@@ -130,7 +130,7 @@
                  </li>
 
                  <li class="nav-item">
-                     <a href="./register/" class="nav-link register">Register</a>
+                     <a href="{{ route('users.register') }}" class="nav-link register">Register</a>
                  </li>
              </ul>
          </div>
