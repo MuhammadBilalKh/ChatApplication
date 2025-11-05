@@ -1,0 +1,25 @@
+EPG Task Timeline
+
+
+1) Import Files TAB (Already Created on EPG Fatima[tvlistingdev] instance) (4 hrs)
+	Constant Checks
+	
+2) RMS (Restricted Management System)
+
+Front end (12 hrs):
+
+Vendor Name (selectable)
+Program Name (selectable) 
+Replacement Program (text field)
+Replacement Description (text field)
+
+Grid Table for records of restriction and remove button to remove restriction.
+
+New tab or at the top of screen for Export XML in teleste feature.
+
+
+Backend logics (12 hrs):
+RMS Backend Code
+ReadXML Cron code change
+Export Tel Cron code change
+Export ZAP Cron code change

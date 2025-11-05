@@ -7,6 +7,10 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>@yield('title')</title>
 
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
     <link rel="stylesheet" href="/assets/css/index.css?ver=6.8.3" media="all" />
     <link rel="stylesheet" href="/assets/css/kkpress.min.css?ver=2.6.14" media="all" />
     <link rel="stylesheet" href="/assets/css/kmkcommerce-core.css?ver=1.0.8" />
@@ -97,11 +101,6 @@
         </div>
     </div>
 
-    @if($errors->any())
-        <div class="alert alert-danger">
-            @dd($errors)
-        </div>
-    @endif
     {{-- @include('layout.auth.modal-login') --}}
 
 </body>
@@ -115,17 +114,6 @@
 <script src="/assets/js/flexmenu.min.js"></script>
 <script src="/assets/js/masonry.min.js"></script>
 <script src="/assets/js/jquery.fitvids.min.js"></script>
-
-<script type="text/javascript"
-    src="https://www.clientbetalink.xyz/MIGVELv1/wp-content/plugins/buddypress-media/lib/media-element/mediaelement-and-player.min.js?ver=4.7.3">
-</script>
-<script type="text/javascript"
-    src="https://www.clientbetalink.xyz/MIGVELv1/wp-content/plugins/buddypress-media/lib/media-element/wp-mediaelement.min.js?ver=4.7.3">
-</script>
-<script type="text/javascript"
-    src="https://www.clientbetalink.xyz/MIGVELv1/wp-content/plugins/buddypress-media/app/assets/js/vendors/emoji-picker.js?ver=4.7.3">
-</script>
-
 <script src="/assets/js/kmk.min.js"></script>
 
 <!-- Inline JS -->

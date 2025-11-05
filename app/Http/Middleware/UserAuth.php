@@ -16,7 +16,7 @@ class UserAuth
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::user() == null) {
+        if (!Auth::check()) {
             return redirect()->route('users.login');
         }
 

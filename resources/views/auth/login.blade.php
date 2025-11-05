@@ -9,6 +9,7 @@
 @section('title', APPLICATION_TITLE)
 
 @section('login-section')
+
     <article id="post-95" class="post-95 page type-page status-publish hentry kmk-post">
         <div class="entry-content clearfix">
             <div data-kmk-type="wp-page" data-kmk-id="95" class="kmk kmk-95" data-kmk-post-type="page">
@@ -17,7 +18,8 @@
                     data-id="0405d30" data-element_type="section"
                     data-settings="{&quot;background_background&quot;:&quot;video&quot;,&quot;background_video_link&quot;:&quot;http:\/\/mythemestore.com\/friend-finder\/videos\/8.mp4&quot;}">
                     <div class="kmk-background-video-container h-100 kmk-hidden-mobile" aria-hidden="true">
-                        <video src="/assets/videos/bg-video.mp4" class="kmk-background-video-hosted" autoplay muted playsinline loop></video>
+                        <video src="/assets/videos/bg-video.mp4" class="kmk-background-video-hosted" autoplay muted
+                            playsinline loop></video>
                     </div>
                     <div class="kmk-background-overlay"></div>
                     <div class="kmk-container kmk-column-gap-default">
@@ -170,7 +172,8 @@
 
                                                         <div class="kmk-login-element kmk-element default">
                                                             <div class="login-form-wrapper">
-                                                                <form action="{{ route('users.authenticate') }}" method="post"
+                                                                <form action="{{ route('users.authenticate') }}"
+                                                                    method="{{ FORM_METHOD_POST }}"
                                                                     id="element-login-form"
                                                                     class="kmk-login-form element-login-form"
                                                                     name="element-login">
@@ -183,9 +186,14 @@
                                                                                     class="uil-user"></i></span>
                                                                             <input type="text" id="element-username"
                                                                                 class="username-control" required
-                                                                                name="log" value=""
+                                                                                name="log" value="{{ old('log') }}"
                                                                                 placeholder="Email or username">
+
                                                                         </div>
+                                                                        @error('log')
+                                                                            <span
+                                                                                class="text-danger">{{ $message }}</span>
+                                                                        @enderror
                                                                     </div>
                                                                     <div class="form-group">
                                                                         <div class="pass">
@@ -225,16 +233,13 @@
                                                                     <div class="kmk-login-result">
                                                                     </div>
                                                                     <div class="submit">
-                                                                        <button type="submit" id="element_login_submit"
+                                                                        <input type="submit" id="element_login_submit"
                                                                             class="wide submit-login ellipsis"
-                                                                            name="wp-submit">Log
+                                                                            value="Log
                                                                             into your
-                                                                            account</button>
+                                                                            account" />
                                                                     </div>
-                                                                    <input type="hidden" id="element-login-security"
-                                                                        name="element-login-security"
-                                                                        value="eb27b9b60c" /><input type="hidden"
-                                                                        name="_wp_http_referer" value="/MIGVELv1/" />
+
                                                                     <div class="register-link">
                                                                         <a href="{{ route('users.register') }}"
                                                                             class="register color-primary">Create

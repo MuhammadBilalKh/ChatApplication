@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
+use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -34,7 +35,7 @@ class UserController extends Controller
         ]);
 
         if ($newUser) {
-            $authUser = Auth::guard('web')->attempt(['email' => $request->signup_email, 'password' => $request->signup_password]);
+            $authUser = Auth::attempt(['email' => $request->signup_email, 'password' => $request->signup_password]);
 
             if ($authUser) {
                 return redirect()->route('users.show_dashboard');
@@ -44,22 +45,32 @@ class UserController extends Controller
 
     public function authenticate(Request $request)
     {
+        $request->validate([
+            'log' => 'required|email',
+            'pwd' => "required",
+        ]);
+
         $credentials = [
             'email' => $request->log,
             'password' => ($request->pwd),
         ];
 
-        $authAttempt = Auth::guard("web")->attempt($credentials);
+        $authAttempt = Auth::attempt($credentials);
 
-        // dd(User::where($credentials)->exists(), Auth::user(), $credentials);
-        if($authAttempt){
+        if ($authAttempt) {
             return redirect()->route('users.show_dashboard')->with('success', "Your Are Logged In");
         } else {
-            dd("no");
+            return redirect()->back()->withErrors([
+                'log' => 'Invalid Credentials.',
+            ])->onlyInput('log');
         }
     }
 
-    public function show_dashboard(Request $request){
-        return view('users.dashboard');
+    public function show_dashboard(Request $request)
+    {
+        $recentPosts = Post::where(['user_id' => Auth::user()->user_id])->pluck("title", "post_id")->toArray();
+        return view('users.dashboard', [
+            'recentPosts' => $recentPosts,
+        ]);
     }
 }

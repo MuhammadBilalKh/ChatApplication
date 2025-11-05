@@ -87,7 +87,7 @@
                 </a>
                 <div class="my-card item">
                     <h4 class="form-title">Login Now</h4>
-                    <form action="{{ route('users.authenticate') }}" method="post" id="panel-login-form"
+                    <form action="{{ route('users.authenticate') }}" method="{{ FORM_METHOD_POST }}" id="panel-login-form"
                         class="kmk-login-form panel-login" name="panel-login">
                         <div class="form-group">
                             <div class="user-name">
@@ -446,8 +446,9 @@
                 </div>
                 <div class="modal-body">
                     <h4 class="modal-title">Log into your account</h4>
-                    <form action="" method="{{ FORM_METHOD_POST }}" id="modal-login-form"
+                    <form action="{{ route('users.authenticate') }}" method="{{ FORM_METHOD_POST }}" id="modal-login-form"
                         class="kmk-login-form modal-login-form" name="modal-login-form">
+                        @csrf
                         <div class="form-group">
                             <div class="user-name">
                                 <label class="screen-reader-text">Email/username</label>
