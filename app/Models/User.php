@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Post;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -24,6 +25,8 @@ class User extends Authenticatable
         'email',
         'password',
         'username',
+        "profile_picture",
+        'country_id',
     ];
 
     /**
@@ -47,5 +50,9 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function getPosts(){
+        return $this->hasMany(Post::class, "user_id", "user_id");
     }
 }

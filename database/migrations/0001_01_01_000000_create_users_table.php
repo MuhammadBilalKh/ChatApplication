@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('password');
             $table->integer("country_id")->unsigned()->nullable();
             $table->string("date_of_birth")->nullable();
+            $table->string("profile_picture");
             $table->enum("gender", ['male', "female"])->nullable();
             $table->rememberToken();
             $table->timestamps();

@@ -87,8 +87,8 @@
                 </a>
                 <div class="my-card item">
                     <h4 class="form-title">Login Now</h4>
-                    <form action="{{ route('users.authenticate') }}" method="{{ FORM_METHOD_POST }}" id="panel-login-form"
-                        class="kmk-login-form panel-login" name="panel-login">
+                    <form action="{{ route('users.authenticate') }}" method="{{ FORM_METHOD_POST }}"
+                        id="panel-login-form" class="kmk-login-form panel-login" name="panel-login">
                         <div class="form-group">
                             <div class="user-name">
                                 <label class="screen-reader-text">Email/username</label>
@@ -289,7 +289,10 @@
 
 
                                                                 <h2 class="bp-heading">Account Details</h2>
-
+                                                                <label for="signup_username">Profile Picture
+                                                                    (required)</label><input type="file"
+                                                                    name="signup_profile_picture"
+                                                                    id="signup_username" />
                                                                 <label for="signup_username">Username
                                                                     (required)</label><input type="text"
                                                                     name="signup_username" id="signup_username"
@@ -446,8 +449,8 @@
                 </div>
                 <div class="modal-body">
                     <h4 class="modal-title">Log into your account</h4>
-                    <form action="{{ route('users.authenticate') }}" method="{{ FORM_METHOD_POST }}" id="modal-login-form"
-                        class="kmk-login-form modal-login-form" name="modal-login-form">
+                    <form action="{{ route('users.authenticate') }}" method="{{ FORM_METHOD_POST }}"
+                        id="modal-login-form" class="kmk-login-form modal-login-form" name="modal-login-form">
                         @csrf
                         <div class="form-group">
                             <div class="user-name">

@@ -85,7 +85,6 @@
         </div>
     </div>
 
-    @include('layout.master.modal-login')
 </body>
 
 <script src="/assets/js/jquery.min.js"></script>

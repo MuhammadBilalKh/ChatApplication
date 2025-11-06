@@ -27,6 +27,7 @@ class UserRequest extends FormRequest
             'signup_password' => "required|min:8",
             'signup_password_confirm' => 'required|same:signup_password',
             'field_1' => "required",
+            'signup_profile_picture' => "required|image",
         ];
     }
 
@@ -42,6 +43,7 @@ class UserRequest extends FormRequest
             'signup_password_confirm.required' => 'Password Confirmation is Required',
             'signup_password_confirm.same' => 'Password and Confirm Password Mismatch',
             'field_1.required' => "Name is Required",
+            "signup_profile_picture.required" => "Profile Picutre is Required",
         ];
     }
 }

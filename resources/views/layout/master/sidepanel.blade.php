@@ -5,37 +5,59 @@
                 <img src="/assets/images/logo.png" alt=" Business Name" />
             </a>
             <div class="my-card item">
-                <h4 class="form-title">Login Now</h4>
-                <form action="{{ route('users.authenticate') }}" method="post" id="panel-login-form" class="kmk-login-form panel-login"
-                    name="panel-login">
-                    <div class="form-group">
-                        <div class="user-name">
-                            <label class="screen-reader-text">Email/username</label>
-                            <span class="icon"><i class="uil-user"></i></span>
-                            <input type="text" id="username" class="username-control" required name="log"
-                                value="" placeholder="Email or username">
+                @auth
+                    <div class="info">
+                        <a href="./members-2/sandlas/" class="profile-avatar">
+                            <img src="{{ Auth::user()->profile_picture }}" alt="{{ Auth::user()->username }}" class="avatar mCS_img_loaded">
+                        </a>
+                        <div class="profile-name">
+                            <a href="./members-2/sandlas/" class="name ellipsis">{{ Auth::user()->name }}</a>
+                            <small>Member</small>
+
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="pass">
-                            <label class="screen-reader-text">Password</label>
-                            <span class="icon"><i class="uil-key-skeleton-alt"></i></span>
-                            <input type="password" id="password" class="password-control" required name="pwd"
-                                value="" placeholder="Password">
+                    <ul class="connections">
+                        <li><span class="count">{{ $totalFriends }}</span>
+                            <p class="mute">Friends</p>
+                        </li>
+                        <li><span class="count">0</span>
+                            <p class="mute">Groups</p>
+                        </li>
+                    </ul>
+                @endauth
+                @guest
+                    <h4 class="form-title">Login Now</h4>
+                    <form action="{{ route('users.authenticate') }}" method="post" id="panel-login-form"
+                        class="kmk-login-form panel-login" name="panel-login">
+                        <div class="form-group">
+                            <div class="user-name">
+                                <label class="screen-reader-text">Email/username</label>
+                                <span class="icon"><i class="uil-user"></i></span>
+                                <input type="text" id="username" class="username-control" required name="log"
+                                    value="" placeholder="Email or username">
+                            </div>
                         </div>
-                    </div>
-                    <div class="kmk-login-result"></div>
-                    <div class="submit">
-                        <button type="submit" id="login_submit" class="submit-login" name="wp-submit">Log
-                            In</button>
-                    </div>
-                    <input type="hidden" id="panel-login-security" name="panel-login-security"
-                        value="171d7e1524" /><input type="hidden" name="_wp_http_referer"
-                        value="/MIGVELv1/activity-2/" />
-                    <div class="register-link">
-                        <a href="./register/" class="register color-primary">Create an account</a>
-                    </div>
-                </form>
+                        <div class="form-group">
+                            <div class="pass">
+                                <label class="screen-reader-text">Password</label>
+                                <span class="icon"><i class="uil-key-skeleton-alt"></i></span>
+                                <input type="password" id="password" class="password-control" required name="pwd"
+                                    value="" placeholder="Password">
+                            </div>
+                        </div>
+                        <div class="kmk-login-result"></div>
+                        <div class="submit">
+                            <button type="submit" id="login_submit" class="submit-login" name="wp-submit">Log
+                                In</button>
+                        </div>
+                        <input type="hidden" id="panel-login-security" name="panel-login-security"
+                            value="171d7e1524" /><input type="hidden" name="_wp_http_referer"
+                            value="/MIGVELv1/activity-2/" />
+                        <div class="register-link">
+                            <a href="./register/" class="register color-primary">Create an account</a>
+                        </div>
+                    </form>
+                @endguest
             </div>
         </div>
         <div class="panel-block light">
@@ -64,7 +86,8 @@
                     </li>
                     <li id="menu-item-476"
                         class="menu-item menu-item-type-post_type menu-item-object-page menu-item-476"><a
-                            href="./adverts/"><i class="uil-tv-retro"></i><span class="nav-link-text">Adverts</span></a>
+                            href="./adverts/"><i class="uil-tv-retro"></i><span
+                                class="nav-link-text">Adverts</span></a>
                     </li>
                     <li id="menu-item-482"
                         class="menu-item menu-item-type-post_type menu-item-object-page menu-item-482"><a
@@ -72,7 +95,8 @@
                                 class="nav-link-text">Shop</span></a></li>
                     <li id="menu-item-480"
                         class="menu-item menu-item-type-post_type menu-item-object-page menu-item-480"><a
-                            href="./jobs/"><i class="uil-briefcase-alt"></i><span class="nav-link-text">Jobs</span></a>
+                            href="./jobs/"><i class="uil-briefcase-alt"></i><span
+                                class="nav-link-text">Jobs</span></a>
                     </li>
                     <li id="menu-item-478"
                         class="menu-item menu-item-type-post_type menu-item-object-page menu-item-478"><a

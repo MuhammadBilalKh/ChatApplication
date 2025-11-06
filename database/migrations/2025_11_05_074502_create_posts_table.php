@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->bigInteger("post_id")->autoIncrement();
-            $table->string("title");
             $table->string("media")->nullable();
             $table->enum('media_type', ['image', 'video', 'text', 'link'])->default('text');
             $table->text("description")->nullable();
