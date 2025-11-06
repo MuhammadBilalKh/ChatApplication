@@ -17,7 +17,7 @@
                         </div>
                     </div>
                     <ul class="connections">
-                        <li><span class="count">{{ $totalFriends }}</span>
+                        <li><span class="count" id="totalFriendsCount"></span>
                             <p class="mute">Friends</p>
                         </li>
                         <li><span class="count">0</span>
@@ -70,7 +70,7 @@
                     </li>
                     <li id="menu-item-481"
                         class="menu-item menu-item-type-post_type menu-item-object-page menu-item-481"><a
-                            href="./photos/"><i class="uil-image-v"></i><span class="nav-link-text">Photos</span></a>
+                            href="{{ route('posts.show_photos') }}"><i class="uil-image-v"></i><span class="nav-link-text">Photos</span></a>
                     </li>
                     <li id="menu-item-483"
                         class="menu-item menu-item-type-post_type menu-item-object-page menu-item-483"><a

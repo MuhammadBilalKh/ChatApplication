@@ -69,7 +69,7 @@
                                     <img loading="lazy"
                                         src="{{ asset($post->postUploadedBy->profile_picture ?? 'assets/images/default.png') }}"
                                         class="avatar user-1-avatar avatar-200 photo" width="200" height="200"
-                                        alt="Profile Photo">
+                                        alt="Profile Photo" />
                                 </a>
                             </div>
                             <div class="mini-info">

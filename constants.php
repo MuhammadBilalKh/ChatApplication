@@ -17,3 +17,5 @@ defined("LIMITED_POST_IN_RIGHTBAR") || define("LIMITED_POST_IN_RIGHTBAR", 10);
 
 defined("NEW_JOINING_USER_POST") || define("NEW_JOINING_USER_POST", 1);
 defined("POST_VISIBILITY_PUBLIC") || define("POST_VISIBILITY_PUBLIC","public");
+
+defined("MEDIA_TYPE_IMAGE") || define("MEDIA_TYPE_IMAGE", "image");

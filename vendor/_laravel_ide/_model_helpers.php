@@ -666,6 +666,7 @@ namespace App\Models {
      * @property string $file_path
      * @property string $media_type
      * @property int $post_media_id
+     * @property-read \App\Models\Post $getPost
      * @method static \Illuminate\Database\Eloquent\Builder<PostMedia>|PostMedia wherePostMediaId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<PostMedia>|PostMedia whereMediaType($value)
      * @method static \Illuminate\Database\Eloquent\Builder<PostMedia>|PostMedia whereFilePath($value)

@@ -43,7 +43,7 @@
                         </div>
                         <div id="whats-new-content">
                             <div id="whats-new-textarea" style="position: relative;">
-                                <textarea name="description" cols="50" rows="4" placeholder="What's new, Novipa?"
+                                <textarea name="description" cols="50" rows="4" placeholder="What's new, {{ Auth::user()->username }}?"
                                     aria-label="To enrich screen reader interactions, please activate Accessibility in Grammarly extension settings"
                                     id="whats-new" class="bp-suggestions" spellcheck="false" maxlength="3000" style="resize: vertical; height: auto;"></textarea>
                             </div>
@@ -105,7 +105,8 @@
                     </form>
                 </div>
 
-                <nav class="activity-type-navs main-navs bp-navs dir-navs " role="navigation" aria-label="Directory menu">
+                <nav class="activity-type-navs main-navs bp-navs dir-navs " role="navigation"
+                    aria-label="Directory menu">
 
 
                     <ul class="component-navigation activity-nav">
@@ -156,13 +157,18 @@
         let loading = false;
 
         jQuery(document).ready(function() {
-            loadPosts();
-            jQuery("#alertResponse").hide();
-            document.title = "Welcome {{ Auth::user()->name }}";
-
+            const alertResponse = jQuery("#alertResponse");
+            const listPosts = document.querySelector('#listPosts');
             const uploadButton = document.getElementById('rtmedia-add-media-button-post-update');
             const fileInput = document.getElementById('html5_1j8u2f1q1aon1eei190eik911tu3');
             const fileListContainer = document.getElementById('rtmedia_uploader_filelist');
+
+            // Initially hide alert
+            alertResponse.hide();
+            document.title = "Welcome {{ Auth::user()->name }}";
+
+            // Load first posts
+            loadPosts();
 
             uploadButton.addEventListener('click', function() {
                 fileInput.click();
@@ -241,6 +247,7 @@
                 if (fileItem) fileItem.remove();
             }
 
+            // Infinite scroll
             window.addEventListener('scroll', () => {
                 const scrollPosition = window.innerHeight + window.scrollY;
                 const pageHeight = document.documentElement.scrollHeight;
@@ -249,20 +256,28 @@
                 }
             });
 
+            // Load posts with spinner
             function loadPosts() {
                 if (loading) return;
                 loading = true;
+
+                alertResponse.html('<i class="fa fa-spinner fa-spin"></i> Loading Community Events...');
+                alertResponse.fadeIn();
+
                 fetch(`{{ route('posts.load') }}?page=${page}`)
                     .then(res => res.json())
                     .then(data => {
                         if (data.html.trim() !== '') {
-                            document.querySelector('#listPosts').insertAdjacentHTML('beforeend', data.html);
+                            listPosts.insertAdjacentHTML('beforeend', data.html);
                             page++;
                         }
                         loading = false;
+                        alertResponse.fadeOut(300);
                     })
                     .catch(() => {
                         loading = false;
+                        alertResponse.html('<span class="text-danger">Error loading posts.</span>');
+                        setTimeout(() => alertResponse.fadeOut(300), 500);
                     });
             }
         });

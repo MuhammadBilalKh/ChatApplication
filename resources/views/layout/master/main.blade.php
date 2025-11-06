@@ -128,6 +128,23 @@
     };
     ['DOMContentLoaded', 'kmk/lazyload/observe']
     .forEach(e => document.addEventListener(e, lazyloadRunObserver));
+
+    jQuery.ajax({
+        url: "{{ route('users.show_stats') }}",
+        type: "{{ FORM_METHOD_POST }}",
+        headers: {
+            "X-CSRF-TOKEN": "{{ csrf_token() }}",
+        },
+        success: function(resp) {
+            if (resp.pendingFriendRequests == 0) {
+                jQuery("#pendingFriendRequestCount").html("No Pending Request Found")
+            } else {
+                jQuery("#pendingFriendRequestCount").html(resp.pendingFriendRequests + " Pending Request")
+            }
+
+            jQuery("#totalFriendsCount").html(resp.totalFriends);
+        }
+    });
 </script>
 
 </html>

@@ -28,12 +28,8 @@
                         <div class="dropdown-menu" aria-labelledby="nav_friend_requests">
                             <div class="dropdown-title">Friend requests</div>
                             <div class="alert-message">
-                                <div class="alert alert-warning" role="alert">
-                                    @if ($pendingFriendRequests == 0)
-                                        No Friend Request Found.
-                                    @else
-                                        {{ $pendingFriendRequests }} Friend Requests Pending
-                                    @endif
+                                <div class="alert alert-warning" role="alert" id="pendingFriendRequestCount">
+
                                 </div>
                             </div>
                             <div class="dropdown-footer">

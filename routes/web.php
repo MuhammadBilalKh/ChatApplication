@@ -18,8 +18,11 @@ Route::middleware(['web'])->group(function () {
 
         Route::prefix("post")->group(function(){
             Route::get("/load", [PostController::class, 'load_posts'])->name('posts.load');
+            Route::get("/photos", [PostController::class, 'show_photos'])->name("posts.show_photos");
             Route::post("/store", [PostController::class, 'upload_post'])->name('posts.store');
         });
+
+        Route::post("/dashboard-data", [UserController::class, 'getUserStatsData'])->name('users.show_stats');
 
         Route::get("/logout", [UserController::class, 'logout'])->name('users.logout');
     });

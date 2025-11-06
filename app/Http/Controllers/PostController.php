@@ -72,15 +72,21 @@ class PostController extends Controller
         $page = $request->input('page', 1);
         $offset = ($page - 1) * $limit;
 
-        $posts = Post::with("postUploadedBy", "postMedia")->whereIn('user_id', $userIds)
-            ->orWhere(['new_joining_post' => NEW_JOINING_USER_POST])
-            ->inRandomOrder()
-            ->latest()
-            ->take(20)
-            ->paginate(5);
+        $posts = Post::with(['postUploadedBy', 'postMedia'])
+            ->whereIn('user_id', $userIds)
+            ->orWhere('new_joining_post', NEW_JOINING_USER_POST)
+            ->orderByDesc('created_at')
+            ->paginate(2);
 
         $html = view('partials.post_list', compact('posts'))->render();
 
         return response()->json(['html' => $html]);
+    }
+
+    public function show_photos(){
+        $userPosts = Post::where(['user_id' => Auth::user()->user_id])->pluck("post_id")->toArray();
+        $postMedia = PostMedia::with("getPost")->whereIn("post_id", $userPosts)->where(['media_type' => MEDIA_TYPE_IMAGE])->paginate(20);
+
+        return view('users.photos', ['photos' => $postMedia]);
     }
 }

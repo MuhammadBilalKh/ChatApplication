@@ -11,7 +11,8 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-    public function login(Request $request){
+    public function login(Request $request)
+    {
         return view('auth.login');
     }
 
@@ -96,6 +97,17 @@ class UserController extends Controller
 
         return view('users.dashboard', [
             'recentPosts' => $recentPosts,
+            'totalFriends' => $totalFriendsCount,
+            'pendingFriendRequests' => $pendingFriendRequests,
+        ]);
+    }
+
+    public function getUserStatsData()
+    {
+        $totalFriendsCount = FriendShip::where(['sender_id' => Auth::user()->user_id, 'status' => FRIEND_REQUEST_STATUS_ACCEPTED])->count();
+        $pendingFriendRequests = FriendShip::where(['receiver_id' => Auth::user()->user_id, 'status' => FRIEND_REQUEST_STATUS_PENDING])->count();
+
+        return response()->json([
             'totalFriends' => $totalFriendsCount,
             'pendingFriendRequests' => $pendingFriendRequests,
         ]);

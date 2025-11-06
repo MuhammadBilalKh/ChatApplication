@@ -13,14 +13,8 @@
         </div>
         <div id="recent-posts-1" class="widget widget_recent_entries">
             <h5 class="widget-title">Recent Posts</h5>
-            <ul>
-                @forelse ($recentPosts as $key => $value)
-                    <li>
-                        <a href="">{{ ($value) }}</a>
-                    </li>
-                @empty
-                    <li>No Recent Posts Found</li>
-                @endforelse
+            <ul id="recentPosts">
+
             </ul>
 
         </div>
