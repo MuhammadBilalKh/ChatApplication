@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Post;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -13,7 +12,7 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
-    protected $primaryKey = "user_id";
+    protected $primaryKey = 'user_id';
 
     /**
      * The attributes that are mass assignable.
@@ -25,7 +24,7 @@ class User extends Authenticatable
         'email',
         'password',
         'username',
-        "profile_picture",
+        'profile_picture',
         'country_id',
     ];
 
@@ -52,7 +51,14 @@ class User extends Authenticatable
         ];
     }
 
-    public function getPosts(){
-        return $this->hasMany(Post::class, "user_id", "user_id");
+    public function getPosts()
+    {
+        return $this->hasMany(Post::class, 'user_id', 'user_id');
+    }
+
+    public function getFriends()
+    {
+        return $this->hasMany(FriendShip::class, 'sender_id', 'user_id')
+            ->where('status', FRIEND_REQUEST_STATUS_ACCEPTED);
     }
 }

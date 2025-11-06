@@ -105,8 +105,7 @@
                     </form>
                 </div>
 
-                <nav class="activity-type-navs main-navs bp-navs dir-navs " role="navigation"
-                    aria-label="Directory menu">
+                <nav class="activity-type-navs main-navs bp-navs dir-navs " role="navigation" aria-label="Directory menu">
 
 
                     <ul class="component-navigation activity-nav">
@@ -164,10 +163,8 @@
             const fileListContainer = document.getElementById('rtmedia_uploader_filelist');
 
             // Initially hide alert
-            alertResponse.hide();
             document.title = "Welcome {{ Auth::user()->name }}";
 
-            // Load first posts
             loadPosts();
 
             uploadButton.addEventListener('click', function() {
@@ -247,7 +244,6 @@
                 if (fileItem) fileItem.remove();
             }
 
-            // Infinite scroll
             window.addEventListener('scroll', () => {
                 const scrollPosition = window.innerHeight + window.scrollY;
                 const pageHeight = document.documentElement.scrollHeight;
@@ -256,7 +252,6 @@
                 }
             });
 
-            // Load posts with spinner
             function loadPosts() {
                 if (loading) return;
                 loading = true;
@@ -281,5 +276,34 @@
                     });
             }
         });
+
+        function SendFriendRequest(receiverID) {
+            jQuery.ajax({
+                url: "{{ route('peoples.create_friend_request') }}",
+                type: "{{ FORM_METHOD_POST }}",
+                headers: {
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                },
+                data: {
+                    memberID: receiverID,
+                },
+                beforeSend: function() {
+
+                },
+                success: function(response) {
+                    if (response.status == {{ REQUEST_PROCESSED }}) {
+                        jQuery("#member-" + receiverID).removeClass("add").addClass("requested")
+                    }
+                }
+            });
+        }
+
+        function CancelFriendRequest(receiverID) {
+
+        }
+
+        function AcceptFriendRequest(receiverID) {
+
+        }
     </script>
 @endpush

@@ -8,6 +8,9 @@ defined("FORM_METHOD_POST") || define("FORM_METHOD_POST", "POST");
 defined("REQUEST_PROCESSED") || define("REQUEST_PROCESSED", 1);
 defined("REQUEST_GOT_ERROR") || define("REQUEST_GOT_ERROR", 0);
 
+defined("ACCOUNT_STATUS_ACTIVE") || define("ACCOUNT_STATUS_ACTIVE", 1);
+defined("ACCOUNT_STATUS_INACTIVE") || define("ACCOUNT_STATUS_INACTIVE", 2);
+
 defined("FRIEND_REQUEST_STATUS_PENDING") || define("FRIEND_REQUEST_STATUS_PENDING", "pending");
 defined("FRIEND_REQUEST_STATUS_ACCEPTED") || define("FRIEND_REQUEST_STATUS_ACCEPTED", "accepted");
 defined("FREIND_REQUEST_STATUS_DECLINED") || define("FRIEND_REQUEST_STATUS_DECLINED", "declined");
@@ -19,3 +22,4 @@ defined("NEW_JOINING_USER_POST") || define("NEW_JOINING_USER_POST", 1);
 defined("POST_VISIBILITY_PUBLIC") || define("POST_VISIBILITY_PUBLIC","public");
 
 defined("MEDIA_TYPE_IMAGE") || define("MEDIA_TYPE_IMAGE", "image");
+defined("MEDIA_TYPE_VIDEO") || define("MEDIA_TYPE_VIDEO", "video");

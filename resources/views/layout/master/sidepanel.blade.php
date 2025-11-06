@@ -8,7 +8,8 @@
                 @auth
                     <div class="info">
                         <a href="./members-2/sandlas/" class="profile-avatar">
-                            <img src="{{ Auth::user()->profile_picture }}" alt="{{ Auth::user()->username }}" class="avatar mCS_img_loaded">
+                            <img src="{{ asset(Auth::user()->profile_picture) }}" alt="{{ Auth::user()->username }}"
+                                class="avatar mCS_img_loaded">
                         </a>
                         <div class="profile-name">
                             <a href="./members-2/sandlas/" class="name ellipsis">{{ Auth::user()->name }}</a>
@@ -64,25 +65,35 @@
             <div class="panel-menu item">
                 <ul id="menu-dashboard-menu" class="navbar-panel">
                     <li id="menu-item-475"
-                        class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-35 current_page_item menu-item-475">
-                        <a href="./activity-2/" aria-current="page"><i class="uil-notebooks"></i><span
-                                class="nav-link-text">Activity</span></a>
-                    </li>
-                    <li id="menu-item-481"
-                        class="menu-item menu-item-type-post_type menu-item-object-page menu-item-481"><a
-                            href="{{ route('posts.show_photos') }}"><i class="uil-image-v"></i><span class="nav-link-text">Photos</span></a>
+                        class="menu-item menu-item-type-post_type menu-item-object-page
+                            @if (Route::currentRouteName() == 'users.show_dashboard') current-menu-item @endif
+                            page_item page-item-35 menu-item-475">
+                                                <a href="{{ route('users.show_dashboard') }}">
+                                                    <i class="uil-notebooks"></i>
+                                                    <span class="nav-link-text">Activity</span>
+                                                </a>
+                                            </li>
+
+                                            <li id="menu-item-481"
+                                                class="menu-item menu-item-type-post_type menu-item-object-page
+                            @if (Route::currentRouteName() == 'posts.show_photos') current-menu-item @endif
+                            menu-item-481">
+                        <a href="{{ route('posts.show_photos') }}">
+                            <i class="uil-image-v"></i>
+                            <span class="nav-link-text">Photos</span>
+                        </a>
                     </li>
                     <li id="menu-item-483"
-                        class="menu-item menu-item-type-post_type menu-item-object-page menu-item-483"><a
-                            href="./videos/"><i class="uil-play"></i><span class="nav-link-text">Watch</span></a>
+                        class="menu-item menu-item-type-post_type menu-item-object-page @if (Route::currentRouteName() == 'posts.show_videos') current-menu-item @endif menu-item-483"><a
+                            href="{{ route('posts.show_videos') }}"><i class="uil-play"></i><span class="nav-link-text">Watch</span></a>
                     </li>
                     <li id="menu-item-484"
-                        class="menu-item menu-item-type-post_type menu-item-object-page menu-item-484"><a
-                            href="./members-2/"><i class="uil-user"></i><span class="nav-link-text">People</span></a>
+                        class="menu-item menu-item-type-post_type menu-item-object-page @if (Route::currentRouteName() == 'peoples.list') current-menu-item @endif menu-item-484"><a
+                            href="{{ route('peoples.list') }}"><i class="uil-user"></i><span class="nav-link-text">People</span></a>
                     </li>
                     <li id="menu-item-614"
-                        class="menu-item menu-item-type-post_type menu-item-object-page menu-item-614"><a
-                            href="./games/"><i class="uil-users-alt"></i><span class="nav-link-text">Games</span></a>
+                        class="menu-item menu-item-type-post_type menu-item-object-page @if (Route::currentRouteName() == 'peoples.games') current-menu-item @endif menu-item-614"><a
+                            href="{{ route('peoples.games') }}"><i class="uil-users-alt"></i><span class="nav-link-text">Games</span></a>
                     </li>
                     <li id="menu-item-476"
                         class="menu-item menu-item-type-post_type menu-item-object-page menu-item-476"><a

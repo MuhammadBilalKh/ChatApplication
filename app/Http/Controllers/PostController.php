@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\FriendShip;
 use App\Models\Post;
 use App\Models\PostMedia;
+use getID3;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -39,54 +40,120 @@ class PostController extends Controller
                     $mediaType = 'file';
                 }
 
-                $uniqueName = Auth::user()->username . '-' . uniqid('post_') . '_' . time() . '.' . $extension;
+                $uniqueName = Auth::user()->username.'-'.uniqid('post_').'_'.time().'.'.$extension;
 
                 $destination = public_path('uploads/posts');
                 $file->move($destination, $uniqueName);
 
-                $filePath = 'uploads/posts/' . $uniqueName;
+                $filePath = 'uploads/posts/'.$uniqueName;
 
                 PostMedia::create([
-                    'post_id'    => $post->post_id,
+                    'post_id' => $post->post_id,
                     'media_type' => $mediaType,
-                    'file_size'  => $fileSize,
-                    'file_path'  => $filePath,
+                    'file_size' => $fileSize,
+                    'file_path' => $filePath,
                 ]);
             }
         }
 
-
-        return redirect()->back()->with("post-upload-success", "Post Uploaded Successfully.");
+        return redirect()->back()->with('post-upload-success', 'Post Uploaded Successfully.');
     }
 
     public function load_posts(Request $request)
     {
-        $userFriends = FriendShip::where('sender_id', Auth::user()->user_id)
-            ->where('status', FRIEND_REQUEST_STATUS_ACCEPTED)
-            ->pluck('receiver_id')
-            ->toArray();
+        $authId = Auth::user()->user_id;
 
-        $userIds = array_merge([$userId = Auth::user()->user_id], $userFriends);
+        $userFriends = FriendShip::where(function ($q) use ($authId) {
+            $q->where('sender_id', $authId)
+            ->orWhere('receiver_id', $authId);
+        })
+        ->where('status', FRIEND_REQUEST_STATUS_ACCEPTED)
+        ->pluck('sender_id', 'receiver_id')
+        ->flatten()
+        ->unique()
+        ->toArray();
+
+        $userIds = array_merge([$authId], $userFriends);
 
         $limit = 10;
         $page = $request->input('page', 1);
-        $offset = ($page - 1) * $limit;
 
         $posts = Post::with(['postUploadedBy', 'postMedia'])
             ->whereIn('user_id', $userIds)
             ->orWhere('new_joining_post', NEW_JOINING_USER_POST)
             ->orderByDesc('created_at')
-            ->paginate(2);
+            ->paginate($limit);
+
+        $postUserIds = $posts->pluck('user_id')->unique();
+
+        $friendships = FriendShip::where(function ($q) use ($authId, $postUserIds) {
+            $q->where('sender_id', $authId)
+            ->whereIn('receiver_id', $postUserIds);
+        })
+        ->orWhere(function ($q) use ($authId, $postUserIds) {
+            $q->where('receiver_id', $authId)
+            ->whereIn('sender_id', $postUserIds);
+        })
+        ->get();
+
+        foreach ($posts as $post) {
+            $friendship = $friendships->first(function ($f) use ($authId, $post) {
+                return ($f->sender_id == $authId && $f->receiver_id == $post->user_id)
+                    || ($f->receiver_id == $authId && $f->sender_id == $post->user_id);
+            });
+
+            if (!$friendship) {
+                $post->friend_status = 'none';
+            } else {
+                if ($friendship->status == FRIEND_REQUEST_STATUS_PENDING) {
+                    if ($friendship->sender_id == $authId) {
+                        $post->friend_status = 'sent';
+                    } else {
+                        $post->friend_status = 'received';
+                    }
+                } elseif ($friendship->status == FRIEND_REQUEST_STATUS_ACCEPTED) {
+                    $post->friend_status = 'friends';
+                } else {
+                    $post->friend_status = 'none';
+                }
+            }
+        }
 
         $html = view('partials.post_list', compact('posts'))->render();
 
         return response()->json(['html' => $html]);
     }
 
-    public function show_photos(){
-        $userPosts = Post::where(['user_id' => Auth::user()->user_id])->pluck("post_id")->toArray();
-        $postMedia = PostMedia::with("getPost")->whereIn("post_id", $userPosts)->where(['media_type' => MEDIA_TYPE_IMAGE])->paginate(20);
+    public function show_photos()
+    {
+        $userPosts = Post::where(['user_id' => Auth::user()->user_id])->pluck('post_id')->toArray();
+        $postMedia = PostMedia::with('getPost')->whereIn('post_id', $userPosts)->where(['media_type' => MEDIA_TYPE_IMAGE])->paginate(50);
 
         return view('users.photos', ['photos' => $postMedia]);
+    }
+
+    public function show_videos()
+    {
+        $userPosts = Post::where('user_id', Auth::user()->user_id)->pluck('post_id')->toArray();
+        $postMedia = PostMedia::with('getPost')
+            ->where('media_type', MEDIA_TYPE_VIDEO)
+            ->whereIn('post_id', $userPosts)
+            ->paginate(10);
+
+        $getID3 = new getID3();
+        foreach ($postMedia as $media) {
+            $filePath = public_path($media->file_apth ?? '');
+            if (file_exists($filePath)) {
+                $fileInfo = $getID3->analyze($filePath);
+                $duration = isset($fileInfo['playtime_seconds'])
+                    ? gmdate('i:s', $fileInfo['playtime_seconds'])
+                    : '00:00';
+            } else {
+                $duration = 'N/A';
+            }
+            $media->duration = $duration;
+        }
+
+        return view('users.videos', ['videos' => $postMedia]);
     }
 }

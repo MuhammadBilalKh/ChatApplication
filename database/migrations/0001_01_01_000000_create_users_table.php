@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string("profile_picture");
             $table->enum("gender", ['male', "female"])->nullable();
             $table->rememberToken();
+            $table->unsignedTinyInteger("status");
             $table->timestamps();
         });
 

@@ -3,15 +3,18 @@
         <div class="activity-avatar item-avatar">
             <a href="#">
                 <img src="{{ asset($post->postUploadedBy->profile_picture ?? 'assets/images/default.png') }}"
-                    width="50" height="50" class="avatar user-7-avatar avatar-200 photo" alt="User Profile Picture" />
+                    width="50" height="50" class="avatar user-7-avatar avatar-200 photo"
+                    alt="User Profile Picture" />
             </a>
         </div>
 
         <div class="activity-content">
             <div class="activity-header">
-                <p><strong>{{ $post->postUploadedBy->name ?? 'Unknown User' }}</strong> @if ($post->new_joining_post == NEW_JOINING_USER_POST)
-                    became a registered member
-                @endif</p>
+                <p><strong>{{ $post->postUploadedBy->name ?? 'Unknown User' }}</strong>
+                    @if ($post->new_joining_post == NEW_JOINING_USER_POST)
+                        became a registered member
+                    @endif
+                </p>
                 <div class="date mute">{{ $post->created_at->diffForHumans() }}</div>
             </div>
 
@@ -85,7 +88,24 @@
                             </div>
                             <div class="mini-actions">
                                 <div class="friendship-button generic-button">
-                                    <a href="#" class="friendship-button add" title="Add Friend">Add Friend</a>
+                                    @if (Auth::user()->user_id != $post->postUploadedBy->user_id)
+                                        @if ($post->friend_status === 'none')
+                                            <a href="#" id="member-{{ $post->postUploadedBy->user_id }}"
+                                                onclick="SendFriendRequest({{ $post->postUploadedBy->user_id }})"
+                                                class="friendship-button add" title="Add Friend">Add Friend</a>
+                                        @elseif ($post->friend_status === 'sent')
+                                            <a href="#" id="member-{{ $post->postUploadedBy->user_id }}"
+                                                onclick="CancelFriendRequest({{ $post->postUploadedBy->user_id }})"
+                                                class="friendship-button remove" title="Cancel Request">Requested</a>
+                                        @elseif ($post->friend_status === 'received')
+                                            <a href="#" id="member-{{ $post->postUploadedBy->user_id }}"
+                                                onclick="AcceptFriendRequest({{ $post->postUploadedBy->user_id }})"
+                                                class="friendship-button add" title="Accept Request">Accept</a>
+                                        @elseif ($post->friend_status === 'friends')
+                                            <a href="#" class="friendship-button remove"
+                                                title="Unfriend">Friends</a>
+                                        @endif
+                                    @endif
                                 </div>
                             </div>
                         </div>
