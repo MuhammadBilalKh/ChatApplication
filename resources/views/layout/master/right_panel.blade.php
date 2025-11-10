@@ -11,12 +11,16 @@
             </form>
 
         </div>
+
+        @if (View::hasSection('dashboard-extra-rightpanel'))
+            @yield('dashboard-extra-rightpanel')
+        @endif
+
         <div id="recent-posts-1" class="widget widget_recent_entries">
             <h5 class="widget-title">Recent Posts</h5>
             <ul id="recentPosts">
 
             </ul>
-
         </div>
         <div id="recent-comments-1" class="widget widget_recent_comments">
             <h5 class="widget-title">Recent Comments</h5>

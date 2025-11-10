@@ -13,20 +13,15 @@
 
                 <nav class="members-type-navs main-navs bp-navs dir-navs " role="navigation" aria-label="Directory menu">
 
-
                     <ul class="component-navigation members-nav">
-
                         <li id="members-all" class="selected" data-bp-scope="all" data-bp-object="members">
                             <a href="https://www.clientbetalink.xyz/MIGVELv1/members-2/">Active
                                 Members&nbsp;<span class="count">{{ count($members) }}</span></a>
                         </li>
 
+                    </ul>
 
-                    </ul><!-- .component-navigation -->
-
-
-                </nav><!-- .bp-navs -->
-
+                </nav>
 
                 <div class="screen-content">
 
@@ -35,13 +30,14 @@
                         <div class="subnav-search clearfix">
 
                             <div class="dir-search members-search bp-search" data-bp-search="members">
-                                <form action="{{ route('peoples.list') }}" method="{{ FORM_METHOD_GET }}" class="bp-dir-search-form" id="dir-members-search-form"
-                                    role="search">
+                                <form action="{{ route('peoples.list') }}" method="{{ FORM_METHOD_GET }}"
+                                    class="bp-dir-search-form" id="dir-members-search-form" role="search">
 
                                     <label for="dir-members-search" class="bp-screen-reader-text">Search
                                         Members...</label>
 
-                                    <input id="dir-members-search" name="members_search" value="{{ request()->input('members_search') }}" type="search"
+                                    <input id="dir-members-search" name="members_search"
+                                        value="{{ request()->input('members_search') }}" type="search"
                                         placeholder="Search Members...">
 
                                     <button type="submit" id="dir-members-search-submit" class="nouveau-search-submit"
@@ -87,11 +83,10 @@
                                     <div class="list-wrap">
 
                                         <div class="item-avatar">
-                                            <a href="#profile"><img
-                                                    loading="lazy"
-                                                    src="{{ asset(Auth::user()->profile_picture) }}"
+                                            <a href="#profile"><img loading="lazy"
+                                                    src="{{ asset($value->profile_picture) }}"
                                                     class="avatar user-8-avatar avatar-200 photo" width="200"
-                                                    height="200" alt="Profile picture of {{ Auth::user()->username }}"></a>
+                                                    height="200" alt="Profile picture of {{ $value->username }}"></a>
                                         </div>
 
                                         <div class="item">
@@ -118,14 +113,51 @@
                                                 <p class="latest-update"></p>
 
                                                 <ul class=" members-meta action">
-                                                    <li class="generic-button"><a
-                                                            href="#profile">My
-                                                            Profile</a></li>
+                                                    @if (Auth::user()->user_id == $value->user_id)
+                                                        <li class="generic-button">
+                                                            <a href="#profile">My Profile</a>
+                                                        </li>
+                                                    @else
+                                                        @php
+                                                            $friendship = \App\Models\User::checkFriendShipStatus(
+                                                                $value->user_id,
+                                                            );
+                                                        @endphp
+
+                                                        @if ($friendship)
+                                                            @if ($friendship->status == FRIEND_REQUEST_STATUS_ACCEPTED)
+                                                                <li class="generic-button">
+                                                                    <a href="#"
+                                                                        onclick="Unfriend({{ $value->user_id }})"
+                                                                        class="friendship-button remove"
+                                                                        title="Unfriend">Unfriend</a>
+                                                                </li>
+                                                            @elseif ($friendship->status == FRIEND_REQUEST_STATUS_PENDING)
+                                                                <li class="generic-button">
+                                                                    <a href="#" class="friendship-button pending"
+                                                                        title="Request Pending">Request Pending</a>
+                                                                </li>
+                                                            @elseif ($friendship->status == FRIEND_REQUEST_STATUS_REJECTED)
+                                                                <li class="generic-button">
+                                                                    <a href="#"
+                                                                        onclick="SendFriendRequest({{ $value->user_id }})"
+                                                                        class="friendship-button add"
+                                                                        title="Add Friend">Add Friend</a>
+                                                                </li>
+                                                            @endif
+                                                        @else
+                                                            <li class="generic-button">
+                                                                <a href="#"
+                                                                    onclick="SendFriendRequest({{ $value->user_id }})"
+                                                                    class="friendship-button add" title="Add Friend">Add
+                                                                    Friend</a>
+                                                            </li>
+                                                        @endif
+                                                    @endif
                                                 </ul>
                                             </div>
-
-                                        </div><!-- // .item -->
-
+                                            {{ $members->links() }}
+                                        </div>
                                     </div>
                                 </li>
                             @endforeach
@@ -137,14 +169,8 @@
 
                                 <p class="pag-data">
                                     {{ $members->links() }} </p>
-
                             </div>
-
-
                         </div>
-
-
-
                     </div><!-- #members-dir-list -->
 
                 </div><!-- // .screen-content -->

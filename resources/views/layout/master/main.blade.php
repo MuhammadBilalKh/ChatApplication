@@ -75,13 +75,11 @@
                                 </main>
                             </div><!-- .col-main -->
 
-
                             @include('layout.master.right_panel')
                         </div><!-- .row -->
                     </div><!-- .container -->
                 </div><!-- .layout -->
             </div><!-- #primary -->
-
         </div>
     </div>
 

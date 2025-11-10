@@ -105,8 +105,8 @@
                             href="./shop/"><i class="uil-shopping-trolley"></i><span
                                 class="nav-link-text">Shop</span></a></li>
                     <li id="menu-item-480"
-                        class="menu-item menu-item-type-post_type menu-item-object-page menu-item-480"><a
-                            href="./jobs/"><i class="uil-briefcase-alt"></i><span
+                        class="menu-item menu-item-type-post_type menu-item-object-page @if (Route::currentRouteName() == 'posts.jobs_listing') current-menu-item @endif menu-item-480"><a
+                            href="{{ route('posts.jobs_listing') }}"><i class="uil-briefcase-alt"></i><span
                                 class="nav-link-text">Jobs</span></a>
                     </li>
                     <li id="menu-item-478"

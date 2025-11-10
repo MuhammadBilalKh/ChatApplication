@@ -3,9 +3,10 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
@@ -60,5 +61,18 @@ class User extends Authenticatable
     {
         return $this->hasMany(FriendShip::class, 'sender_id', 'user_id')
             ->where('status', FRIEND_REQUEST_STATUS_ACCEPTED);
+    }
+
+    public static function checkFriendShipStatus($memberID)
+    {
+        return FriendShip::where(function ($query) use ($memberID) {
+                $query->where('sender_id', Auth::user()->user_id)
+                    ->where('receiver_id', $memberID);
+            })
+            ->orWhere(function ($query) use ($memberID) {
+                $query->where('sender_id', $memberID)
+                    ->where('receiver_id', Auth::user()->user_id);
+            })
+            ->first();
     }
 }

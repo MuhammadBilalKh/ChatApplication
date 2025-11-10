@@ -15,7 +15,6 @@
     <link rel="stylesheet" href="/assets/css/job-listings.css?ver=598383a28ac5f9f156e4" media="all" />
     <link rel="stylesheet" href="/assets/css/brands.css?ver=10.3.0" media="all" />
 
-
     <link rel="stylesheet" href="/assets/css/bootstrap.min.css" media="all" />
     <link rel="stylesheet" href="/assets/css/dashicons.min.css?ver=6.8.3" media="all" />
     <link rel="stylesheet" href="/assets/css/ionicons.min.css" media="all" />

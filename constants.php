@@ -23,3 +23,13 @@ defined("POST_VISIBILITY_PUBLIC") || define("POST_VISIBILITY_PUBLIC","public");
 
 defined("MEDIA_TYPE_IMAGE") || define("MEDIA_TYPE_IMAGE", "image");
 defined("MEDIA_TYPE_VIDEO") || define("MEDIA_TYPE_VIDEO", "video");
+
+defined("POSTING_TYPE_POST") || define("POSTING_TYPE_POST", 1);
+defined("POSTING_TYPE_ADVERT") || define("POSTING_TYPE_ADVERT", 2);
+defined("POSTING_TYPE_JOB_LISTING") || define("POSTING_TYPE_JOB_LISTING", 3);
+
+defined("JOB_TYPE_FREELANCE") || define("JOB_TYPE_FREELANCE", 1);
+defined("JOB_TYPE_FULL_TIME") || define("JOB_TYPE_FULL_TIME", 2);
+defined("JOB_TYPE_INTERNSHIP") || define("JOB_TYPE_INTERNSHIP", 3);
+defined("JOB_TYPE_PART_TIME") || define("JOB_TYPE_PART_TIME", 4);
+defined("JOB_TYPE_TEMPORARY") || define("JOB_TYPE_TEMPORARY", 5);

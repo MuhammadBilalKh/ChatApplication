@@ -33,6 +33,14 @@ Route::middleware(['web'])->group(function () {
             Route::post("/cancel_friend_request", [SiteController::class, 'cancel_friend_request'])->name('peoples.cancel_friend_request');
         });
 
+        Route::prefix("jobs")->group(function(){
+            Route::get("/", [SiteController::class, 'jobs_listing'])->name('posts.jobs_listing');
+            Route::get("/submit-job-request", [SiteController::class, 'submit_job'])->name('posts.submit_job');
+            Route::get("/view-job-posting", [SiteController::class, 'view_job_posting'])->name('posts.view_job_posting');
+
+            Route::post("/post-job-request", [SiteController::class, 'submit_job'])->name('posts.create_job');
+        });
+
         Route::post("/dashboard-data", [UserController::class, 'getUserStatsData'])->name('users.show_stats');
 
         Route::get("/logout", [UserController::class, 'logout'])->name('users.logout');

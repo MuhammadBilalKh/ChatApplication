@@ -15,7 +15,7 @@ return new class extends Migration
             $table->bigInteger("post_id")->autoIncrement();
             $table->string("media")->nullable();
             $table->enum('media_type', ['image', 'video', 'text', 'link'])->default('text');
-            $table->text("description")->nullable();
+            $table->mediumText("description")->nullable();
             $table->unsignedBigInteger("user_id");
             $table->enum('visibility', ['public', 'friends', 'private'])->default('public');
             $table->boolean('is_shared')->default(false);

@@ -23,6 +23,7 @@ class PostController extends Controller
             'user_id' => Auth::user()->user_id,
             'title' => $request->post_title,
             'visibility' => POST_VISIBILITY_PUBLIC,
+            'post_type' => POSTING_TYPE_POST,
         ]);
 
         if ($request->hasFile('media')) {
@@ -80,6 +81,7 @@ class PostController extends Controller
 
         $posts = Post::with(['postUploadedBy', 'postMedia'])
             ->whereIn('user_id', $userIds)
+            ->where("post_type", POSTING_TYPE_POST)
             ->orWhere('new_joining_post', NEW_JOINING_USER_POST)
             ->orderByDesc('created_at')
             ->paginate($limit);
