@@ -328,12 +328,13 @@ namespace App\Models {
     /**
      * App\Models\JobPosting
      *
+     * @property mixed $views_count
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
      * @property string $job_notes
      * @property mixed $publishing_status
      * @property string|null $company_logo
-     * @property string $twitter_username
+     * @property string|null $twitter_username
      * @property string|null $video
      * @property string|null $tagline
      * @property string|null $company_url
@@ -344,7 +345,7 @@ namespace App\Models {
      * @property mixed $is_remotely_available
      * @property mixed $salary
      * @property mixed $job_type
-     * @property string $location
+     * @property string|null $location
      * @property int $job_posting_id
      * @property-read mixed $title
      * @property-read \App\Models\User $getPostedBy
@@ -366,6 +367,7 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<JobPosting>|JobPosting whereJobNotes($value)
      * @method static \Illuminate\Database\Eloquent\Builder<JobPosting>|JobPosting whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<JobPosting>|JobPosting whereUpdatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<JobPosting>|JobPosting whereViewsCount($value)
      * @method static \Illuminate\Database\Eloquent\Builder<JobPosting>|JobPosting newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<JobPosting>|JobPosting newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<JobPosting>|JobPosting query()

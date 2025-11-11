@@ -27,7 +27,6 @@
 
                         <ul class="job-listing-meta meta">
 
-
                             <li class="single-job-type">
                                 <div class="item-name">
                                     <span class="item-icon"><i class="uil-briefcase-alt"></i></span>
@@ -36,7 +35,30 @@
                                     </span>
                                 </div>
                                 <div class="item-desc">
-                                    <span>Full Time</span>
+                                    <span>
+                                        @php
+                                            switch ($data->job_type) {
+                                                case JOB_TYPE_FREELANCE:
+                                                    return "Freelance";
+                                                    break;
+                                                case JOB_TYPE_FULL_TIME:
+                                                    return "Full Time";
+                                                    break;
+                                                case JOB_TYPE_INTERNSHIP:
+                                                    return "Internship";
+                                                    break;
+                                                case JOB_TYPE_PART_TIME:
+                                                    return "Part Time";
+                                                    break;
+                                                case JOB_TYPE_TEMPORARY:
+                                                    return "Temporary";
+                                                    break;
+                                                default:
+                                                    return ""
+                                                    break;
+                                            }
+                                        @endphp
+                                    </span>
                                 </div>
                             </li>
 
@@ -49,7 +71,7 @@
                                 </div>
                                 <div class="item-desc">
                                     <a class="google_map_link"
-                                        href="https://maps.google.com/maps?q=testing%20%28Remote%29&amp;zoom=14&amp;size=512x512&amp;maptype=roadmap&amp;sensor=false"
+                                        href="{{ urlencode($data->location) }}"
                                         target="_blank">testing (Remote)</a>
                                 </div>
                             </li>
@@ -64,8 +86,8 @@
                                     alt="test company">
                             </div>
                             <div class="info">
-                                <h1 class="job_title h2">test</h1> <span class="color-primary">test company</span>
-                                <p class="tagline">this is the test taggline</p>
+                                <h1 class="job_title h2">{{ $data->title }}</h1> <span class="color-primary">{{ $data->company_name }}</span>
+                                <p class="tagline">{{ $data->tagline }}</p>
                             </div>
                             <div class="contacts">
                             </div>
@@ -73,18 +95,18 @@
 
 
                         <div class="job_description">
-                            <p>akjsdfhlakjdgshfadgshf</p>
+                            <p>{{ $data->description }}</p>
                         </div>
 
 
                     </div>
 
-                    <input type="hidden" name="job_id" value="806">
+                    {{-- <input type="hidden" name="job_id" value="806">
                     <input type="hidden" name="step" value="1">
-                    <input type="hidden" name="job_manager_form" value="submit-job">
+                    <input type="hidden" name="job_manager_form" value="submit-job"> --}}
                 </div>
             </form>
 
-        </div><!-- .entry-contents -->
+        </div>
     </article>
 @endsection

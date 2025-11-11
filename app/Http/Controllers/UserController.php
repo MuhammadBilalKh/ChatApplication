@@ -13,6 +13,10 @@ class UserController extends Controller
 {
     public function login(Request $request)
     {
+        if(Auth::user()){
+            return redirect()->route('users.show_dashboard');
+        }
+        
         return view('auth.login');
     }
 

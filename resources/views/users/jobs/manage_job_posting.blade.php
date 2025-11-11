@@ -31,86 +31,9 @@
 
 
     <article id="post-505" class="post-505 page type-page status-publish hentry kmk-post">
-
         <div class="entry-content clearfix">
-
             <div id="job-manager-job-dashboard">
-                <form action="{{ route('posts.jobs_listing') }}" class="job_filters kmk-filters">
 
-                    <div class="search_jobs">
-
-                        <div class="search_keywords">
-                            <label for="search_keywords">Keywords</label>
-                            <input type="text" name="search_keywords" id="search_keywords" placeholder="Keywords"
-                                value="{{ request()->search_keywords }}">
-                        </div>
-
-                        <div class="search_location">
-                            <label for="search_location">Location</label>
-                            <input type="text" name="search_location" id="search_location" placeholder="Location"
-                                value="{{ request()->search_location }}">
-                        </div>
-
-                        <div class="search_submit">
-                            <input type="submit" value="">
-                        </div>
-
-                    </div>
-
-                    <button class="button-filter" type="button" data-toggle="collapse" data-target="#job_filters_collapse"
-                        aria-expanded="false" aria-controls="job_filters_collapse">
-                        <i class=" uil-sliders-v"></i>
-                        Filter</button>
-                    <div class="collapse" id="job_filters_collapse">
-                        <ul class="job_types">
-                            <li>
-                                <label for="job_type_freelance" class="freelance">
-                                    <input type="checkbox" name="filter_job_type[]" value="{{ JOB_TYPE_FREELANCE }}"
-                                        {{ in_array(JOB_TYPE_FREELANCE, request('filter_job_type', [])) ? 'checked' : '' }}>
-                                    Freelance
-                                </label>
-                            </li>
-
-                            <li>
-                                <label for="job_type_full-time" class="full-time">
-                                    <input type="checkbox" name="filter_job_type[]" value="{{ JOB_TYPE_FULL_TIME }}"
-                                        {{ in_array(JOB_TYPE_FULL_TIME, request('filter_job_type', [])) ? 'checked' : '' }}>
-                                    Full Time
-                                </label>
-                            </li>
-
-                            <li>
-                                <label for="job_type_internship" class="internship">
-                                    <input type="checkbox" name="filter_job_type[]" value="{{ JOB_TYPE_INTERNSHIP }}"
-                                        {{ in_array(JOB_TYPE_INTERNSHIP, request('filter_job_type', [])) ? 'checked' : '' }}>
-                                    Internship
-                                </label>
-                            </li>
-
-                            <li>
-                                <label for="job_type_part-time" class="part-time">
-                                    <input type="checkbox" name="filter_job_type[]" value="{{ JOB_TYPE_PART_TIME }}"
-                                        {{ in_array(JOB_TYPE_PART_TIME, request('filter_job_type', [])) ? 'checked' : '' }}>
-                                    Part Time
-                                </label>
-                            </li>
-
-                            <li>
-                                <label for="job_type_temporary" class="temporary">
-                                    <input type="checkbox" name="filter_job_type[]" value="{{ JOB_TYPE_TEMPORARY }}"
-                                        {{ in_array(JOB_TYPE_TEMPORARY, request('filter_job_type', [])) ? 'checked' : '' }}>
-                                    Temporary
-                                </label>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="showing_jobs" style="display: block;">
-                        <span>&nbsp;</span><a
-                            href="https://www.clientbetalink.xyz/MIGVELv1?feed=job_feed&amp;job_types=freelance%2Cfull-time%2Cinternship%2Cpart-time%2Ctemporary&amp;search_location&amp;job_categories&amp;search_keywords"
-                            class="rss_link">RSS</a>
-                    </div>
-                </form>
                 <ul class="job_listings">
 
                     @forelse ($list as $key => $value)
@@ -188,7 +111,6 @@
                     </div>
                 </dialog>
             </div>
-            {{ $list->links() }}
         </article>
     @endsection
 

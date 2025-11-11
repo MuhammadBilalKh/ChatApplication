@@ -36,7 +36,8 @@ Route::middleware(['web'])->group(function () {
         Route::prefix("jobs")->group(function(){
             Route::get("/", [SiteController::class, 'jobs_listing'])->name('posts.jobs_listing');
             Route::get("/submit-job-request", [SiteController::class, 'submit_job'])->name('posts.submit_job');
-            Route::get("/view-job-posting", [SiteController::class, 'view_job_posting'])->name('posts.view_job_posting');
+            Route::get("/view-job-posting/{jobID}", [SiteController::class, 'view_job_posting'])->name('posts.view_job_posting');
+            Route::get("/manage", [SiteController::class, 'manage_job_posting'])->name('posts.manage_job_posting');
 
             Route::post("/post-job-request", [SiteController::class, 'submit_job'])->name('posts.create_job');
         });
@@ -47,6 +48,6 @@ Route::middleware(['web'])->group(function () {
     });
 });
 
-Route::fallback(function () {
-    return '404 Not Found';
+Route::fallback(function(){
+    return view('not_found');
 });

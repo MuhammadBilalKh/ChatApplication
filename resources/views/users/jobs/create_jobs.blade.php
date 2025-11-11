@@ -21,7 +21,7 @@
             </li>
             <li id="menu-item-123"
                 class="menu-item menu-item-type-post_type menu-item-object-page page_item page-item-505 menu-item-123">
-                <a href="https://www.clientbetalink.xyz/MIGVELv1/job-dashboard/" aria-current="page">Manage</a>
+                <a href="{{ route('posts.manage_job_posting') }}" aria-current="page">Manage</a>
             </li>
             <li id="menu-item-124"
                 class="menu-item menu-item-type-post_type menu-item-object-page @if (Route::currentRouteName() == 'posts.submit_job') current_page_item @endif menu-item-124">
@@ -94,6 +94,15 @@
                 @enderror
             </div>
         </fieldset>
+        <fieldset class="fieldset-job_type fieldset-type-term-select">
+            <label for="salary">salary</label>
+            <div class="field required-field">
+                <input type="number" value="{{ old('salary') }}" placeholder="Enter Salary" />
+                @error('salary')
+                    <span class="text-danger">{{ $message }}</span>
+                @enderror
+            </div>
+        </fieldset>
         <fieldset class="fieldset-job_description fieldset-type-wp-editor">
             <label for="job_description">Description</label>
             <div class="field required-field">
@@ -155,7 +164,7 @@
                 <small>(optional)</small></label>
             <div class="field ">
                 <input type="text" class="input-text" name="company_twitter" id="company_twitter"
-                    placeholder="@yourcompany" value="" maxlength="">
+                    placeholder="@yourcompany" value="{{ old('company_twitter') }}" maxlength="">
             </div>
         </fieldset>
         <fieldset class="fieldset-company_logo fieldset-type-file">
@@ -170,8 +179,6 @@
                     Maximum file size: 2 GB. </small>
             </div>
         </fieldset>
-
-
 
         <div class="submit">
             <input type="submit" name="submit_job" class="button" value="Preview" />

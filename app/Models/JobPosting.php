@@ -26,6 +26,7 @@ class JobPosting extends Model
         "company_logo",
         "publishing_status",
         "job_notes",
+        "views_count",
     ];
 
     public function getPostedBy(){
