@@ -76,10 +76,11 @@
                             </div><!-- .col-main -->
 
                             @include('layout.master.right_panel')
-                            @include('layout.master.chat_windows')
-                            @include('layout.master.chatbar')
+
                         </div><!-- .row -->
+
                     </div><!-- .container -->
+
                 </div><!-- .layout -->
             </div><!-- #primary -->
         </div>
@@ -146,15 +147,6 @@
 
             jQuery("#totalFriendsCount").html(resp.totalFriends);
         }
-    });
-</script>
-
-<script>
-    const chatBuddies = document.getElementById('buddy-chat-buddies');
-    const collapserButton = document.getElementById('buddy-chat-buddies__collapser');
-
-    collapserButton.addEventListener('click', function() {
-        chatBuddies.classList.toggle('collapsed');
     });
 </script>
 

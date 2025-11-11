@@ -113,5 +113,66 @@
                 </div>
             @endif
         </div>
+        <div class="activity-comments">
+            <ul>
+                @foreach ($post->comments as $key => $value)
+                    <li id="acomment-{{ $value->comment_id }}" class="comment-item"
+                        data-bp-activity-comment-id="{{ $value->comment_id }}">
+                        <div class="acomment-avatar item-avatar">
+                            <a href="https://www.clientbetalink.xyz/MIGVELv1/members-2/sandlas/">
+                                <img loading="lazy" src="{{ asset(Auth::user()->profile_picture) }}"
+                                    class="avatar user-2-avatar avatar-50 photo" width="50" height="50"
+                                    alt="Profile picture of {{ Auth::user()->username }}"> </a>
+                        </div>
+
+                        <div class="acomment-meta">
+
+                            <a
+                                href="https://www.clientbetalink.xyz/MIGVELv1/members-2/sandlas/">{{ $value->commentPostedBy->username }}</a>
+                            replied <a href="https://www.clientbetalink.xyz/MIGVELv1/activity-2/p/30/#acomment-51"
+                                class="activity-time-since"><time class="time-since" datetime="2025-11-05 17:05:59"
+                                    data-bp-timestamp="1762362359">{{ $value->created_at->diffForHumans() }}</time></a>
+                        </div>
+
+                        <div class="acomment-content">
+                            <p>{{ $value->comment_text }}</p>
+                        </div>
+
+                        <div class=" activity-meta action">
+                            <div class="generic-button"><a class="acomment-reply bp-primary-action"
+                                    id="acomment-reply-30-from-{{ $value->comment_id }}" href="#acomment-51">Reply</a>
+                            </div>
+                            @if ($value->commentPostedBy->user_id == Auth::user()->user_id)
+                                <div class="generic-button"><a
+                                        class="delete acomment-delete confirm bp-secondary-action" rel="nofollow"
+                                        href="https://www.clientbetalink.xyz/MIGVELv1/activity-2/delete/51/?cid=51&amp;_wpnonce=386f661e3c">Delete</a>
+                            @endif
+                        </div>
+        </div>
     </li>
+@endforeach
+</ul>
+<form action="{{ route('comments.store', ['post' => $post->post_id]) }}" method="post"
+    id="ac-form-{{ $post->post_id }}" class="ac-form root" style="display: block;">
+    @csrf
+    <div class="ac-reply-avatar">
+        <img loading="lazy" src="{{ asset(Auth::user()->profile_picture ?? 'assets/images/default.png') }}"
+            class="avatar user-{{ Auth::user()->user_id }}-avatar avatar-50 photo" width="50" height="50"
+            alt="Profile picture of {{ Auth::user()->name }}">
+    </div>
+    <div class="ac-reply-content">
+        <div class="ac-textarea">
+            <label for="ac-input-{{ $post->post_id }}" class="bp-screen-reader-text">
+                Comment
+            </label>
+            <textarea id="ac-input-{{ $post->post_id }}" class="ac-input bp-suggestions" name="comment" spellcheck="false"
+                aria-label="To enrich screen reader interactions, please activate Accessibility in Grammarly extension settings"></textarea>
+        </div>
+        <input type="hidden" name="comment_form_id" value="{{ $post->post_id }}">
+        <input type="submit" name="ac_form_submit" value="Post">
+        <button type="button" class="ac-reply-cancel" onclick="this.closest('form').reset()">Cancel</button>
+    </div>
+</form>
+</div>
+</li>
 @endforeach
