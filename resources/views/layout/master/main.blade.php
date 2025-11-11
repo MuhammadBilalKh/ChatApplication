@@ -85,6 +85,7 @@
 
 </body>
 
+  <script src="https://js.pusher.com/8.4.0/pusher.min.js"></script>
 <script src="/assets/js/jquery.min.js"></script>
 <script src="/assets/js/popper.min.js"></script>
 <script src="/assets/js/bootstrap.min.js"></script>

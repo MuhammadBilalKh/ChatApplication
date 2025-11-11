@@ -174,10 +174,7 @@
 
 
         <div class="submit">
-            <input type="hidden" name="job_manager_form" value="submit-job">
-            <input type="hidden" name="job_id" value="0">
-            <input type="hidden" name="step" value="0">
-            <input type="submit" name="submit_job" class="button" value="Preview">
+            <input type="submit" name="submit_job" class="button" value="Preview" />
             <input type="submit" name="save_draft" class="button button-outline save_draft" value="Save Draft"
                 formnovalidate=""> <span class="spinner"
                 style="background-image: url('https://www.clientbetalink.xyz/MIGVELv1/wp-includes/images/spinner.gif');"></span>

@@ -33,3 +33,6 @@ defined("JOB_TYPE_FULL_TIME") || define("JOB_TYPE_FULL_TIME", 2);
 defined("JOB_TYPE_INTERNSHIP") || define("JOB_TYPE_INTERNSHIP", 3);
 defined("JOB_TYPE_PART_TIME") || define("JOB_TYPE_PART_TIME", 4);
 defined("JOB_TYPE_TEMPORARY") || define("JOB_TYPE_TEMPORARY", 5);
+
+defined("JOB_SUBMITTION_DRAFT") || define("JOB_SUBMITTION_DRAFT", 1);
+defined("JOB_SUBMITTION_POSTING") || define("JOB_SUBMITTION_POSTING", 2);

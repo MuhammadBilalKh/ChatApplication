@@ -62,7 +62,34 @@ class SiteController extends Controller
     public function submit_job(Request $request){
 
         if($request->isMethod(FORM_METHOD_POST)){
-            dd($request);
+            $request->validate([
+                'job_title' => "required",
+                'job_type' => 'required|integer|in:1,2,3,4,5',
+                "description" => "required",
+                "application_email" => "required",
+            ]);
+
+            $postingType = $request->submit_job;
+
+            if ($request->hasFile('company_logo')) {
+                $path = $request->file('company_logo')->store('company_logos', 'public');
+            } else {
+                $path = null;
+            }
+
+            $jobPosting = JobPosting::create([
+                'submittion_type' => JOB_SUBMITTION_DRAFT,
+                'title' => $request->job_title,
+                'job_type' => $request->job_type,
+                'description' => $request->description,
+                'application_email' => $request->application_email,
+                'company_name' => $request->company_name,
+                'company_url' => $request->company_website,
+                'tagline' => $request->company_tagline,
+                'video' => $request->company_video,
+                'twitter_username' => $request->company_twitter,
+                'company_logo' => $path,
+            ]);
         }
 
         return view('users.jobs.create_jobs');
