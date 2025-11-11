@@ -16,7 +16,7 @@ class UserController extends Controller
         if(Auth::user()){
             return redirect()->route('users.show_dashboard');
         }
-        
+
         return view('auth.login');
     }
 
@@ -53,6 +53,7 @@ class UserController extends Controller
             'name'             => $request->field_1,
             'username'         => $request->signup_username,
             'profile_picture'  => $profilePicturePath,
+            'user_type'        => USER_TYPE_USER,
         ]);
 
         if ($newUser) {

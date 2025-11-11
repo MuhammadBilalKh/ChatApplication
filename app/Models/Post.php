@@ -43,4 +43,16 @@ class Post extends Model
             'new_joining_post' => NEW_JOINING_USER_POST,
         ]);
     }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class, 'post_id', 'post_id')
+            ->whereNull('parent_comment_id')
+            ->with('replies');
+    }
+
+    public function likes()
+    {
+        return $this->hasMany(PostLike::class, 'post_id', 'post_id');
+    }
 }

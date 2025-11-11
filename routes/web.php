@@ -22,6 +22,14 @@ Route::middleware(['web'])->group(function () {
             Route::get("/photos", [PostController::class, 'show_photos'])->name("posts.show_photos");
             Route::get("/videos", [PostController::class, 'show_videos'])->name('posts.show_videos');
 
+            Route::post('/like/{post}', [PostController::class, 'like_post'])->name('posts.like');
+            Route::post('/unlike/{post}', [PostController::class, 'unlike_post'])->name('posts.unlike');
+
+            Route::post("/add-comment", [PostController::class, 'add_comment'])->name('comments.store');
+            Route::post("/add-reply", [PostController::class, 'add_reply'])->name('comments.reply');
+            Route::post('/edit-comment', [PostController::class, 'update_comment'])->name('comments.update');
+            Route::post("/delete-comment", [PostController::class, 'delete_comment'])->name('comments.destroy');
+
             Route::post("/store", [PostController::class, 'upload_post'])->name('posts.store');
         });
 

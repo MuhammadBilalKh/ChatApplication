@@ -40,3 +40,6 @@ defined("JOB_SUBMITTION_POSTING") || define("JOB_SUBMITTION_POSTING", 2);
 defined("PUBLISHING_STATUS_DRAFT") || define("PUBLISHING_STATUS_DRAFT", 1);
 defined("PUBLISHING_STATUS_PUBLIC") || define("PUBLISHING_STATUS_PUBLIC", 2);
 
+defined("USER_TYPE_ADMIN") || define("USER_TYPE_ADMIN", "admin");
+defined("USER_TYPE_USER") || define("USER_TYPE_USER", "user");
+

@@ -76,6 +76,8 @@
                             </div><!-- .col-main -->
 
                             @include('layout.master.right_panel')
+                            @include('layout.master.chat_windows')
+                            @include('layout.master.chatbar')
                         </div><!-- .row -->
                     </div><!-- .container -->
                 </div><!-- .layout -->
@@ -85,7 +87,7 @@
 
 </body>
 
-  <script src="https://js.pusher.com/8.4.0/pusher.min.js"></script>
+<script src="https://js.pusher.com/8.4.0/pusher.min.js"></script>
 <script src="/assets/js/jquery.min.js"></script>
 <script src="/assets/js/popper.min.js"></script>
 <script src="/assets/js/bootstrap.min.js"></script>
@@ -96,7 +98,7 @@
 <script src="/assets/js/masonry.min.js"></script>
 <script src="/assets/js/jquery.fitvids.min.js"></script>
 
-{{-- <script type="text/javascript"
+<script type="text/javascript"
     src="https://www.clientbetalink.xyz/MIGVELv1/wp-content/plugins/buddypress-media/lib/media-element/mediaelement-and-player.min.js?ver=4.7.3">
 </script>
 <script type="text/javascript"
@@ -104,13 +106,14 @@
 </script>
 <script type="text/javascript"
     src="https://www.clientbetalink.xyz/MIGVELv1/wp-content/plugins/buddypress-media/app/assets/js/vendors/emoji-picker.js?ver=4.7.3">
-</script> --}}
+</script>
 
 <script src="/assets/js/kmk.min.js"></script>
+
 @stack('script')
 
-<!-- Inline JS -->
 <script>
+
     const lazyloadRunObserver = () => {
         const lazyloadBackgrounds = document.querySelectorAll('.e-con.e-parent:not(.e-lazyloaded)');
         const observer = new IntersectionObserver(entries => {
@@ -143,6 +146,15 @@
 
             jQuery("#totalFriendsCount").html(resp.totalFriends);
         }
+    });
+</script>
+
+<script>
+    const chatBuddies = document.getElementById('buddy-chat-buddies');
+    const collapserButton = document.getElementById('buddy-chat-buddies__collapser');
+
+    collapserButton.addEventListener('click', function() {
+        chatBuddies.classList.toggle('collapsed');
     });
 </script>
 

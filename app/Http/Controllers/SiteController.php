@@ -63,7 +63,7 @@ class SiteController extends Controller
 
         if (!empty($request->filter_job_type) && is_array($request->filter_job_type)) {
             $validJobTypes = array_filter($request->filter_job_type);
-        
+
             if (!empty($validJobTypes)) {
                 $jobPostingQuery->where(function ($query) use ($validJobTypes) {
                     foreach ($validJobTypes as $type) {
