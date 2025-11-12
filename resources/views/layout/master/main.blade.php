@@ -101,7 +101,7 @@
 <script src="/assets/js/masonry.min.js"></script>
 <script src="/assets/js/jquery.fitvids.min.js"></script>
 
-<script type="text/javascript"
+{{-- <script type="text/javascript"
     src="https://www.clientbetalink.xyz/MIGVELv1/wp-content/plugins/buddypress-media/lib/media-element/mediaelement-and-player.min.js?ver=4.7.3">
 </script>
 <script type="text/javascript"
@@ -109,7 +109,7 @@
 </script>
 <script type="text/javascript"
     src="https://www.clientbetalink.xyz/MIGVELv1/wp-content/plugins/buddypress-media/app/assets/js/vendors/emoji-picker.js?ver=4.7.3">
-</script>
+</script> --}}
 
 <script src="/assets/js/kmk.min.js"></script>
 

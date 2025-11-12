@@ -55,4 +55,8 @@ class Post extends Model
     {
         return $this->hasMany(PostLike::class, 'post_id', 'post_id');
     }
+
+    public function getLikedBy(){
+        return $this->hasMany(PostLike::class, 'post_id', "post_id");
+    }
 }

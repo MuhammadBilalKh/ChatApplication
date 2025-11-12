@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\PostLike;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -74,5 +75,9 @@ class User extends Authenticatable
                     ->where('receiver_id', Auth::user()->user_id);
             })
             ->first();
+    }
+
+    public function getLikedPosts(){
+        return $this->hasMany(User::class, 'user_id', "user_id");
     }
 }

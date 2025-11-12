@@ -51,7 +51,7 @@
         }
     </style>
 @endpush
-<li class="comment-item comment-container" id="comment-{{ $comment->comment_id }}"
+{{-- <li class="comment-item comment-container" id="comment-{{ $comment->comment_id }}"
     data-comment-id="{{ $comment->comment_id }}" style="margin-left: {{ $depth * 30 }}px;">
 
     <div class="acomment-avatar item-avatar">
@@ -125,9 +125,9 @@
             @endforeach
         </ul>
     @endif
-</li>
+</li> --}}
 
-{{-- <li class="comment-item comment-container" id="comment-{{ $comment->comment_id }}"
+<li class="comment-item comment-container" id="comment-{{ $comment->comment_id }}"
     data-comment-id="{{ $comment->comment_id }}" style="margin-left: {{ ($depth ?? 0) * 30 }}px;">
 
     <div class="acomment-avatar item-avatar">
@@ -197,5 +197,4 @@
         @endif
     </div>
 
-    <!-- Reply form would go here for nested replies -->
-</li> --}}
+</li>

@@ -76,12 +76,13 @@ class PostController extends Controller
             ->toArray();
 
         $userIds = array_merge([$authId], $userFriends);
+        $userIds = array_unique($userIds);
 
-        $limit = 10;
+        $limit = 5;
         $page = $request->input('page', 1);
 
-        // Load posts with comments and replies recursively
         $posts = Post::with([
+            'getLikedBy',
             'postUploadedBy',
             'postMedia',
             'comments' => function ($query) {
@@ -234,7 +235,6 @@ class PostController extends Controller
             ], 404);
         }
 
-        // Ensure the user is allowed to delete this comment
         if ($comment->commented_by !== Auth::user()->user_id) {
             return response()->json([
                 'status' => 'error',
@@ -242,7 +242,6 @@ class PostController extends Controller
             ], 403);
         }
 
-        // Recursively delete replies
         $deleteReplies = function ($comment) use (&$deleteReplies) {
             foreach ($comment->replies as $reply) {
                 $reply->load('replies');
@@ -254,12 +253,10 @@ class PostController extends Controller
         $comment->load('replies');
         $deleteReplies($comment);
 
-        // Get the post for updating comment count
         $post = $comment->post;
 
         $comment->delete();
 
-        // Decrement comments_count for the post (handling minimum zero)
         if ($post) {
             $postCommentsCount = max(0, $post->comments_count - 1 - $comment->replies()->count());
             $post->update(['comments_count' => $postCommentsCount]);
@@ -306,5 +303,69 @@ class PostController extends Controller
         }
 
         return back()->with('success', 'Comment updated successfully.');
+    }
+
+    public function like(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $request->validate([
+            'post_id' => 'required|integer|exists:posts,post_id',
+        ]);
+
+        $post = \App\Models\Post::find($request->post_id);
+
+        if (!$post) {
+            return response()->json(['status' => 'error', 'message' => 'Post not found.'], 404);
+        }
+
+        $alreadyLiked = \App\Models\PostLike::where('post_id', $post->post_id)
+            ->where('user_id', Auth::user()->user_id)
+            ->exists();
+
+        if (!$alreadyLiked) {
+            \App\Models\PostLike::create([
+                'post_id' => $post->post_id,
+                'user_id' => Auth::user()->user_id,
+            ]);
+
+            $post->increment('likes_count');
+        }
+
+        $likeCount = $post->likes()->count();
+
+        return response()->json([
+            'status' => 'success',
+            'count' => $likeCount,
+        ]);
+    }
+
+
+    public function unlike(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $request->validate([
+            'post_id' => 'required|integer|exists:posts,post_id',
+        ]);
+
+        $post = \App\Models\Post::find($request->post_id);
+
+        if (!$post) {
+            return response()->json(['status' => 'error', 'message' => 'Post not found.'], 404);
+        }
+
+        $deleted = \App\Models\PostLike::where('post_id', $post->post_id)
+            ->where('user_id', Auth::user()->user_id)
+            ->delete();
+
+        if ($deleted) {
+            $post->update([
+                'likes_count' => max(0, $post->likes()->count()),
+            ]);
+        }
+
+        $likeCount = $post->likes()->count();
+
+        return response()->json([
+            'status' => 'success',
+            'count' => $likeCount,
+        ]);
     }
 }
