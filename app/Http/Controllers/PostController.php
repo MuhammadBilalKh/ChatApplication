@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Comment;
 use App\Models\FriendShip;
+use App\Models\MarkFavorite;
 use App\Models\Post;
+use App\Models\PostLike;
 use App\Models\PostMedia;
 use getID3;
 use Illuminate\Http\Request;
@@ -76,7 +78,6 @@ class PostController extends Controller
             ->toArray();
 
         $userIds = array_merge([$authId], $userFriends);
-        $userIds = array_unique($userIds);
 
         $limit = 5;
         $page = $request->input('page', 1);
@@ -84,6 +85,7 @@ class PostController extends Controller
         $posts = Post::with([
             'getLikedBy',
             'postUploadedBy',
+            'getMarkedFavorite',
             'postMedia',
             'comments' => function ($query) {
                 $query->whereNull('parent_comment_id')
@@ -280,8 +282,8 @@ class PostController extends Controller
 
         $request->validate([
             'content' => 'required|string|max:1000',
-        ],[
-            'content.required' => "Comment Content is Required",
+        ], [
+            'content.required' => 'Comment Content is Required',
         ]);
 
         $comment->update([
@@ -305,67 +307,92 @@ class PostController extends Controller
         return back()->with('success', 'Comment updated successfully.');
     }
 
-    public function like(Request $request): \Illuminate\Http\JsonResponse
+    public function toggleLike(Request $request)
     {
-        $request->validate([
-            'post_id' => 'required|integer|exists:posts,post_id',
-        ]);
+        $postID = (int) str_replace('post-', '', $request->post_id);
+        $existLike = PostLike::where(['post_id' => $postID, 'user_id' => Auth::user()->user_id])->exists();
 
-        $post = \App\Models\Post::find($request->post_id);
-
-        if (!$post) {
-            return response()->json(['status' => 'error', 'message' => 'Post not found.'], 404);
-        }
-
-        $alreadyLiked = \App\Models\PostLike::where('post_id', $post->post_id)
-            ->where('user_id', Auth::user()->user_id)
-            ->exists();
-
-        if (!$alreadyLiked) {
-            \App\Models\PostLike::create([
-                'post_id' => $post->post_id,
+        if ($existLike) {
+            PostLike::where(['post_id' => $postID, 'user_id' => Auth::user()->user_id])->delete();
+        } else {
+            PostLike::create([
+                'post_id' => $postID,
                 'user_id' => Auth::user()->user_id,
             ]);
-
-            $post->increment('likes_count');
         }
 
-        $likeCount = $post->likes()->count();
-
         return response()->json([
-            'status' => 'success',
-            'count' => $likeCount,
+            'status' => REQUEST_PROCESSED,
+            'likesCount' => PostLike::where(['post_id' => $postID])->count(),
         ]);
     }
 
-
-    public function unlike(Request $request): \Illuminate\Http\JsonResponse
+    public function toggleMarkFavorite(Request $request)
     {
-        $request->validate([
-            'post_id' => 'required|integer|exists:posts,post_id',
-        ]);
+        $markType = '';
+        $postID = (int) str_replace('post-', '', $request->post_id);
+        $existLike = MarkFavorite::where(['post_id' => $postID, 'user_id' => Auth::user()->user_id])->exists();
 
-        $post = \App\Models\Post::find($request->post_id);
+        if ($existLike) {
+            MarkFavorite::where(['post_id' => $postID, 'user_id' => Auth::user()->user_id])->delete();
 
-        if (!$post) {
-            return response()->json(['status' => 'error', 'message' => 'Post not found.'], 404);
-        }
+            $markType = 'delete';
 
-        $deleted = \App\Models\PostLike::where('post_id', $post->post_id)
-            ->where('user_id', Auth::user()->user_id)
-            ->delete();
+            return response()->json([
+                'status' => REQUEST_PROCESSED,
+                'markType' => $markType,
+            ]);
+        } else {
+            MarkFavorite::create([
+                'post_id' => $postID,
+                'user_id' => Auth::user()->user_id,
+            ]);
 
-        if ($deleted) {
-            $post->update([
-                'likes_count' => max(0, $post->likes()->count()),
+            $markType = 'create';
+
+            return response()->json([
+                'status' => REQUEST_PROCESSED,
+                'markType' => $markType,
             ]);
         }
 
-        $likeCount = $post->likes()->count();
+    }
 
-        return response()->json([
-            'status' => 'success',
-            'count' => $likeCount,
-        ]);
+    public function delete_post(Request $request)
+    {
+        $postID = (int) str_replace('post-', '', $request->post_id);
+        $userID = Auth::user()->user_id;
+
+        if (! Post::where(['user_id' => $userID, 'post_id' => $postID])->exists()) {
+            return response()->json([
+                'status' => REQUEST_GOT_ERROR,
+                'message' => 'You are not Allowed to Delete This Post',
+            ]);
+        } else {
+            Post::where([
+                'user_id' => $userID,
+                'post_id' => $postID,
+            ])->delete();
+
+            PostLike::where([
+                'post_id' => $postID,
+            ])->delete();
+
+            PostMedia::where([
+                'post_id' => $postID,
+            ])->delete();
+
+            MarkFavorite::where([
+                'post_id' => $postID,
+            ])->delete();
+
+            Comment::where([
+                'post_id' => $postID,
+            ])->delete();
+
+            return response()->json([
+                'status' => REQUEST_PROCESSED,
+            ]);
+        }
     }
 }

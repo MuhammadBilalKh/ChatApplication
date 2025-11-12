@@ -5,6 +5,7 @@ namespace App\Models;
 
 use App\Models\User;
 use App\Models\PostMedia;
+use App\Models\MarkFavorite;
 use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
@@ -58,5 +59,9 @@ class Post extends Model
 
     public function getLikedBy(){
         return $this->hasMany(PostLike::class, 'post_id', "post_id");
+    }
+
+    public function getMarkedFavorite(){
+        return $this->hasMany(MarkFavorite::class, "post_id", "post_id");
     }
 }

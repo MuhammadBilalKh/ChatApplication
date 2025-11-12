@@ -1606,6 +1606,16 @@ namespace App\Models {
     /**
      * App\Models\MarkFavorite
      *
+     * @property \Illuminate\Support\Carbon|null $updated_at
+     * @property \Illuminate\Support\Carbon|null $created_at
+     * @property mixed $post_id
+     * @property mixed $user_id
+     * @property int $mark_favorite_post_id
+     * @method static \Illuminate\Database\Eloquent\Builder<MarkFavorite>|MarkFavorite whereMarkFavoritePostId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<MarkFavorite>|MarkFavorite whereUserId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<MarkFavorite>|MarkFavorite wherePostId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<MarkFavorite>|MarkFavorite whereCreatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<MarkFavorite>|MarkFavorite whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<MarkFavorite>|MarkFavorite newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<MarkFavorite>|MarkFavorite newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<MarkFavorite>|MarkFavorite query()
@@ -2252,6 +2262,8 @@ namespace App\Models {
      * @property-read int|null $likes_count
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\PostLike> $getLikedBy
      * @property-read int|null $getLikedBy_count
+     * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\MarkFavorite> $getMarkedFavorite
+     * @property-read int|null $getMarkedFavorite_count
      * @method static \Illuminate\Database\Eloquent\Builder<Post>|Post wherePostId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Post>|Post whereDescription($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Post>|Post whereUserId($value)

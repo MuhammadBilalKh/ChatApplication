@@ -46,22 +46,38 @@
                     <div class="activity-meta action">
                         <div class="generic-button">
                             <a class="button acomment-reply bp-primary-action bp-tooltip show-comments-btn"
-                               data-bp-tooltip="Comment" role="button"
-                               data-comments-count="{{ $topLevelCommentsCount }}"
-                               data-post-id="{{ $post->post_id }}">
+                                data-bp-tooltip="Comment" role="button"
+                                data-comments-count="{{ $topLevelCommentsCount }}" data-post-id="{{ $post->post_id }}">
                                 <span>{{ $topLevelCommentsCount }} Comments</span>
                             </a>
                         </div>
+                        @php
+                            $markedFavorite = $post->getMarkedFavorite->contains('user_id', Auth::user()->user_id);
+                        @endphp
                         <div class="generic-button">
-                            <a href="#" class="button fav bp-secondary-action bp-tooltip"
+                            <a type="button" data-id="post-{{ $post->post_id }}" class="button btnMarkFavorite fav bp-secondary-action {{ $markedFavorite ? 'unlike' : 'like' }} bp-tooltip"
                                 data-bp-tooltip="Mark as Favorite">
-                                <span>Favorite</span>
+                                <span>{{ $markedFavorite ? "Remove Marked" : "Mark as Favorite"  }}</span>
                             </a>
                         </div>
+                        @if (Auth::user()->user_id == $post->postUploadedBy->user_id)
+                            <div class="generic-button">
+                                <a type="button" data-id="post-{{ $post->post_id }}" class="button delPost fav bp-secondary-action bp-tooltip"
+                                    data-bp-tooltip="Delete">
+                                    <span>Delete</span>
+                                </a>
+                            </div>
+                        @endif
+                        @php
+                            $userLiked = $post->getLikedBy->contains('user_id', Auth::user()->user_id);
+                        @endphp
                         <div class="generic-button kmk-like">
-                            <a href="#" class="button bp-primary-action like">
-                                <i class="uil-thumbs-up"></i>
-                                <span class="like-text">{{ $post->likes_count }} Like</span>
+
+                            <a type="button" id="post-{{ $post->post_id }}" data-id="post-{{ $post->post_id }}"
+                                class="button btnLikeUnlike bp-primary-action {{ $userLiked ? 'unlike' : 'like' }}">
+                                <i
+                                    class="{{ $userLiked ? 'uil-thumbs-down' : 'uil-thumbs-up' }} post-{{ $post->post_id }}"></i>
+                                <span class="like-text">{{ count($post->getLikedBy) }} Like</span>
                             </a>
                         </div>
                     </div>
@@ -78,7 +94,7 @@
         <div class="activity-comments post-comments" id="comments-{{ $post->post_id }}" style="display: none;">
             <!-- Comments List -->
             <ul class="comment-list">
-                @foreach($topLevelComments as $comment)
+                @foreach ($topLevelComments as $comment)
                     @include('partials.comment_item', ['comment' => $comment, 'depth' => 0])
                 @endforeach
             </ul>
@@ -91,8 +107,8 @@
 
                 <div class="ac-reply-avatar">
                     <img loading="lazy" src="{{ asset(Auth::user()->profile_picture ?? 'assets/images/default.png') }}"
-                        class="avatar user-{{ Auth::user()->user_id }}-avatar avatar-50 photo" width="50" height="50"
-                        alt="Profile picture of {{ Auth::user()->name }}">
+                        class="avatar user-{{ Auth::user()->user_id }}-avatar avatar-50 photo" width="50"
+                        height="50" alt="Profile picture of {{ Auth::user()->name }}">
                 </div>
 
                 <div class="ac-reply-content">
@@ -101,8 +117,7 @@
                             Comment
                         </label>
                         <input type="text" id="comment-{{ $post->post_id }}" class="ac-input bp-suggestions"
-                                  name="content" placeholder="Write a comment..."
-                                  spellcheck="false" required />
+                            name="content" placeholder="Write a comment..." spellcheck="false" required />
                     </div>
                     <input type="submit" name="ac_form_submit" class="mt-3" value="Post Comment">
                     <button type="button" class="ac-reply-cancel">Cancel</button>

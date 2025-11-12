@@ -68,12 +68,33 @@
             <time class="time-since" datetime="{{ $comment->created_at }}">
                 {{ $comment->created_at->diffForHumans() }}
             </time>
+            @if ($comment->updated_at != $comment->created_at)
+                <span class="edited-text">(edited)</span>
+            @endif
         </span>
     </div>
 
-    <div class="acomment-content">
+    <div class="acomment-content" id="comment-content-{{ $comment->comment_id }}">
         <p>{{ $comment->comment_text }}</p>
     </div>
+
+    <!-- Edit Comment Form (Hidden by default) -->
+    @if ($comment->commentPostedBy->user_id == Auth::user()->user_id)
+        <form action="{{ route('comments.update', $comment->comment_id) }}" method="POST" class="edit-comment-form"
+            id="edit-form-{{ $comment->comment_id }}" style="display: none;">
+            @csrf
+            @method('PUT')
+            <div class="ac-reply-content">
+                <div class="ac-textarea">
+                    <input class="ac-input form-control bp-suggestions edit-comment-text" value="{{ $comment->comment_text }}" name="content" spellcheck="false" required />
+                </div>
+                <div class="edit-actions">
+                    <input type="submit" class="mt-3" value="Update">
+                    <button type="button" class="cancel-edit">Cancel</button>
+                </div>
+            </div>
+        </form>
+    @endif
 
     <div class="activity-meta action">
         <div class="generic-button">
@@ -85,6 +106,13 @@
         </div>
 
         @if ($comment->commentPostedBy->user_id == Auth::user()->user_id)
+            <div class="generic-button">
+                <a class="acomment-edit bp-primary-action edit-comment-btn"
+                   href="#"
+                   data-comment-id="{{ $comment->comment_id }}">
+                    Edit
+                </a>
+            </div>
             <div class="generic-button">
                 <a class="delete acomment-delete confirm bp-secondary-action"
                    href="#"
@@ -126,76 +154,3 @@
         </ul>
     @endif
 </li>
-
-{{-- <li class="comment-item comment-container" id="comment-{{ $comment->comment_id }}"
-    data-comment-id="{{ $comment->comment_id }}" style="margin-left: {{ ($depth ?? 0) * 30 }}px;">
-
-    <div class="acomment-avatar item-avatar">
-        <a href="#">
-            <img loading="lazy"
-                src="{{ asset($comment->commentPostedBy->profile_picture ?? 'assets/images/default.png') }}"
-                class="avatar avatar-50 photo" width="50" height="50"
-                alt="Profile picture of {{ $comment->commentPostedBy->username ?? 'User' }}">
-        </a>
-    </div>
-
-    <div class="acomment-meta">
-        <strong>{{ $comment->commentPostedBy->username ?? 'Unknown User' }}</strong>
-        <span class="activity-time-since">
-            <time class="time-since" datetime="{{ $comment->created_at }}">
-                {{ $comment->created_at->diffForHumans() }}
-            </time>
-            @if ($comment->updated_at != $comment->created_at)
-                <span class="edited-text">(edited)</span>
-            @endif
-        </span>
-    </div>
-
-    <!-- Comment Content Display -->
-    <div class="acomment-content" id="comment-content-{{ $comment->comment_id }}">
-        <p>{{ $comment->comment_text }}</p>
-    </div>
-
-    <!-- Edit Comment Form (Hidden by default) -->
-    <form action="{{ route('comments.update', $comment->comment_id) }}" method="POST" class="edit-comment-form"
-        id="edit-form-{{ $comment->comment_id }}" style="display: none;">
-        @csrf
-        @method('PUT')
-        <div class="ac-reply-content">
-            <div class="ac-textarea">
-                <input class="ac-input form-control bp-suggestions edit-comment-text" value="{{ $comment->comment_text }}" name="content" spellcheck="false" required />
-            </div>
-            <div class="edit-actions">
-                <input type="submit" class="mt-3" value="Update">
-                <button type="button" class="cancel-edit">Cancel</button>
-            </div>
-        </div>
-    </form>
-
-    <div class="activity-meta action">
-        <div class="generic-button">
-            <a class="acomment-reply bp-primary-action show-reply-form-btn" href="#"
-                data-comment-id="{{ $comment->comment_id }}">
-                Reply
-            </a>
-        </div>
-
-        @if (Auth::check() && $comment->commented_by == Auth::user()->user_id)
-            <div class="generic-button">
-                <a class="acomment-edit bp-primary-action edit-comment-btn" href="#"
-                    data-comment-id="{{ $comment->comment_id }}">
-                    Edit
-                </a>
-            </div>
-
-            <div class="generic-button">
-                <a class="delete acomment-delete confirm bp-secondary-action" href="#"
-                    data-comment-id="{{ $comment->comment_id }}">
-                    Delete
-                </a>
-            </div>
-        @endif
-    </div>
-
-    <!-- Reply form would go here for nested replies -->
-</li> --}}

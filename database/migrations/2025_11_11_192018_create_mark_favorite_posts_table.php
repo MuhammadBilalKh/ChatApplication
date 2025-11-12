@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('mark_favorite_posts', function (Blueprint $table) {
-            $table->unsignedBigInteger("mark_favorite_post_id");
+            $table->unsignedBigInteger("mark_favorite_post_id")->autoIncrement();
             $table->unsignedBigInteger("user_id");
             $table->unsignedBigInteger("post_id");
             $table->timestamps();

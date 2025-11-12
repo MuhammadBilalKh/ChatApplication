@@ -587,15 +587,12 @@
                 const $contentDisplay = $commentContainer.find('.acomment-content');
                 const $editForm = $commentContainer.find('.edit-comment-form');
 
-                // Hide content, show edit form
                 $contentDisplay.hide();
                 $editForm.show();
 
-                // Focus on textarea
                 $editForm.find('.edit-comment-text').focus();
             });
 
-            // Cancel edit
             jQuery(document).on('click', '.cancel-edit', function(e) {
                 e.preventDefault();
 
@@ -603,12 +600,107 @@
                 const $commentContainer = $editForm.closest('.comment-container');
                 const $contentDisplay = $commentContainer.find('.acomment-content');
 
-                // Show content, hide edit form
                 $contentDisplay.show();
                 $editForm.hide();
             });
 
-            // Submit edit form
+            jQuery(document).on("click", ".delPost", function(e) {
+                e.preventDefault();
+
+                const $delBtn = jQuery(this);
+                const postID = $delBtn.data("id").replace("post-", "");
+
+                if (window.confirm('Are you sure you want to delete this post?')) {
+                    jQuery.ajax({
+                        url: "{{ route('posts.delete') }}",
+                        type: "{{ FORM_METHOD_POST }}",
+                        data: {
+                            post_id: postID,
+                            _token: "{{ csrf_token() }}",
+                        },
+                        success: function(resp) {
+                            if (resp.status == {{ REQUEST_PROCESSED }}) {
+                                $delBtn.closest("li").remove();
+
+                                showTempMessage("Post Deleted Successfully", "success");
+                            } else {
+                                showTempMessage(resp.message, 'danger');
+                            }
+                        }
+                    });
+                }
+            });
+
+            jQuery(document).on("click", ".btnMarkFavorite", function(e) {
+                e.preventDefault();
+
+                const $likeBtn = jQuery(this);
+                const postID = $likeBtn.data("id");
+
+                jQuery.ajax({
+                    url: "{{ route('posts.toggle_mark_favorite') }}",
+                    type: "{{ FORM_METHOD_POST }}",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        post_id: postID,
+                    },
+                    success: function(resp) {
+                        if (resp.status === {{ REQUEST_PROCESSED }}) {
+                            if (resp.markType === "create") {
+                                $likeBtn.removeClass("like").addClass("unlike");
+                                $likeBtn.find("span").text("Remove Marked");
+                            } else if (resp.markType === "delete") {
+                                $likeBtn.removeClass("unlike").addClass("like");
+                                $likeBtn.find("span").text("Mark as Favorite");
+                            }
+                        }
+                    },
+                    error: function() {
+                        alert('Error while processing like/unlike. Please try again.');
+                    }
+                });
+            });
+
+            jQuery(document).on("click", ".btnLikeUnlike", function(e) {
+                e.preventDefault();
+
+                const $likeBtn = jQuery(this);
+                const postID = $likeBtn.attr("id").replace("post-", "");
+
+                jQuery.ajax({
+                    url: "{{ route('posts.toggle_like') }}",
+                    type: "{{ FORM_METHOD_POST }}",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        post_id: postID,
+                    },
+                    success: function(resp) {
+                        if (resp.status === {{ REQUEST_PROCESSED }}) {
+                            if (typeof resp.likesCount !== 'undefined') {
+                                $likeBtn.find('.like-text').text(
+                                    resp.likesCount + (resp.likesCount === 1 ? ' Like' :
+                                        ' Likes')
+                                );
+
+                                const $icon = $likeBtn.find('i');
+                                if ($likeBtn.hasClass('like')) {
+                                    $likeBtn.removeClass('like').addClass('unlike');
+                                    $icon.removeClass('uil-thumbs-up').addClass(
+                                        'uil-thumbs-down');
+                                } else {
+                                    $likeBtn.removeClass('unlike').addClass('like');
+                                    $icon.removeClass('uil-thumbs-down').addClass(
+                                        'uil-thumbs-up');
+                                }
+                            }
+                        }
+                    },
+                    error: function() {
+                        alert('Error while processing like/unlike. Please try again.');
+                    }
+                });
+            });
+
             jQuery(document).on('submit', '.edit-comment-form', function(e) {
                 e.preventDefault();
 
@@ -651,11 +743,9 @@
                                 }
                             }
 
-                            // Show content, hide edit form
                             $contentDisplay.show();
                             $editForm.hide();
 
-                            // Show success message
                             showTempMessage('Comment updated successfully', 'success');
                         }
                     },
@@ -675,7 +765,6 @@
                 });
             });
 
-            // Helper function to show temporary messages
             function showTempMessage(message, type = 'success') {
                 const $message = jQuery('<div class="temp-message alert alert-' + type + '">' + message + '</div>');
                 jQuery('body').append($message);
@@ -686,14 +775,14 @@
                     'right': '20px',
                     'z-index': '9999',
                     'padding': '10px 20px',
-                    'border-radius': '5px'
+                    'border-radius': '9px'
                 });
 
                 setTimeout(function() {
                     $message.fadeOut(300, function() {
                         jQuery(this).remove();
                     });
-                }, 3000);
+                }, 3500);
             }
         });
     </script>
