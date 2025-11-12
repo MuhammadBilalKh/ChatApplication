@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comment;
 use App\Models\FriendShip;
 use App\Models\Post;
 use App\Models\PostMedia;
@@ -137,78 +138,6 @@ class PostController extends Controller
         return response()->json(['html' => $html]);
     }
 
-    // public function load_posts(Request $request)
-    // {
-    //     $authId = Auth::user()->user_id;
-
-    //     $userFriends = FriendShip::where(function ($q) use ($authId) {
-    //             $q->where('sender_id', $authId)
-    //               ->orWhere('receiver_id', $authId);
-    //         })
-    //         ->where('status', FRIEND_REQUEST_STATUS_ACCEPTED)
-    //         ->pluck('sender_id', 'receiver_id')
-    //         ->flatten()
-    //         ->unique()
-    //         ->toArray();
-
-    //     $userIds = array_merge([$authId], $userFriends);
-
-    //     $limit = 10;
-    //     $page = $request->input('page', 1);
-
-    //     // Use the correct Comment relationship for user loading
-    //     $posts = Post::with([
-    //             'postUploadedBy',
-    //             'postMedia',
-    //             'comments.commentPostedBy', // main-level comments with user
-    //             'comments.replies.commentPostedBy' // replies of comments with user
-    //         ])
-    //         ->whereIn('user_id', $userIds)
-    //         ->where("post_type", POSTING_TYPE_POST)
-    //         ->orWhere('new_joining_post', NEW_JOINING_USER_POST)
-    //         ->orderByDesc('created_at')
-    //         ->paginate($limit);
-
-    //     $postUserIds = $posts->pluck('user_id')->unique();
-
-    //     $friendships = FriendShip::where(function ($q) use ($authId, $postUserIds) {
-    //             $q->where('sender_id', $authId)
-    //               ->whereIn('receiver_id', $postUserIds);
-    //         })
-    //         ->orWhere(function ($q) use ($authId, $postUserIds) {
-    //             $q->where('receiver_id', $authId)
-    //               ->whereIn('sender_id', $postUserIds);
-    //         })
-    //         ->get();
-
-    //     foreach ($posts as $post) {
-    //         $friendship = $friendships->first(function ($f) use ($authId, $post) {
-    //             return ($f->sender_id == $authId && $f->receiver_id == $post->user_id)
-    //                 || ($f->receiver_id == $authId && $f->sender_id == $post->user_id);
-    //         });
-
-    //         if (!$friendship) {
-    //             $post->friend_status = 'none';
-    //         } else {
-    //             if ($friendship->status == FRIEND_REQUEST_STATUS_PENDING) {
-    //                 if ($friendship->sender_id == $authId) {
-    //                     $post->friend_status = 'sent';
-    //                 } else {
-    //                     $post->friend_status = 'received';
-    //                 }
-    //             } elseif ($friendship->status == FRIEND_REQUEST_STATUS_ACCEPTED) {
-    //                 $post->friend_status = 'friends';
-    //             } else {
-    //                 $post->friend_status = 'none';
-    //             }
-    //         }
-    //     }
-
-    //     $html = view('partials.post_list', compact('posts'))->render();
-
-    //     return response()->json(['html' => $html]);
-    // }
-
     public function show_photos()
     {
         $userPosts = Post::where(['user_id' => Auth::user()->user_id])->pluck('post_id')->toArray();
@@ -247,7 +176,7 @@ class PostController extends Controller
         $validated = $request->validate([
             'post_id' => ['required', 'exists:posts,post_id'],
             'content' => ['required', 'string', 'max:1000'],
-            'parent_comment_id' => ['nullable', 'exists:comments,comment_id'], // Add this line
+            'parent_comment_id' => ['nullable', 'exists:comments,comment_id'],
         ], [
             'post_id.required' => 'Post is required.',
             'post_id.exists' => 'Selected post does not exist.',
@@ -255,17 +184,17 @@ class PostController extends Controller
             'content.max' => 'Comment may not be longer than 1000 characters.',
         ]);
 
-        $comment = new \App\Models\Comment([
+        $comment = new Comment([
             'comment_text' => $validated['content'],
             'commented_by' => Auth::user()->user_id,
-            'parent_comment_id' => $validated['parent_comment_id'] ?? null, // Handle parent comment
+            'parent_comment_id' => $validated['parent_comment_id'] ?? null,
             'post_id' => $validated['post_id'],
             'comment_type' => COMMENT_TYPE_TEXT,
         ]);
 
         $comment->save();
 
-        \App\Models\Post::where('post_id', $validated['post_id'])->increment('comments_count');
+        Post::where('post_id', $validated['post_id'])->increment('comments_count');
 
         $comment->load(['commentPostedBy']);
 
@@ -274,7 +203,7 @@ class PostController extends Controller
         if ($request->ajax()) {
             $html = view('partials.comment_item', [
                 'comment' => $comment,
-                'depth' => $depth
+                'depth' => $depth,
             ])->render();
 
             return response()->json([
@@ -285,5 +214,64 @@ class PostController extends Controller
         }
 
         return back()->with('post-upload-success', 'Comment added successfully.');
+    }
+
+    public function delete_comment(Request $request)
+    {
+        $validated = $request->validate([
+            'comment_id' => ['required', 'exists:comments,comment_id'],
+        ], [
+            'comment_id.required' => 'Comment ID is required.',
+            'comment_id.exists' => 'Comment does not exist.',
+        ]);
+
+        $comment = Comment::with('replies')->where('comment_id', $validated['comment_id'])->first();
+
+        if (!$comment) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Comment not found.',
+            ], 404);
+        }
+
+        // Ensure the user is allowed to delete this comment
+        if ($comment->commented_by !== Auth::user()->user_id) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Unauthorized.',
+            ], 403);
+        }
+
+        // Recursively delete replies
+        $deleteReplies = function ($comment) use (&$deleteReplies) {
+            foreach ($comment->replies as $reply) {
+                $reply->load('replies');
+                $deleteReplies($reply);
+                $reply->delete();
+            }
+        };
+
+        $comment->load('replies');
+        $deleteReplies($comment);
+
+        // Get the post for updating comment count
+        $post = $comment->post;
+
+        $comment->delete();
+
+        // Decrement comments_count for the post (handling minimum zero)
+        if ($post) {
+            $postCommentsCount = max(0, $post->comments_count - 1 - $comment->replies()->count());
+            $post->update(['comments_count' => $postCommentsCount]);
+        }
+
+        if ($request->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Comment and its replies deleted successfully.',
+            ]);
+        }
+
+        return back()->with('post-upload-success', 'Comment and its replies deleted successfully.');
     }
 }

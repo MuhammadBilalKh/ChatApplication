@@ -104,7 +104,7 @@
                                   name="content" placeholder="Write a comment..."
                                   spellcheck="false" required />
                     </div>
-                    <input type="submit" name="ac_form_submit" value="Post Comment">
+                    <input type="submit" name="ac_form_submit" class="mt-3" value="Post Comment">
                     <button type="button" class="ac-reply-cancel">Cancel</button>
                 </div>
             </form>

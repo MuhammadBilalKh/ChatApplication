@@ -59,8 +59,8 @@
                 <input type="text" class="ac-input bp-suggestions" name="content"
                           placeholder="Write a reply..." spellcheck="false" required />
             </div>
-            <input type="submit" value="Post Reply">
-            <button type="button" class="ac-reply-cancel">Cancel</button>
+            <input type="submit" class="mt-3" value="Post Reply">
+            <button type="button" id="btnCancel" class="ac-reply-cancel">Cancel</button>
         </div>
     </form>
 

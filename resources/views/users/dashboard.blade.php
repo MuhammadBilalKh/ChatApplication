@@ -317,9 +317,9 @@
                 $commentsSection.slideToggle(300);
             });
 
-            // Add comment
             $(document).on('submit', '.add-comment-form', function(e) {
                 e.preventDefault();
+
                 const $form = $(this);
                 const $btn = $form.find('[type="submit"]');
                 const postId = $form.find('input[name="post_id"]').val();
@@ -329,33 +329,38 @@
                 $.ajax({
                     url: "{{ route('comments.store') }}",
                     type: "POST",
-                    data: $form.serialize(),
-                    headers: {
-                        'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                    data: {
+                        post_id: postId,
+                        content: $form.find('input[name="content"]').val(),
+                        parent_comment_id: $form.find('input[name="parent_comment_id"]').val(),
+                        _token: "{{ csrf_token() }}"
                     },
                     success: function(response) {
                         if (response.status === 'success') {
-                            // Add new comment to the list
-                            const $commentList = $form.siblings('.comment-list');
+                            // FIXED: Better selector for comment list
+                            const $commentsSection = $form.closest('.post-comments');
+                            let $commentList = $commentsSection.find('.comment-list').first();
+
+                            console.log('Comment list found:', $commentList.length); // Debug
+
                             if ($commentList.length === 0) {
-                                $form.before('<ul class="comment-list"></ul>');
+                                // Create comment list before the form
+                                $commentList = $('<ul class="comment-list"></ul>');
+                                $form.before($commentList);
                             }
-                            $('.comment-list').first().append(response.html);
+
+                            // Append the new comment
+                            $commentList.append(response.html);
 
                             // Reset form
-                            $form.find('textarea').val('');
+                            $form.find('input[name="content"]').val('');
 
                             // Update comment count
-                            const $commentBtn = $(
-                                `.show-comments-btn[data-post-id="${postId}"]`);
-                            const currentCount = parseInt($commentBtn.data(
-                                'comments-count')) || 0;
-                            $commentBtn.data('comments-count', currentCount + 1);
-                            $commentBtn.find('span').text((currentCount + 1) +
-                                ' Comments');
+                            updateCommentCount(postId, 1);
                         }
                     },
                     error: function(xhr) {
+                        console.error('Error:', xhr.responseText);
                         alert('Error posting comment. Please try again.');
                     },
                     complete: function() {
@@ -363,6 +368,20 @@
                     }
                 });
             });
+
+            $(document).on("click", "#btnCancel", function() {
+                $(this).closest('form').find('input[type="text"]').val('');
+            });
+
+            function updateCommentCount(postId, increment = 1) {
+                const $commentBtn = $(`.show-comments-btn[data-post-id="${postId}"]`);
+                if ($commentBtn.length) {
+                    const currentCount = parseInt($commentBtn.data('comments-count')) || 0;
+                    const newCount = currentCount + increment;
+                    $commentBtn.data('comments-count', newCount);
+                    $commentBtn.find('span').text(newCount + ' Comments');
+                }
+            }
 
             // Add reply
             $(document).on('submit', '.add-reply-form', function(e) {
@@ -426,7 +445,6 @@
                 });
             });
 
-            // Cancel buttons
             $(document).on('click', '.ac-reply-cancel', function() {
                 const $form = $(this).closest('form');
                 $form.find('textarea').val('');
@@ -435,15 +453,17 @@
                 }
             });
 
-            // Delete comment
             $(document).on('click', '.acomment-delete', function(e) {
                 e.preventDefault();
                 const commentId = $(this).data('comment-id');
 
                 if (confirm('Are you sure you want to delete this comment?')) {
                     $.ajax({
-                        url: "{{ route('comments.destroy', '') }}/" + commentId,
-                        type: "DELETE",
+                        url: "{{ route('comments.destroy') }}",
+                        type: "{{ FORM_METHOD_POST }}",
+                        data: {
+                            comment_id: commentId,
+                        },
                         headers: {
                             'X-CSRF-TOKEN': "{{ csrf_token() }}"
                         },
@@ -451,7 +471,6 @@
                             if (response.status === 'success') {
                                 $('#comment-' + commentId).fadeOut(300, function() {
                                     $(this).remove();
-                                    // Update comment counts if needed
                                 });
                             }
                         },
@@ -461,8 +480,6 @@
                     });
                 }
             });
-
-            // ... your existing infinite scroll and friend request code ...
         });
     </script>
 @endpush
