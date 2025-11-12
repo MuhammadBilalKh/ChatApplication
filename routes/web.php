@@ -17,6 +17,7 @@ Route::middleware(['web'])->group(function () {
     Route::middleware([UserAuth::class])->group(function () {
         Route::get("/", [UserController::class, 'show_dashboard'])->name('users.show_dashboard');
 
+        Route::get("/profile", [UserController::class, 'show_profile'])->name('users.profile');
         Route::prefix("post")->group(function(){
             Route::get("/load", [PostController::class, 'load_posts'])->name('posts.load');
             Route::get("/photos", [PostController::class, 'show_photos'])->name("posts.show_photos");

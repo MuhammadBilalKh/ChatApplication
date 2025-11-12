@@ -7,13 +7,13 @@
             <div class="my-card item">
                 @auth
                     <div class="info">
-                        <a href="./members-2/sandlas/" class="profile-avatar">
+                        <a href="{{ route('users.profile') }}" class="profile-avatar">
                             <img src="{{ asset(Auth::user()->profile_picture) }}" alt="{{ Auth::user()->username }}"
                                 class="avatar mCS_img_loaded">
                         </a>
                         <div class="profile-name">
-                            <a href="./members-2/sandlas/" class="name ellipsis">{{ Auth::user()->name }}</a>
-                            <small>Member</small>
+                            <a href="{{ route('users.profile') }}" class="name ellipsis">{{ Auth::user()->name }}</a>
+                            <small>{{ Auth::user()->user_type == USER_TYPE_ADMIN ? "Administrator" : "User" }}</small>
 
                         </div>
                     </div>
