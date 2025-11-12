@@ -43,3 +43,4 @@ defined("PUBLISHING_STATUS_PUBLIC") || define("PUBLISHING_STATUS_PUBLIC", 2);
 defined("USER_TYPE_ADMIN") || define("USER_TYPE_ADMIN", "admin");
 defined("USER_TYPE_USER") || define("USER_TYPE_USER", "user");
 
+defined("COMMENT_TYPE_TEXT") || define("COMMENT_TYPE_TEXT", "text");

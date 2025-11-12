@@ -275,35 +275,194 @@
                         setTimeout(() => alertResponse.fadeOut(300), 500);
                     });
             }
-        });
 
-        function SendFriendRequest(receiverID) {
-            jQuery.ajax({
-                url: "{{ route('peoples.create_friend_request') }}",
-                type: "{{ FORM_METHOD_POST }}",
-                headers: {
-                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
-                },
-                data: {
-                    memberID: receiverID,
-                },
-                beforeSend: function() {
+            function SendFriendRequest(receiverID) {
+                jQuery.ajax({
+                    url: "{{ route('peoples.create_friend_request') }}",
+                    type: "{{ FORM_METHOD_POST }}",
+                    headers: {
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                    },
+                    data: {
+                        memberID: receiverID,
+                    },
+                    beforeSend: function() {
 
-                },
-                success: function(response) {
-                    if (response.status == {{ REQUEST_PROCESSED }}) {
-                        jQuery("#member-" + receiverID).removeClass("add").addClass("requested")
+                    },
+                    success: function(response) {
+                        if (response.status == {{ REQUEST_PROCESSED }}) {
+                            jQuery("#member-" + receiverID).removeClass("add").addClass("requested")
+                        }
                     }
+                });
+            }
+
+            function CancelFriendRequest(receiverID) {
+
+            }
+
+            function AcceptFriendRequest(receiverID) {
+
+            }
+
+        });
+        jQuery(document).ready(function($) {
+            // ... your existing file upload code ...
+
+            // Toggle comments section
+            $(document).on('click', '.show-comments-btn', function(e) {
+                e.preventDefault();
+                const postId = $(this).data('post-id');
+                const $commentsSection = $('#comments-' + postId);
+                $commentsSection.slideToggle(300);
+            });
+
+            // Add comment
+            $(document).on('submit', '.add-comment-form', function(e) {
+                e.preventDefault();
+                const $form = $(this);
+                const $btn = $form.find('[type="submit"]');
+                const postId = $form.find('input[name="post_id"]').val();
+
+                $btn.prop('disabled', true).val('Posting...');
+
+                $.ajax({
+                    url: "{{ route('comments.store') }}",
+                    type: "POST",
+                    data: $form.serialize(),
+                    headers: {
+                        'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                    },
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            // Add new comment to the list
+                            const $commentList = $form.siblings('.comment-list');
+                            if ($commentList.length === 0) {
+                                $form.before('<ul class="comment-list"></ul>');
+                            }
+                            $('.comment-list').first().append(response.html);
+
+                            // Reset form
+                            $form.find('textarea').val('');
+
+                            // Update comment count
+                            const $commentBtn = $(
+                                `.show-comments-btn[data-post-id="${postId}"]`);
+                            const currentCount = parseInt($commentBtn.data(
+                                'comments-count')) || 0;
+                            $commentBtn.data('comments-count', currentCount + 1);
+                            $commentBtn.find('span').text((currentCount + 1) +
+                                ' Comments');
+                        }
+                    },
+                    error: function(xhr) {
+                        alert('Error posting comment. Please try again.');
+                    },
+                    complete: function() {
+                        $btn.prop('disabled', false).val('Post Comment');
+                    }
+                });
+            });
+
+            // Add reply
+            $(document).on('submit', '.add-reply-form', function(e) {
+                e.preventDefault();
+                const $form = $(this);
+                const $btn = $form.find('[type="submit"]');
+                const parentCommentId = $form.find('input[name="parent_comment_id"]').val();
+
+                $btn.prop('disabled', true).val('Posting...');
+
+                $.ajax({
+                    url: "{{ route('comments.store') }}",
+                    type: "POST",
+                    data: $form.serialize(),
+                    headers: {
+                        'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                    },
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            // Find or create reply list
+                            let $replyList = $form.siblings('.reply-list');
+                            if ($replyList.length === 0) {
+                                $replyList = $('<ul class="reply-list"></ul>');
+                                $form.after($replyList);
+                            }
+
+                            // Add reply
+                            $replyList.append(response.html);
+
+                            // Reset and hide form
+                            $form.find('textarea').val('');
+                            $form.slideUp(200);
+
+                            // Update parent comment reply count if needed
+                            const $parentComment = $('#comment-' + parentCommentId);
+                            const $replyBtn = $parentComment.find(
+                                '.show-reply-form-btn');
+                            // You can add reply count logic here if needed
+                        }
+                    },
+                    error: function(xhr) {
+                        alert('Error posting reply. Please try again.');
+                    },
+                    complete: function() {
+                        $btn.prop('disabled', false).val('Post Reply');
+                    }
+                });
+            });
+
+            // Show/hide reply form
+            $(document).on('click', '.show-reply-form-btn', function(e) {
+                e.preventDefault();
+                const $btn = $(this);
+                const $commentContainer = $btn.closest('.comment-container');
+                const $replyForm = $commentContainer.find('.add-reply-form').first();
+
+                $replyForm.slideToggle(200, function() {
+                    if ($replyForm.is(':visible')) {
+                        $replyForm.find('textarea').focus();
+                    }
+                });
+            });
+
+            // Cancel buttons
+            $(document).on('click', '.ac-reply-cancel', function() {
+                const $form = $(this).closest('form');
+                $form.find('textarea').val('');
+                if ($form.hasClass('add-reply-form')) {
+                    $form.slideUp(200);
                 }
             });
-        }
 
-        function CancelFriendRequest(receiverID) {
+            // Delete comment
+            $(document).on('click', '.acomment-delete', function(e) {
+                e.preventDefault();
+                const commentId = $(this).data('comment-id');
 
-        }
+                if (confirm('Are you sure you want to delete this comment?')) {
+                    $.ajax({
+                        url: "{{ route('comments.destroy', '') }}/" + commentId,
+                        type: "DELETE",
+                        headers: {
+                            'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                        },
+                        success: function(response) {
+                            if (response.status === 'success') {
+                                $('#comment-' + commentId).fadeOut(300, function() {
+                                    $(this).remove();
+                                    // Update comment counts if needed
+                                });
+                            }
+                        },
+                        error: function() {
+                            alert('Error deleting comment.');
+                        }
+                    });
+                }
+            });
 
-        function AcceptFriendRequest(receiverID) {
-
-        }
+            // ... your existing infinite scroll and friend request code ...
+        });
     </script>
 @endpush
