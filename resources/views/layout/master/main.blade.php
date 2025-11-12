@@ -49,6 +49,8 @@
     <link rel="stylesheet" href="/assets/css/post-95.css?ver=1761620622" />
 
     <link rel="stylesheet" href="/assets/css/mainCss.css" media="all" />
+
+    @stack('css')
 </head>
 
 <body

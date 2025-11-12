@@ -227,7 +227,7 @@ class PostController extends Controller
 
         $comment = Comment::with('replies')->where('comment_id', $validated['comment_id'])->first();
 
-        if (!$comment) {
+        if (! $comment) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Comment not found.',
@@ -273,5 +273,38 @@ class PostController extends Controller
         }
 
         return back()->with('post-upload-success', 'Comment and its replies deleted successfully.');
+    }
+
+    public function update_comment(Request $request)
+    {
+        $comment = Comment::where('comment_id', $request->comment_id)
+            ->where('commented_by', Auth::user()->user_id)
+            ->first();
+
+        $request->validate([
+            'content' => 'required|string|max:1000',
+        ],[
+            'content.required' => "Comment Content is Required",
+        ]);
+
+        $comment->update([
+            'comment_text' => $request->content,
+            'updated_at' => now(),
+        ]);
+
+        if ($request->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Comment updated successfully.',
+                'comment' => [
+                    'id' => $comment->comment_id,
+                    'text' => $comment->comment_text,
+                    'updated_at' => $comment->updated_at->diffForHumans(),
+                    'is_edited' => $comment->updated_at != $comment->created_at,
+                ],
+            ]);
+        }
+
+        return back()->with('success', 'Comment updated successfully.');
     }
 }

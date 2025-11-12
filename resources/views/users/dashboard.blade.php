@@ -480,6 +480,123 @@
                     });
                 }
             });
+
+            $(document).on('click', '.edit-comment-btn', function(e) {
+                e.preventDefault();
+
+                const commentId = $(this).data('comment-id');
+                const $commentContainer = $('#comment-' + commentId);
+                const $contentDisplay = $commentContainer.find('.acomment-content');
+                const $editForm = $commentContainer.find('.edit-comment-form');
+
+                // Hide content, show edit form
+                $contentDisplay.hide();
+                $editForm.show();
+
+                // Focus on textarea
+                $editForm.find('.edit-comment-text').focus();
+            });
+
+            // Cancel edit
+            $(document).on('click', '.cancel-edit', function(e) {
+                e.preventDefault();
+
+                const $editForm = $(this).closest('.edit-comment-form');
+                const $commentContainer = $editForm.closest('.comment-container');
+                const $contentDisplay = $commentContainer.find('.acomment-content');
+
+                // Show content, hide edit form
+                $contentDisplay.show();
+                $editForm.hide();
+            });
+
+            // Submit edit form
+            $(document).on('submit', '.edit-comment-form', function(e) {
+                e.preventDefault();
+
+                const $form = $(this);
+                const $btn = $form.find('[type="submit"]');
+                const commentId = $form.closest('.comment-container').data('comment-id');
+                const content = $form.find('input[name="content"]').val().trim();
+
+                if (!content) {
+                    alert('Comment cannot be empty');
+                    return;
+                }
+
+                $btn.prop('disabled', true).val('Updating...');
+
+                $.ajax({
+                    url: "{{ route('comments.update') }}",
+                    type: '{{ FORM_METHOD_POST }}',
+                    data: {
+                        content: content,
+                        comment_id: commentId,
+                        _token: "{{ csrf_token() }}",
+                    },
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            // Update the comment content display
+                            const $commentContainer = $('#comment-' + commentId);
+                            const $contentDisplay = $commentContainer.find('.acomment-content');
+                            const $editForm = $commentContainer.find('.edit-comment-form');
+
+                            // Update content
+                            $contentDisplay.find('p').text(content);
+
+                            // Update edited timestamp if needed
+                            const $timeElement = $commentContainer.find('.activity-time-since');
+                            if (response.comment.is_edited) {
+                                if (!$timeElement.find('.edited-text').length) {
+                                    $timeElement.append(
+                                        ' <span class="edited-text">(edited)</span>');
+                                }
+                            }
+
+                            // Show content, hide edit form
+                            $contentDisplay.show();
+                            $editForm.hide();
+
+                            // Show success message
+                            showTempMessage('Comment updated successfully', 'success');
+                        }
+                    },
+                    error: function(xhr) {
+                        console.error('Error updating comment:', xhr.responseText);
+                        let errorMessage = 'Error updating comment';
+
+                        if (xhr.responseJSON && xhr.responseJSON.errors) {
+                            errorMessage = Object.values(xhr.responseJSON.errors).join(', ');
+                        }
+
+                        alert(errorMessage);
+                    },
+                    complete: function() {
+                        $btn.prop('disabled', false).val('Update');
+                    }
+                });
+            });
+
+            // Helper function to show temporary messages
+            function showTempMessage(message, type = 'success') {
+                const $message = $('<div class="temp-message alert alert-' + type + '">' + message + '</div>');
+                $('body').append($message);
+
+                $message.css({
+                    'position': 'fixed',
+                    'top': '20px',
+                    'right': '20px',
+                    'z-index': '9999',
+                    'padding': '10px 20px',
+                    'border-radius': '5px'
+                });
+
+                setTimeout(function() {
+                    $message.fadeOut(300, function() {
+                        $(this).remove();
+                    });
+                }, 3000);
+            }
         });
     </script>
 @endpush
