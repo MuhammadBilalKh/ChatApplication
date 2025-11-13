@@ -17,7 +17,7 @@
         line-height: 26px;
         position: fixed;
         bottom: 0;
-        z-index: 99999;
+        z-index: 999;
         width: 100%
     }
 
@@ -1164,3 +1164,167 @@
     }
 }
 
+
+ul.job-category-listings.top-listings.beehive-columns.columns-3 {
+    display: ruby;
+}
+.job-category-item {
+  list-style: none; /* Removes bullet or number */
+}
+.job-category-listings.top-listings li.job-category-item {
+  list-style: none;
+}
+
+img.avatar.mCS_img_loaded {
+    border-radius: 50px;
+}
+
+.mCSB_inside>.mCSB_container {
+    margin-right: 0px !important;
+}
+nav.navbar.kmk-navbar.social.fixed-top {
+   background-color: #F5BD02;
+
+}
+li#myaccount-url-list {
+    background-color: #fff;
+    border-radius: 50px;
+    padding: 2px;
+    width: 125px;
+}
+img.avatar.avatar-30.photo {
+    border-radius: 50px;
+}
+nav.kmk-navbar ul.navbar-user>li>a#nav_my_account .account-name{
+        max-width: 96px;
+    white-space: nowrap;
+    width: 100%;
+    display: block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+input#ajax-search-textfield:focus {
+    background: #fff;
+    border-radius: 50px;
+}
+.coupon {
+    display: flex;
+}
+.fixed-top {
+    z-index: 998;
+}
+
+div#activity-filter-select {
+    text-align: end;
+    float: inline-end;
+}
+.profile-nav{
+    margin-bottom: 20px;
+    overflow: visible !important;
+}
+nav#object-nav {
+    padding-bottom: 45px;
+    padding-top: 61px;
+}
+.activity-update-form #whats-new-avatar img , .activity-list .activity-item>div.item-avatar img{
+      border-radius: 50%  !important;
+}
+.b-r-50 {
+    border-radius: 50%  !important;
+}
+
+.input-options.datebox-selects {
+    display: inline-flex;
+}
+.bp-cover-image-status{
+    background-color: #ffd;
+    border: 1px solid #cb2;
+    color: #440;
+    display: block;
+    font-size: 90%;
+    margin: 1em 0;
+    padding: 10px 15px;
+}
+div#comp-filters {
+        float: inline-end;
+}
+/* Container styling */
+.list-wrap {
+    display: flex;                /* Use flexbox */
+    align-items: center;          /* Vertical centering */
+    justify-content: center;      /* Horizontal centering */
+    background-color: #ffffff;    /* White background */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Subtle shadow */
+    border-radius: 10px;          /* Rounded corners */
+    padding: 20px;                /* Space inside the box */
+    margin: 20px auto;            /* Center horizontally with auto margin */
+    max-width: 600px;             /* Limit width */
+    flex-wrap: wrap;              /* Wrap content on smaller screens */
+}
+
+/* Avatar styling */
+.item-avatar img {
+    border-radius: 50%;          /* Make avatar circular */
+    width: 100px;                /* Avatar size */
+    height: 100px;
+    object-fit: cover;           /* Keep image proportion */
+    margin-right: 20px;          /* Space between avatar and content */
+}
+
+/* Item content styling */
+.item-block {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Member name */
+.list-title.member-name a {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #333;
+    text-decoration: none;
+}
+
+/* Meta info styling */
+.item-meta.mute {
+    font-size: 0.9em;
+    color: #777;
+    margin-bottom: 10px;
+}
+
+/* Connections list styling */
+.connections {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.connections li {
+    text-align: center;
+}
+
+.connections .count {
+    font-weight: bold;
+    display: block;
+    font-size: 1.1em;
+}
+
+/* Friend button styling */
+h4.list-title.member-name {
+    font-size: 15px;
+    text-align: center;
+    padding-top: 13px;
+}
+.friendship-button{
+margin-top: 10px;
+}
+
+
+#header-cover-image {
+    height: 280px;
+    background-image: url(https://mythemestore.com/beehive-preview/wp-content/uploads/buddypress/groups/4/cover-image/5e2cc36891950-bp-cover-image.jpg);
+}

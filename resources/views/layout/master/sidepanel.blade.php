@@ -17,7 +17,7 @@
 
                         </div>
                     </div>
-                    <ul class="connections">
+                    <ul class="connections ml-4">
                         <li><span class="count" id="totalFriendsCount"></span>
                             <p class="mute">Friends</p>
                         </li>

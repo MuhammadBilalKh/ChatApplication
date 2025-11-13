@@ -622,15 +622,14 @@ namespace App\Models {
      * @property mixed $post_id
      * @property mixed $parent_comment_id
      * @property mixed $commented_by
-     * @property string $comment_text
      * @property int $comment_id
+     * @property-read mixed $comment_text
      * @property-read \App\Models\User $commentPostedBy
      * @property-read \App\Models\Comment $commentParent
      * @property-read \App\Models\Post $commentPost
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Comment> $replies
      * @property-read int|null $replies_count
      * @method static \Illuminate\Database\Eloquent\Builder<Comment>|Comment whereCommentId($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<Comment>|Comment whereCommentText($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Comment>|Comment whereCommentedBy($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Comment>|Comment whereParentCommentId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Comment>|Comment wherePostId($value)
@@ -1922,17 +1921,17 @@ namespace App\Models {
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
      * @property mixed $sender_id
-     * @property string|null $message
      * @property string|null $attachment_path
      * @property mixed $receiver_id
      * @property mixed $message_type
      * @property mixed $message_id
+     * @property-read mixed $message
      * @property-read \App\Models\User $messageSentBy
+     * @property-read \App\Models\User $messageReceiveBy
      * @method static \Illuminate\Database\Eloquent\Builder<Message>|Message whereMessageId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Message>|Message whereMessageType($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Message>|Message whereReceiverId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Message>|Message whereAttachmentPath($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<Message>|Message whereMessage($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Message>|Message whereSenderId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Message>|Message whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Message>|Message whereUpdatedAt($value)
@@ -2239,6 +2238,10 @@ namespace App\Models {
     /**
      * App\Models\Post
      *
+     * @property mixed $is_profile_info_updated_post
+     * @property mixed $is_new_friend_added_post
+     * @property mixed $is_cover_picture_change_post
+     * @property mixed $is_profile_picture_change_post
      * @property mixed $post_type
      * @property mixed $new_joining_post
      * @property \Illuminate\Support\Carbon|null $updated_at
@@ -2277,6 +2280,10 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<Post>|Post whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Post>|Post whereNewJoiningPost($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Post>|Post wherePostType($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Post>|Post whereIsProfilePictureChangePost($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Post>|Post whereIsCoverPictureChangePost($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Post>|Post whereIsNewFriendAddedPost($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Post>|Post whereIsProfileInfoUpdatedPost($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Post>|Post newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<Post>|Post newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<Post>|Post query()

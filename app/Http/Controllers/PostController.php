@@ -18,7 +18,9 @@ class PostController extends Controller
     {
         $request->validate([
             'description' => 'required|string|max:3000',
-            'media.*' => 'nullable|file|max:2048',
+            'media.*' => 'nullable|file|max:51200',
+        ],[
+            'media.*.max' => 'Each file must not exceed 5 MB. Please upload files smaller than 2 MB.',
         ]);
 
         $post = Post::create([
@@ -27,6 +29,7 @@ class PostController extends Controller
             'title' => $request->post_title,
             'visibility' => POST_VISIBILITY_PUBLIC,
             'post_type' => POSTING_TYPE_POST,
+            'title' => "posted an update",
         ]);
 
         if ($request->hasFile('media')) {
@@ -77,7 +80,7 @@ class PostController extends Controller
             ->unique()
             ->toArray();
 
-        $userIds = array_merge([$authId], $userFriends);
+        $userIds = array_unique(array_merge([$authId], $userFriends));
 
         $limit = 5;
         $page = $request->input('page', 1);

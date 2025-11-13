@@ -81,7 +81,7 @@
     <!-- Edit Comment Form (Hidden by default) -->
     @if ($comment->commentPostedBy->user_id == Auth::user()->user_id)
         <form action="{{ route('comments.update', $comment->comment_id) }}" method="POST" class="edit-comment-form"
-            id="edit-form-{{ $comment->comment_id }}" style="display: none;">
+            id="edit-form-{{ $comment->comment_id }}" style="display: none;" data-comment-id="{{ $comment->comment_id }}">
             @csrf
             @method('PUT')
             <div class="ac-reply-content">

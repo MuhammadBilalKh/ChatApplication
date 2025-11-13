@@ -119,7 +119,7 @@ class UserController extends Controller
     }
 
     public function show_profile(){
-        return view('users.profile');
+        return view('users.profile.profile');
     }
 
     public function logout()

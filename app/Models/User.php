@@ -28,6 +28,7 @@ class User extends Authenticatable
         'username',
         'profile_picture',
         'country_id',
+        "cover_image",
     ];
 
     /**

@@ -21,6 +21,10 @@ class Post extends Model
         'comments_count',
         "new_joining_post",
         'shares_count',
+        "is_profile_picture_change_post",
+        'is_cover_picture_change_post',
+        "is_new_friend_added_post",
+        "is_profile_info_updated_post",
     ];
 
     public function postUploadedBy()

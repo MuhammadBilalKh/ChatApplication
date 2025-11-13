@@ -12,10 +12,9 @@
     <link rel="stylesheet" href="/assets/css/kmkcommerce-core.css?ver=1.0.8" />
     <link rel="stylesheet" href="/assets/css/mentions.min.css?ver=14.4.0" media="all" />
     <link rel="stylesheet" href="/assets/css/kmkpress.min.css?ver=14.4.0" media="screen" />
-    <link rel="stylesheet" href="/assets/css/main.css?ver=1760540595" media="all" />
-    <link rel="stylesheet" href="/assets/css/job-listings.css?ver=598383a28ac5f9f156e4" media="all" />
+    <link rel="stylesheet" href="/assets/css/job-listings.css?ver=598383a28ac5f9f156e4"
+        media="all" />
     <link rel="stylesheet" href="/assets/css/brands.css?ver=10.3.0" media="all" />
-
 
     <link rel="stylesheet" href="/assets/css/bootstrap.min.css" media="all" />
     <link rel="stylesheet" href="/assets/css/dashicons.min.css?ver=6.8.3" media="all" />
@@ -25,23 +24,120 @@
     <link rel="stylesheet" href="/assets/css/animate.min.css" media="all" />
     <link rel="stylesheet" href="/assets/css/hiraku.min.css" media="all" />
 
-    <link rel="stylesheet" href="/assets/css/job-manager.min.css" media="all" />
     <link rel="stylesheet" href="/assets/css/rtmedia.min.css" media="all" />
-    <link rel="stylesheet" href="/assets/css/adverts-frontend.min.css" media="all" />
-    <link rel="stylesheet" href="/assets/css/woocommerce.min.css" media="all" />
-    <link rel="stylesheet" href="/assets/css/woocommerce-layout.min.css" media="all" />
-
     <link rel="stylesheet" href="/assets/css/kmk.min.css" media="all" />
-    <link rel="stylesheet" href="/assets/css/mediaelementplayer-legacy.min.css" media="all" />
-    <link rel="stylesheet" href="/assets/css/wp-mediaelement.min.css" media="all" />
-    <link rel="stylesheet" href="/assets/css/godam-player-frontend.css?ver=1760540595" media="all" />
-    <link rel="stylesheet" href="/assets/css/godam-player.css?ver=1760540595" media="all" />
-    <link rel="stylesheet" href="/assets/css/rtm-upload-terms.min.css" media="all" />
     <link rel="stylesheet" href="/assets/css/dynamic-styles.css" media="all" />
 
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700,300italic,400italic,600italic,700italic|Quicksand:700&ver=1.4.5" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900&display=swap" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Roboto+Slab:100,300,400,500,700,900&display=swap" />
+
+    <link rel="stylesheet" href="/assets/css/frontend.min.css?ver=3.32.4" />
+    <link rel="stylesheet" href="/assets/css/post-95.css?ver=1761620622" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+
+    <link rel="stylesheet" href="/assets/css/mainCss.css" media="all" />
+
+    <style>
+        .fancybox-content {
+            background: transparent;
+            display: inline-block;
+            margin: 0;
+            max-width: 100%;
+            overflow: visible;
+            -webkit-overflow-scrolling: touch;
+            position: relative;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        .mfp-container {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .fancybox-button {
+            background-color: #333;
+            color: #fff;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .fancybox-button:hover {
+            background-color: #555;
+        }
+
+        .emoji-picker,
+        #emojiBtn2 {
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .modal-contentPost {
+            width: 1200px;
+            height: auto;
+            max-width: 95vw;
+            max-height: none;
+            /* background: #fff; */
+            border-radius: 10px;
+            overflow: visible;
+        }
+
+        button.rtmedia-edit.rtmedia-action-buttons.button,
+        button.rtmedia-delete-media.rtmedia-action-buttons.button {
+            background: transparent;
+            box-shadow: none;
+            padding: 9px;
+        }
+
+        .rtmedia-single-container button.rtmedia-like:hover,
+        .rtmedia-single-container button.rtmedia-like:active,
+        .rtmedia-single-container button.rtmedia-like:focus {
+            color: #f5bd02;
+        }
+
+        .fancybox-close-small {
+            display: none;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+            .modal-contentPost {
+                width: 90vw;
+                height: 600px;
+                max-height: none;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .modal-contentPost {
+                width: 95vw;
+                height: auto;
+                max-height: none;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+                padding-bottom: 20px;
+            }
+
+            textarea#comment_content {
+                font-size: 14px;
+            }
+
+            .fancybox-content {
+                padding: 0;
+            }
+        }
+    </style>
+
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700,300italic,400italic,600italic,700italic|Quicksand:700&ver=1.4.5" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900&display=swap" />
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Roboto+Slab:100,300,400,500,700,900&display=swap" />
 
@@ -88,18 +184,21 @@
         </div>
     </div>
 
+    @include('partials.content_modal')
 </body>
 
-<script src="https://js.pusher.com/8.4.0/pusher.min.js"></script>
 <script src="/assets/js/jquery.min.js"></script>
-<script src="/assets/js/popper.min.js"></script>
 <script src="/assets/js/bootstrap.min.js"></script>
+<script src="/assets/js/popper.min.js"></script>
 <script src="/assets/js/mscrollbar.min.js"></script>
 <script src="/assets/js/wow.min.js"></script>
 <script src="/assets/js/hiraku.min.js"></script>
 <script src="/assets/js/flexmenu.min.js"></script>
 <script src="/assets/js/masonry.min.js"></script>
 <script src="/assets/js/jquery.fitvids.min.js"></script>
+<script src="/assets/js/emoji-button-3.0.3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+<script src="https://js.pusher.com/8.4.0/pusher.min.js"></script>
 
 {{-- <script type="text/javascript"
     src="https://www.clientbetalink.xyz/MIGVELv1/wp-content/plugins/buddypress-media/lib/media-element/mediaelement-and-player.min.js?ver=4.7.3">
@@ -116,7 +215,91 @@
 @stack('script')
 
 <script>
+    jQuery(document).ready(function() {
 
+        jQuery('#openModalBtn').on('click', function() {
+            $.fancybox.open();
+        });
+
+        jQuery('#postCloser').on('click', function() {
+            $.fancybox.close();
+        });
+
+        jQuery('[data-fancybox]').fancybox({
+            loop: true,
+            buttons: ["zoom", "share", "close"],
+            smallBtn: true,
+            closeBtn: true,
+        });
+
+        const emojiBtn2 = document.getElementById('emojiBtn2');
+        const inputField2 = document.getElementById('comment_content');
+
+        if (emojiBtn2 && inputField2) {
+            const picker2 = new EmojiButton({
+                position: 'top-start',
+                theme: 'light'
+            });
+
+            picker2.on('emoji', emoji => {
+                inputField2.value += emoji;
+                inputField2.focus();
+            });
+
+            emojiBtn2.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                picker2.togglePicker(emojiBtn2);
+            });
+        }
+
+        jQuery('.rtmedia-like, .rt_media_comment_submit').on('click', function(e) {
+            e.preventDefault();
+
+            if (jQuery(this).hasClass('rtmedia-like')) {
+                jQuery(this).toggleClass('liked');
+                if (jQuery(this).hasClass('liked')) {
+                    jQuery(this).find('span').text('Unlike');
+                } else {
+                    jQuery(this).find('span').text('Like');
+                }
+            }
+
+            if (jQuery(this).attr('id') === 'rt_media_comment_submit') {
+                var commentText = jQuery('#comment_content').val();
+                if (commentText.trim() !== "") {
+                    var newComment = `
+                            <li class="rtmedia-comment">
+                                <div class="rtmedia-comment-user-pic">
+                                    <a href="#" title="Current User">
+                                        <img loading="lazy" src="https://placehold.co/90x90?text=You" class="avatar" width="90" height="90" alt="Profile Photo">
+                                    </a>
+                                </div>
+                                <div class="rtm-comment-wrap">
+                                    <div class="rtmedia-comment-details">
+                                        <span class="rtmedia-comment-author"><a href="#" title="Current User">You</a></span>
+                                        <span class="rtmedia-comment-date">Just now</span>
+                                        <div class="rtmedia-comment-content">
+                                            <p>${commentText}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li> `;
+                    jQuery('#rtmedia_comment_ul').append(newComment);
+                    jQuery('#comment_content').val(''); // Clear input field
+                }
+            }
+        });
+
+        // Handle delete comment
+        jQuery(document).on('click', '.rtmedia-delete-comment', function(e) {
+            e.preventDefault();
+            jQuery(this).closest('.rtmedia-comment').remove();
+        });
+    });
+</script>
+
+<script>
     const lazyloadRunObserver = () => {
         const lazyloadBackgrounds = document.querySelectorAll('.e-con.e-parent:not(.e-lazyloaded)');
         const observer = new IntersectionObserver(entries => {

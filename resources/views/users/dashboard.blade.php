@@ -11,7 +11,11 @@
         <div class="entry-content clearfix">
             <div id="kmkpress" class="kmkpress-wrap kmk bp-dir-hori-nav alignwide">
 
-                <h2 class="bp-screen-reader-text">Post Update</h2>
+                <h2 class="bp-screen-reader-text">{{ __("Post") }}</h2>
+
+                <div class="container">
+                    <button data-fancybox id="openModalBtn" data-src="#postModal" href="javascript:;">Open Modal</button>
+                </div>
 
                 @if (session()->has('post-upload-success'))
                     <div class="alert alert-success alert-dismissible">
@@ -579,19 +583,23 @@
                 }
             });
 
-            jQuery(document).on('click', '.edit-comment-btn', function(e) {
-                e.preventDefault();
+            jQuery(document).off('click', '.edit-comment-btn').on('click', '.edit-comment-btn', function(e) {
+            e.preventDefault();
 
-                const commentId = jQuery(this).data('comment-id');
-                const $commentContainer = jQuery('#comment-' + commentId);
-                const $contentDisplay = $commentContainer.find('.acomment-content');
-                const $editForm = $commentContainer.find('.edit-comment-form');
+            // Get the comment id of this button
+            const commentId = jQuery(this).data('comment-id');
+            // Find the relevant container for this comment only
+            const $commentContainer = jQuery('#comment-' + commentId);
 
-                $contentDisplay.hide();
-                $editForm.show();
+            // Hide all edit-comment-forms and show all .acomment-content inside this container only
+            $commentContainer.find('.edit-comment-form').hide();
+            $commentContainer.find('.acomment-content').show();
 
-                $editForm.find('.edit-comment-text').focus();
-            });
+            // Hide the content for this specific comment and show its form (only itself, not its replies)
+            $commentContainer.children('.acomment-content').hide();
+            $commentContainer.children('.edit-comment-form').show();
+            $commentContainer.find('.edit-comment-text').focus();
+        });
 
             jQuery(document).on('click', '.cancel-edit', function(e) {
                 e.preventDefault();
