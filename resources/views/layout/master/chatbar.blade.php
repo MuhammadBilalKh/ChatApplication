@@ -201,7 +201,7 @@
                                         <!-- User contact item -->
                                         <div class="bpc-item mb-3" data-user="Natalie Berry">
                                             <div class="avatar-container"><img
-                                                    src="https://www.clientbetalink.xyz/MIGVELv1/wp-content/uploads/avatars/3/1760986305-bpthumb.jpg"
+                                                    src=""
                                                     alt="Natalie Berry" class="avatar"> <span
                                                     class="status online"></span>
                                             </div>
@@ -245,7 +245,7 @@
                 <div class="chat-window__container">
                     <div class="chat-window__title">
                         <div class="avatar-container"><img
-                                src="https://www.clientbetalink.xyz/MIGVELv1/wp-content/uploads/avatars/3/1760986305-bpthumb.jpg"
+                                src=""
                                 alt="Natalie Berry" class="avatar"> <span class="status"></span></div>
                         <div class="flex-r">
                             <div>

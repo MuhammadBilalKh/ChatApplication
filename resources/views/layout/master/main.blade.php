@@ -364,47 +364,79 @@
             });
         }
 
-        jQuery('.rtmedia-like, .rt_media_comment_submit').on('click', function(e) {
+        // Rewritten to correctly append new comments
+        jQuery(document).on('click', '.rt_media_comment_submit', function(e) {
             e.preventDefault();
 
-            if (jQuery(this).hasClass('rtmedia-like')) {
-                jQuery(this).toggleClass('liked');
-                if (jQuery(this).hasClass('liked')) {
-                    jQuery(this).find('span').text('Unlike');
-                } else {
-                    jQuery(this).find('span').text('Like');
+            var commentText = jQuery('#comment_content').val();
+            if (commentText.trim() !== "") {
+                var $commentUl = jQuery('#rtmedia_comment_ul');
+                if ($commentUl.length === 0) {
+                    $commentUl = jQuery(this).closest('.rtm-media-single-comments')
+                        .siblings('.rtmedia-item-comments').find('#rtmedia_comment_ul');
                 }
-            }
 
-            if (jQuery(this).attr('id') === 'rt_media_comment_submit') {
-                var commentText = jQuery('#comment_content').val();
-                if (commentText.trim() !== "") {
-                    var newComment = `
-                            <li class="rtmedia-comment">
-                                <div class="rtmedia-comment-user-pic">
-                                    <a href="#" title="Current User">
-                                        <img loading="lazy" src="{{ asset(Auth::user()->profile_picture) }}" class="avatar" width="90" height="90" alt="Profile Photo">
-                                    </a>
-                                </div>
-                                <div class="rtm-comment-wrap">
-                                    <div class="rtmedia-comment-details">
-                                        <span class="rtmedia-comment-author"><a href="#" title="Current User">{{ Auth::user()->username }}</a></span>
-                                        <span class="rtmedia-comment-date">Just now</span>
-                                        <div class="rtmedia-comment-content">
-                                            <p>${commentText}</p>
-                                        </div>
+                var $submitBtn = jQuery(this);
+                var postIdValue = jQuery("#txtPostID").val();
+
+                var newComment = `
+                        <li class="rtmedia-comment">
+                            <div class="rtmedia-comment-user-pic">
+                                <a href="#" title="Current User">
+                                    <img loading="lazy" src="{{ asset(Auth::user()->profile_picture) }}" class="avatar" width="90" height="90" alt="Profile Photo">
+                                </a>
+                            </div>
+                            <div class="rtm-comment-wrap">
+                                <div class="rtmedia-comment-details">
+                                    <span class="rtmedia-comment-author"><a href="#" title="Current User">{{ Auth::user()->username }}</a></span>
+                                    <span class="rtmedia-comment-date">Just now</span>
+                                    <div class="rtmedia-comment-content">
+                                        <p>${commentText}</p>
                                     </div>
                                 </div>
-                            </li> `;
-                    jQuery('#rtmedia_comment_ul').append(newComment);
-                    jQuery('#comment_content').val('');
-                }
+                            </div>
+                        </li>`;
+
+                jQuery.ajax({
+                    url: "{{ route('comments.store') }}",
+                    type: "{{ FORM_METHOD_POST }}",
+                    data: {
+                        parent_comment_id: '',
+                        post_id: postIdValue,
+                        content: commentText,
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success: function(resp) {
+                        if (resp.status === "success") {
+                            if ($commentUl.length) {
+                                $commentUl.append(newComment);
+                            }
+                            jQuery('#comment_content').val('');
+                        }
+                    }
+                });
             }
         });
 
         jQuery(document).on('click', '.rtmedia-delete-comment', function(e) {
             e.preventDefault();
-            jQuery(this).closest('.rtmedia-comment').remove();
+
+            if (window.confirm('Are you sure you want to delete this comment?')) {
+                jQuery.ajax({
+                    url: "{{ route('comments.destroy') }}",
+                    type: "{{ FORM_METHOD_POST }}",
+                    data: {
+                        comment_id: jQuery(this).data("id"),
+                        _token: "{{ csrf_token() }}",
+                    },
+                    success: function(resp) {
+                        if (resp.status == "status") {
+                            jQuery(this).closest('.rtmedia-comment').remove();
+                        }
+                    }
+                });
+            }
+
         });
     });
 </script>

@@ -134,10 +134,11 @@
         </div>
 
         <div class="rtm-media-single-comments">
-            <form method="post" id="rt_media_comment_form" class="rt_media_comment_form" action="#">
+            <form id="rt_media_comment_form" class="rt_media_comment_form" onsubmit="return false;">
                 <textarea style="width:100%" placeholder="Type Comment..." name="comment_content" id="comment_content"
                     class="bp-suggestions ac-input emojiable-option"></textarea>
-                <span id="emojiBtn2">🙂</span>
+                    <input type="hidden" name="post_id" id="txtPostID" value="{{ $postData->post_id }}" />
+                <button type="button" id="emojiBtn2" aria-label="Insert emoji" style="background:none;border:none;cursor:pointer;font-size:1.3em;vertical-align:middle;">🙂</button>
                 <input type="submit" id="rt_media_comment_submit" class="rt_media_comment_submit"
                     value="Comment" />
             </form>

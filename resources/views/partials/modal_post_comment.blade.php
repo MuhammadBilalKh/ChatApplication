@@ -21,7 +21,7 @@
             <p>{{ $comment->comment_text }}</p>
         </div>
         <div class="rtmedia-comment-extra"></div>
-        @if (auth()->id() === ($comment->commentPostedBy->user_id ?? null))
+        @if (Auth::user()->user_id === ($comment->commentPostedBy->user_id ?? null))
             <i data-id="{{ $comment->comment_id }}" class="rtmedia-delete-comment dashicons dashicons-no-alt"
                 title="Delete Comment"></i>
         @endif
