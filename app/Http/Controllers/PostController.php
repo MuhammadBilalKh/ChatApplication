@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Comment;
-use App\Models\FriendShip;
-use App\Models\MarkFavorite;
+use getID3;
 use App\Models\Post;
+use App\Models\Comment;
 use App\Models\PostLike;
 use App\Models\PostMedia;
-use getID3;
+use App\Models\FriendShip;
+use App\Models\MarkFavorite;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -30,11 +30,12 @@ class PostController extends Controller
             'visibility' => POST_VISIBILITY_PUBLIC,
             'post_type' => POSTING_TYPE_POST,
             'title' => "posted an update",
+            'new_joining_post' => 0,
         ]);
 
         if ($request->hasFile('media')) {
             foreach ($request->file('media') as $file) {
-                $extension = strtolower($file->getClientOriginalExtension());
+                $extension = strtolower($file->getClientOriginalName());
                 $fileSize = $file->getSize();
 
                 if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
@@ -86,18 +87,18 @@ class PostController extends Controller
         $page = $request->input('page', 1);
 
         $posts = Post::with([
-            'getLikedBy',
-            'postUploadedBy',
-            'getMarkedFavorite',
-            'postMedia',
-            'comments' => function ($query) {
-                $query->whereNull('parent_comment_id')
-                    ->with(['commentPostedBy',
-                        'replies' => function ($q) {
-                            $q->with('commentPostedBy');
-                        }]);
-            },
-        ])
+                'getLikedBy',
+                'postUploadedBy',
+                'getMarkedFavorite',
+                'postMedia',
+                'comments' => function ($query) {
+                    $query->whereNull('parent_comment_id')
+                        ->with(['commentPostedBy',
+                            'replies' => function ($q) {
+                                $q->with('commentPostedBy');
+                            }]);
+                },
+            ])
             ->whereIn('user_id', $userIds)
             ->where('post_type', POSTING_TYPE_POST)
             ->orWhere('new_joining_post', NEW_JOINING_USER_POST)
@@ -397,5 +398,34 @@ class PostController extends Controller
                 'status' => REQUEST_PROCESSED,
             ]);
         }
+    }
+
+    public function generate_post_content(Request $request)
+    {
+        $depth = (int) ($request->input('depth', 1));
+
+        $postData = Post::with([
+            'getLikedBy',
+            'postUploadedBy',
+            'getMarkedFavorite',
+            'postMedia',
+            'comments' => function ($query) {
+                $query->whereNull('parent_comment_id')
+                    ->limit(10)
+                    ->with(['commentPostedBy',
+                        'replies' => function ($q) {
+                            $q->with('commentPostedBy');
+                        }
+                    ]);
+            },
+        ])->where(['post_id' => $request->post_id])->first();
+
+        return response()->json([
+            'status' => REQUEST_PROCESSED,
+            'content' => view('partials.post_content', [
+                'postData' => $postData,
+                'depth' => $depth,
+            ])->render(),
+        ]);
     }
 }

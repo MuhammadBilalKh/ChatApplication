@@ -12,8 +12,7 @@
     <link rel="stylesheet" href="/assets/css/kmkcommerce-core.css?ver=1.0.8" />
     <link rel="stylesheet" href="/assets/css/mentions.min.css?ver=14.4.0" media="all" />
     <link rel="stylesheet" href="/assets/css/kmkpress.min.css?ver=14.4.0" media="screen" />
-    <link rel="stylesheet" href="/assets/css/job-listings.css?ver=598383a28ac5f9f156e4"
-        media="all" />
+    <link rel="stylesheet" href="/assets/css/job-listings.css?ver=598383a28ac5f9f156e4" media="all" />
     <link rel="stylesheet" href="/assets/css/brands.css?ver=10.3.0" media="all" />
 
     <link rel="stylesheet" href="/assets/css/bootstrap.min.css" media="all" />
@@ -40,6 +39,18 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
 
     <link rel="stylesheet" href="/assets/css/mainCss.css" media="all" />
+
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700,300italic,400italic,600italic,700italic|Quicksand:700&ver=1.4.5" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900&display=swap" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Roboto+Slab:100,300,400,500,700,900&display=swap" />
+
+    <link rel="stylesheet" href="/assets/css/frontend.min.css?ver=3.32.4" />
+    <link rel="stylesheet" href="/assets/css/post-95.css?ver=1761620622" />
+
+    <link rel="stylesheet" href="/assets/css/mainCss.css" media="all" />
+
 
     <style>
         .fancybox-content {
@@ -134,18 +145,6 @@
         }
     </style>
 
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700,300italic,400italic,600italic,700italic|Quicksand:700&ver=1.4.5" />
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900&display=swap" />
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Roboto+Slab:100,300,400,500,700,900&display=swap" />
-
-    <link rel="stylesheet" href="/assets/css/frontend.min.css?ver=3.32.4" />
-    <link rel="stylesheet" href="/assets/css/post-95.css?ver=1761620622" />
-
-    <link rel="stylesheet" href="/assets/css/mainCss.css" media="all" />
-
     @stack('css')
 </head>
 
@@ -168,21 +167,19 @@
 
                                     @yield('dashboard-breadcrumbs')
 
-                                    @yield('dashboard-content')<!-- #post-0 -->
+                                    @yield('dashboard-content')
 
                                 </main>
-                            </div><!-- .col-main -->
-
+                            </div>
                             @include('layout.master.right_panel')
-
-                        </div><!-- .row -->
-
-                    </div><!-- .container -->
-
-                </div><!-- .layout -->
-            </div><!-- #primary -->
+                            @include('layout.master.chat_windows')
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+    @include('layout.master.chatbar')
 
     @include('partials.content_modal')
 </body>
@@ -197,8 +194,12 @@
 <script src="/assets/js/masonry.min.js"></script>
 <script src="/assets/js/jquery.fitvids.min.js"></script>
 <script src="/assets/js/emoji-button-3.0.3.min.js"></script>
+<script src="/assets/js/kmk.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
 <script src="https://js.pusher.com/8.4.0/pusher.min.js"></script>
+
+{{-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script> --}}
+{{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script> --}}
 
 {{-- <script type="text/javascript"
     src="https://www.clientbetalink.xyz/MIGVELv1/wp-content/plugins/buddypress-media/lib/media-element/mediaelement-and-player.min.js?ver=4.7.3">
@@ -210,7 +211,117 @@
     src="https://www.clientbetalink.xyz/MIGVELv1/wp-content/plugins/buddypress-media/app/assets/js/vendors/emoji-picker.js?ver=4.7.3">
 </script> --}}
 
-<script src="/assets/js/kmk.min.js"></script>
+<script>
+    const chatBuddies = document.getElementById('buddy-chat-buddies');
+    const collapserButton = document.getElementById('buddy-chat-buddies__collapser');
+    const chatWindowCloseButtons = document.querySelectorAll('.chat_window__close-btn');
+    const chatBuddiesItems = document.querySelectorAll('.bpc-item');
+    const emojiBtn = document.getElementById('emojiBtn');
+    const inputField = document.querySelector('.chat-window__input--field');
+    const placeholder = document.querySelector('.chat-window__input--placeholder');
+    const sendButton = document.querySelector('.chat-window__btn--enter');
+    const chatList = document.querySelector('.bpc-chat-list');
+
+    // Toggle sidebar
+    // collapserButton.addEventListener('click', () => {
+    //     chatBuddies.classList.toggle('collapsed');
+    // });
+
+    // Close chat
+    chatWindowCloseButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const chatWindow = button.closest('.chat-window');
+            chatWindow.style.display = 'none';
+        });
+    });
+
+    // Open chat
+    chatBuddiesItems.forEach(item => {
+        item.addEventListener('click', () => {
+            const userName = item.querySelector('.chat-buddy').textContent.trim();
+            const chatWindow = document.getElementById(`chat-window-${userName.replace(" ", "-")}`);
+            if (chatWindow) chatWindow.style.display = 'block';
+        });
+    });
+
+    // Input placeholder logic
+    if (inputField) {
+        inputField.addEventListener('input', function() {
+            placeholder.style.display = this.textContent.trim() ? 'none' : 'block';
+        });
+    }
+
+    // Send message
+    function sendMessage() {
+        const message = inputField.textContent.trim();
+        if (!message) return;
+
+        const newMsg = document.createElement('li');
+        newMsg.classList.add('message--self');
+        newMsg.innerHTML = `
+            <time>${new Date().toLocaleString()}</time>
+            <div class="message-block">
+                <div class="messages">
+                    <div class="message">${message}</div>
+                </div>
+            </div>
+        `;
+
+        chatList.appendChild(newMsg);
+        inputField.textContent = '';
+        placeholder.style.display = 'block';
+
+        // ✅ Scroll to latest message
+        chatList.scrollTop = chatList.scrollHeight;
+    }
+
+    // Send on button click
+    if (sendButton) {
+        sendButton.addEventListener('click', e => {
+            e.preventDefault();
+            sendMessage();
+        });
+    }
+
+    // Send on Enter key
+    if (inputField) {
+        inputField.addEventListener('keydown', e => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+    }
+
+    // === Emoji Picker ===
+    // Only initialize if emojiBtn exists
+    if (emojiBtn) {
+        const picker = new EmojiButton({
+            position: 'top-start',
+            theme: 'light'
+        });
+
+        picker.on('emoji', emoji => {
+            inputField.textContent += emoji;
+            inputField.focus();
+            placeholder.style.display = 'none';
+        });
+
+        emojiBtn.addEventListener('click', () => picker.togglePicker(emojiBtn));
+    }
+
+    //mobile toggle chat
+    $('#toggle-chat').on('click', function() {
+
+        // Check screen width for mobile (under 768px)
+        if ($(window).width() < 768) {
+            $('#buddy-chat-app').toggleClass('d-none');
+        } else {
+            console.log('Not mobile view — no toggle.');
+        }
+    });
+</script>
+<!-- chat -->
 
 @stack('script')
 
@@ -272,12 +383,12 @@
                             <li class="rtmedia-comment">
                                 <div class="rtmedia-comment-user-pic">
                                     <a href="#" title="Current User">
-                                        <img loading="lazy" src="https://placehold.co/90x90?text=You" class="avatar" width="90" height="90" alt="Profile Photo">
+                                        <img loading="lazy" src="{{ asset(Auth::user()->profile_picture) }}" class="avatar" width="90" height="90" alt="Profile Photo">
                                     </a>
                                 </div>
                                 <div class="rtm-comment-wrap">
                                     <div class="rtmedia-comment-details">
-                                        <span class="rtmedia-comment-author"><a href="#" title="Current User">You</a></span>
+                                        <span class="rtmedia-comment-author"><a href="#" title="Current User">{{ Auth::user()->username }}</a></span>
                                         <span class="rtmedia-comment-date">Just now</span>
                                         <div class="rtmedia-comment-content">
                                             <p>${commentText}</p>
@@ -286,12 +397,11 @@
                                 </div>
                             </li> `;
                     jQuery('#rtmedia_comment_ul').append(newComment);
-                    jQuery('#comment_content').val(''); // Clear input field
+                    jQuery('#comment_content').val('');
                 }
             }
         });
 
-        // Handle delete comment
         jQuery(document).on('click', '.rtmedia-delete-comment', function(e) {
             e.preventDefault();
             jQuery(this).closest('.rtmedia-comment').remove();

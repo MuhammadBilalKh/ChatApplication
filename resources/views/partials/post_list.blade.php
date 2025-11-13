@@ -37,7 +37,7 @@
                             $videoCount = $post->postMedia->where('media_type', 'video')->count();
                         @endphp
                         <div class="post-media">
-                            <div class="row">
+                            <div class="row postContentModal" data-post-id="{{ $post->post_id }}" data-fancybox id="openModalBtn" data-src="#postModal" href="javascript:;">
                                 <div class="col-sm-6 mt-2">
                                     @if ($firstMedia->media_type === 'image')
                                         <img src="{{ asset($firstMedia->file_path) }}" width="300"

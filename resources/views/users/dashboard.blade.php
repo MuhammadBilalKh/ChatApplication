@@ -11,11 +11,7 @@
         <div class="entry-content clearfix">
             <div id="kmkpress" class="kmkpress-wrap kmk bp-dir-hori-nav alignwide">
 
-                <h2 class="bp-screen-reader-text">{{ __("Post") }}</h2>
-
-                <div class="container">
-                    <button data-fancybox id="openModalBtn" data-src="#postModal" href="javascript:;">Open Modal</button>
-                </div>
+                <h2 class="bp-screen-reader-text">{{ __('Post') }}</h2>
 
                 @if (session()->has('post-upload-success'))
                     <div class="alert alert-success alert-dismissible">
@@ -315,35 +311,28 @@
             const commentId = jQuery(this).data("comment-id");
             const postId = jQuery(this).data("post-id");
 
-            // Check if reply box already exists
             const existingBox = jQuery("#reply-box-" + commentId + "-" + postId);
             if (existingBox.length) {
-                existingBox.remove(); // toggle off
+                existingBox.remove();
                 return;
             }
 
-            // Remove any other open reply boxes
             jQuery("[id^='reply-box-']").remove();
 
-            // Build reply form
             const replyBox = `
-        <div class="reply-box mt-2" id="reply-box-${commentId}-${postId}">
-            <textarea class="form-control mb-2" rows="2" placeholder="Write a reply..."></textarea>
-            <button class="btn btn-sm btn-primary post-reply-btn" data-comment-id="${commentId}" data-post-id="${postId}">Reply</button>
-            <button class="btn btn-sm btn-light cancel-reply-btn">Cancel</button>
-        </div>
-    `;
+                <div class="reply-box mt-2" id="reply-box-${commentId}-${postId}">
+                    <textarea class="form-control mb-2" rows="2" placeholder="Write a reply..."></textarea>
+                    <button class="btn btn-sm btn-primary post-reply-btn" data-comment-id="${commentId}" data-post-id="${postId}">Reply</button>
+                    <button class="btn btn-sm btn-light cancel-reply-btn">Cancel</button>
+                </div> `;
 
-            // Append it right after the comment element
             jQuery("#comment-" + commentId).append(replyBox);
         });
 
-        // Handle cancel reply button
         jQuery(document).on("click", ".cancel-reply-btn", function() {
             jQuery(this).closest(".reply-box").remove();
         });
 
-        // Handle posting a reply
         jQuery(document).on("click", ".post-reply-btn", function() {
             const commentId = jQuery(this).data("comment-id");
             const postId = jQuery(this).data("post-id");
@@ -394,7 +383,6 @@
 
         jQuery(document).ready(function(jQuery) {
 
-            // Toggle comments section
             jQuery(document).on('click', '.show-comments-btn', function(e) {
                 e.preventDefault();
                 const postId = jQuery(this).data('post-id');
@@ -432,13 +420,10 @@
                                 $form.before($commentList);
                             }
 
-                            // Append the new comment
                             $commentList.append(response.html);
 
-                            // Reset form
                             $form.find('input[name="content"]').val('');
 
-                            // Update comment count
                             updateCommentCount(postId, 1);
                         }
                     },
@@ -466,9 +451,6 @@
                 }
             }
 
-            // --- FIXED REPLY BUTTON FUNCTIONALITY BELOW ---
-
-            // Add reply (AJAX submit)
             jQuery(document).on('submit', '.add-reply-form', function(e) {
                 e.preventDefault();
                 const $form = jQuery(this);
@@ -487,22 +469,16 @@
                     },
                     success: function(response) {
                         if (response.status === 'success') {
-                            // Find or create reply list under the current comment
                             let $replyList = $form.parent().find('.reply-list').first();
                             if ($replyList.length === 0) {
                                 $replyList = jQuery('<ul class="reply-list"></ul>');
                                 $form.after($replyList);
                             }
 
-                            // Add reply
                             $replyList.append(response.html);
 
-                            // Reset and hide form
                             $form.find('textarea').val('');
                             $form.slideUp(200);
-
-                            // Optionally, update UI reply counters if present
-                            // (You may need more code here depending on your UI)
                         }
                     },
                     error: function(xhr) {
@@ -514,32 +490,23 @@
                 });
             });
 
-            // Show/hide reply form
             jQuery(document).on('click', '.show-reply-form-btn', function(e) {
                 e.preventDefault();
                 const $btn = jQuery(this);
 
-                // Try closest .comment-container, otherwise fallback to immediate parent
                 let $commentContainer = $btn.closest('.comment-container');
                 if ($commentContainer.length === 0) $commentContainer = $btn.parent();
 
-                // Always select the *first* .add-reply-form within this container
                 let $replyForm = $commentContainer.find('.add-reply-form').first();
 
-                // If not found, try to search in next siblings (fallback)
                 if (!$replyForm.length) {
                     $replyForm = $btn.closest('li').find('.add-reply-form').first();
                 }
 
-                // If still not found, look in direct parent (robust fallback)
                 if (!$replyForm.length) {
                     $replyForm = $btn.parent().find('.add-reply-form').first();
                 }
 
-                // If STILL not found, search globally using data-parent-id or similar (as needed)
-                // If you have unique IDs you can use: $('.add-reply-form[data-parent-id="' + ... + '"]');
-
-                // Show/hide and focus
                 $replyForm.slideToggle(200, function() {
                     if ($replyForm.is(':visible')) {
                         $replyForm.find('textarea').focus();
@@ -584,22 +551,18 @@
             });
 
             jQuery(document).off('click', '.edit-comment-btn').on('click', '.edit-comment-btn', function(e) {
-            e.preventDefault();
+                e.preventDefault();
 
-            // Get the comment id of this button
-            const commentId = jQuery(this).data('comment-id');
-            // Find the relevant container for this comment only
-            const $commentContainer = jQuery('#comment-' + commentId);
+                const commentId = jQuery(this).data('comment-id');
+                const $commentContainer = jQuery('#comment-' + commentId);
 
-            // Hide all edit-comment-forms and show all .acomment-content inside this container only
-            $commentContainer.find('.edit-comment-form').hide();
-            $commentContainer.find('.acomment-content').show();
+                $commentContainer.find('.edit-comment-form').hide();
+                $commentContainer.find('.acomment-content').show();
 
-            // Hide the content for this specific comment and show its form (only itself, not its replies)
-            $commentContainer.children('.acomment-content').hide();
-            $commentContainer.children('.edit-comment-form').show();
-            $commentContainer.find('.edit-comment-text').focus();
-        });
+                $commentContainer.children('.acomment-content').hide();
+                $commentContainer.children('.edit-comment-form').show();
+                $commentContainer.find('.edit-comment-text').focus();
+            });
 
             jQuery(document).on('click', '.cancel-edit', function(e) {
                 e.preventDefault();
@@ -773,6 +736,27 @@
                 });
             });
 
+            jQuery(document).on("click", ".postContentModal", function(e) {
+                let postID = jQuery(this).data("post-id");
+                $.ajax({
+                    url: "{{ route('posts.generate_post_content') }}",
+                    type: "{{ FORM_METHOD_POST }}",
+                    data: {
+                        post_id: postID,
+                        _token: "{{ csrf_token() }}",
+                    },
+                    beforeSend: function() {
+                        jQuery(".post-popup-conten").html(
+                            "<h2>Loading <i class='fa fa-spinner fa-spin'></i></h2>");
+                    },
+                    success: function(resp) {
+                        if (resp.status == {{ REQUEST_PROCESSED }}) {
+                            jQuery(".post-popup-content").html(resp.content);
+                        }
+                    }
+                });
+            });
+
             function showTempMessage(message, type = 'success') {
                 const $message = jQuery('<div class="temp-message alert alert-' + type + '">' + message + '</div>');
                 jQuery('body').append($message);
@@ -790,7 +774,7 @@
                     $message.fadeOut(300, function() {
                         jQuery(this).remove();
                     });
-                }, 3500);
+                }, 2500);
             }
         });
     </script>

@@ -18,11 +18,13 @@ Route::middleware(['web'])->group(function () {
         Route::get("/", [UserController::class, 'show_dashboard'])->name('users.show_dashboard');
 
         Route::get("/profile", [UserController::class, 'show_profile'])->name('users.profile');
+
         Route::prefix("post")->group(function(){
             Route::get("/load", [PostController::class, 'load_posts'])->name('posts.load');
             Route::get("/photos", [PostController::class, 'show_photos'])->name("posts.show_photos");
             Route::get("/videos", [PostController::class, 'show_videos'])->name('posts.show_videos');
 
+            Route::post("/load-post", [PostController::class, 'generate_post_content'])->name('posts.generate_post_content');
             Route::post("/manage-like-dislike", [PostController::class, 'toggleLike'])->name('posts.toggle_like');
             Route::post("/delete-post", [PostController::class, 'delete_post'])->name('posts.delete');
             Route::post("/mark-favorite", [PostController::class, 'toggleMarkFavorite'])->name('posts.toggle_mark_favorite');
