@@ -8,7 +8,7 @@
                 @auth
                     <div class="info">
                         <a href="{{ route('users.profile') }}" class="profile-avatar">
-                            <img src="{{ asset(Auth::user()->profile_picture) }}" alt="{{ Auth::user()->username }}"
+                            <img src="{{ asset('/storage/'.Auth::user()->profile_picture) }}" alt="{{ Auth::user()->username }}"
                                 class="avatar mCS_img_loaded">
                         </a>
                         <div class="profile-name">

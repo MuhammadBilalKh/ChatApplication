@@ -133,11 +133,17 @@ class UserController extends Controller
             'user_gender' => 'required',
             'country_id' => 'required|numeric',
             'city_name' => 'required|max:100',
+            'field_2_day' => 'required|integer|min:1|max:31',
+            'field_2_month' => 'required|string',
+            'field_2_year' => 'required|integer|min:1900|max:'.date('Y'),
         ], [
-            'user_full_name.required' => "Full Name is Required",
-            'user_gender.required' => "Please Select Gender",
-            'country_id.required' => "Country is Required",
-            'city_name.required' => "Please Enter Your Country Name",
+            'user_full_name.required' => 'Full Name is Required',
+            'user_gender.required' => 'Please Select Gender',
+            'country_id.required' => 'Country is Required',
+            'city_name.required' => 'Please Enter Your Country Name',
+            'field_2_day.required' => 'Day is required',
+            'field_2_month.required' => 'Month is required',
+            'field_2_year.required' => 'Year is required',
         ]);
 
         $user = Auth::user();
@@ -146,8 +152,13 @@ class UserController extends Controller
             $profileImage = $request->file('profile_image');
             if ($profileImage->isValid()) {
                 $uniqueFileName = uniqid('profile_', true) . '.' . $profileImage->getClientOriginalExtension();
-                $profileImagePath = $profileImage->storeAs('profile_images', $uniqueFileName, 'public');
-                $user->profile_picture = $profileImagePath;
+                // Store in 'public/storage/profile_images'
+                $destinationPath = public_path('storage/profile_images');
+                if (! file_exists($destinationPath)) {
+                    mkdir($destinationPath, 0755, true);
+                }
+                $profileImage->move($destinationPath, $uniqueFileName);
+                $user->profile_picture = 'profile_images/' . $uniqueFileName;
             }
         }
 
@@ -155,7 +166,32 @@ class UserController extends Controller
         $user->gender = $request->input('user_gender');
         $user->country_id = $request->input('country_id');
         $user->city_name = $request->input('city_name');
+
+        $day = $request->input('field_2_day');
+        $month = $request->input('field_2_month');
+        $year = $request->input('field_2_year');
+
+        $months = [
+            'January' => 1, 'February' => 2, 'March' => 3, 'April' => 4,
+            'May' => 5, 'June' => 6, 'July' => 7, 'August' => 8,
+            'September' => 9, 'October' => 10, 'November' => 11, 'December' => 12,
+        ];
+
+        $monthNum = $months[$month] ?? null;
+        if (! $monthNum) {
+            return redirect()->back()->withErrors(['field_2_month' => 'Invalid month selected.'])->withInput();
+        }
+
+        if (! checkdate($monthNum, $day, $year)) {
+            return redirect()->back()->withErrors(['date_of_birth' => 'The selected date of birth is invalid.'])->withInput();
+        }
+
+        $date_of_birth = sprintf('%04d-%02d-%02d', $year, $monthNum, $day);
+        $user->date_of_birth = $date_of_birth;
+
         $user->save();
+
+        Post::createPostForInfoUpdated("profile was updated", Auth::user()->username.' Updates Its Profile Information');
 
         return redirect()->back()->with('success', 'Profile Detail Updated Successfully.');
     }

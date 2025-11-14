@@ -6,6 +6,7 @@ namespace App\Models;
 use App\Models\User;
 use App\Models\PostMedia;
 use App\Models\MarkFavorite;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
@@ -67,5 +68,16 @@ class Post extends Model
 
     public function getMarkedFavorite(){
         return $this->hasMany(MarkFavorite::class, "post_id", "post_id");
+    }
+
+    public static function createPostForInfoUpdated($title, $description){
+        static::create([
+            'title' => $title,
+            'description' => $description,
+            'is_profile_info_updated_post' => 1,
+            'user_id' => Auth::user()->user_id,
+        ]);
+
+        return true;
     }
 }

@@ -130,12 +130,12 @@
                             <div class="form-group col-md-12">
                                 <div id="field_3" class="input-options radio-button-options">
                                     <div class="form-check form-check-inline">
-                                        <input @if (Auth::user()->gender == 'male') selected @endif type="radio"
+                                        <input @if (Auth::user()->gender == 'male') checked @endif type="radio"
                                             name="user_gender" id="option_4" value="Male" />
                                         <label for="option_4" class="form-check-label option-label">Male</label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input @if (Auth::user()->gender == 'female') selected @endif type="radio"
+                                        <input @if (Auth::user()->gender == 'female') checked @endif type="radio"
                                             name="user_gender" id="option_5" value="Female" />
                                         <label for="option_5" class="form-check-label option-label">Female</label>
                                     </div>

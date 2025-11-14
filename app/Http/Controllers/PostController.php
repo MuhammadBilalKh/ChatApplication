@@ -439,22 +439,11 @@ class PostController extends Controller
             'commentParent',
             'commentPost',
             'replies.commentPostedBy',
-        ])
-        ->where('post_id', $postID)
-        ->get();
+        ])->where('post_id', $postID)->get();
 
         return response()->json([
             'status' => REQUEST_PROCESSED,
             'comments' => $comments,
-        ]);
-    }
-
-    public function update_profile(Request $request){
-
-        $user = new User();
-
-        return response()->json([
-            'status' => REQUEST_PROCESSED,
         ]);
     }
 }

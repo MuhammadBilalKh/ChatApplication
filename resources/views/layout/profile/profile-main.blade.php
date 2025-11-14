@@ -266,10 +266,10 @@
                                                                     <div id="item-header-avatar">
                                                                         <div class="item-avatar">
                                                                             <a href="/members-2/">
-                                                                                <img src="{{ asset(Auth::user()->profile_picture) }}"
+                                                                                <img src="{{ asset('/storage/'.Auth::user()->profile_picture) }}"
                                                                                     class="avatar user-2-avatar avatar-200 photo"
                                                                                     width="200" height="200"
-                                                                                    alt="Profile picture of Sandlas">
+                                                                                    alt="Profile picture of {{ Auth::user()->username }}">
                                                                             </a>
 
                                                                         </div>

@@ -35,9 +35,9 @@
                         <div id="whats-new-avatar">
 
                             <a href="https://www.clientbetalink.xyz/MIGVELv1/members-2/novipa/">
-                                <img src="{{ asset(Auth::user()->profile_picture) }}"
+                                <img src="{{ asset('/storage/'.Auth::user()->profile_picture) }}"
                                     class="avatar user-8-avatar avatar-50 photo" width="50" height="50"
-                                    alt="Profile photo of Novipa">
+                                    alt="Profile photo of {{ Auth::user()->username }}">
                             </a>
 
                         </div>
