@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use getID3;
 use App\Models\Post;
+use App\Models\User;
 use App\Models\Comment;
 use App\Models\PostLike;
 use App\Models\PostMedia;
@@ -445,6 +446,15 @@ class PostController extends Controller
         return response()->json([
             'status' => REQUEST_PROCESSED,
             'comments' => $comments,
+        ]);
+    }
+
+    public function update_profile(Request $request){
+
+        $user = new User();
+
+        return response()->json([
+            'status' => REQUEST_PROCESSED,
         ]);
     }
 }

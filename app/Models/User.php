@@ -29,6 +29,7 @@ class User extends Authenticatable
         'profile_picture',
         'country_id',
         "cover_image",
+        "city_name",
     ];
 
     /**
@@ -80,5 +81,9 @@ class User extends Authenticatable
 
     public function getLikedPosts(){
         return $this->hasMany(User::class, 'user_id', "user_id");
+    }
+
+    public function setNameAttribute($val){
+        return $this->attributes['name'] = ucwords($val);
     }
 }

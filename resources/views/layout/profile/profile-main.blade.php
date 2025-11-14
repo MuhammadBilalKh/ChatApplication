@@ -326,7 +326,7 @@
                                                                                     class="nav-link-text">Friends</span>
 
                                                                                 <span
-                                                                                    class="count color-primary">2</span>
+                                                                                    class="count color-primary">{{ Auth::user()->getFriends()->count() }}</span>
                                                                             </a>
                                                                         </li>
 
@@ -445,7 +445,7 @@
                                                                     <div class="widget">
                                                                         <ul class="connections">
                                                                             <li><span
-                                                                                    class="count color-primary">2</span>
+                                                                                    class="count color-primary">{{ Auth::user()->getFriends()->count() }}</span>
                                                                                 <p>Friends</p>
                                                                             </li>
                                                                             <li><span
@@ -457,43 +457,59 @@
 
                                                                     <div class="widget">
                                                                         <h5 class="widget-title">My photos</h5>
-                                                                        <ul class="member-photo-list">
-                                                                            <li
-                                                                                class="rtmedia-list-media rtm-gallery-list member-photo">
-                                                                                <div class="inner">
-                                                                                    <a href="./media/10/">
-                                                                                        <img src="https://www.clientbetalink.xyz/MIGVELv1/wp-content/uploads/rtMedia/users/2/2025/10/GettyImages-2171965934-250x250.jpg"
-                                                                                            alt="GettyImages-2171965934">
+                                                                        <ul class="member-photo-list" style="padding:0;margin:0;">
+                                                                            @php
+                                                                                $latestImages = Auth::user()
+                                                                                    ->getPosts()
+                                                                                    ->with([
+                                                                                        'postMedia' => function ($query) {
+                                                                                            $query->where('media_type', MEDIA_TYPE_IMAGE);
+                                                                                        },
+                                                                                    ])
+                                                                                    ->orderByDesc('created_at')
+                                                                                    ->limit(10)
+                                                                                    ->get()
+                                                                                    ->flatMap(function ($post) {
+                                                                                        return $post->postMedia;
+                                                                                    })
+                                                                                    ->sortByDesc('created_at')
+                                                                                    ->take(5);
+                                                                                $imagesChunked = $latestImages->chunk(3);
+                                                                            @endphp
+                                                                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                                                                @foreach ($imagesChunked as $row)
+                                                                                    <div style="display: flex; gap: 8px;">
+                                                                                        @foreach ($row as $media)
+                                                                                            @php $count = 0; @endphp
+                                                                                            <div style="width: 60px; height: 60px; overflow: hidden; border-radius: 6px; border: 1px solid #ddd;">
+                                                                                                <a href="{{ asset($media->file_path) }}" target="_blank" style="display: block; width: 100%; height: 100%;">
+                                                                                                    <img src="{{ asset($media->file_path) }}"
+                                                                                                         alt="User photo"
+                                                                                                         style="width: 100%; height: 100%; object-fit: cover;">
+                                                                                                </a>
+                                                                                            </div>
+                                                                                            @php $count++; @endphp
+                                                                                            @if($loop->parent->last && $loop->last && $count == 5)
+                                                                                                <div style="margin-left: 8px; display: flex; align-items: center;">
+                                                                                                    <a href="{{ route('posts.show_photos') }}"
+                                                                                                       title="View All"
+                                                                                                       style="font-size: 13px; padding: 0; background: none; border: none; color: #007bff; text-decoration: underline; cursor: pointer;">
+                                                                                                       View All
+                                                                                                    </a>
+                                                                                                </div>
+                                                                                            @endif
+                                                                                        @endforeach
+                                                                                    </div>
+                                                                                @endforeach
+                                                                                <div style="margin-top: 6px; display: flex; align-items: center;">
+                                                                                    <a href="{{ route('posts.show_photos') }}"
+                                                                                        title="View All"
+                                                                                        class="float-right text-warning"
+                                                                                        target="_blank">
+                                                                                        View All ...
                                                                                     </a>
                                                                                 </div>
-                                                                            </li>
-                                                                            <li
-                                                                                class="rtmedia-list-media rtm-gallery-list member-photo">
-                                                                                <div class="inner">
-                                                                                    <a href="./media/9/">
-                                                                                        <img src="https://www.clientbetalink.xyz/MIGVELv1/wp-content/uploads/rtMedia/users/2/2025/10/513551639_2456303934741441_2207866387033912126_n-250x250.jpg"
-                                                                                            alt="513551639_2456303934741441_2207866387033912126_n">
-                                                                                    </a>
-                                                                                </div>
-                                                                            </li>
-                                                                            <li
-                                                                                class="rtmedia-list-media rtm-gallery-list member-photo">
-                                                                                <div class="inner">
-                                                                                    <a href="./media/8/">
-                                                                                        <img src="https://www.clientbetalink.xyz/MIGVELv1/wp-content/uploads/rtMedia/users/2/2025/10/Screenshot-2025-09-03-112450-250x250.png"
-                                                                                            alt="Screenshot 2025-09-03 112450">
-                                                                                    </a>
-                                                                                </div>
-                                                                            </li>
-                                                                            <li
-                                                                                class="rtmedia-list-media rtm-gallery-list member-photo">
-                                                                                <div class="inner">
-                                                                                    <a href="./media/6/">
-                                                                                        <img src="https://www.clientbetalink.xyz/MIGVELv1/wp-content/uploads/rtMedia/users/2/2025/10/portrait-happy-smiling-millennial-woman-hugging-playing-group-akita-inu-puppies-sofa_1429-24033-250x250.jpg"
-                                                                                            alt="portrait-happy-smiling-millennial-woman-hugging-playing-group-akita-inu-puppies-sofa_1429-24033">
-                                                                                    </a>
-                                                                                </div>
-                                                                            </li>
+                                                                            </div>
                                                                         </ul>
                                                                     </div>
                                                                 </aside>
