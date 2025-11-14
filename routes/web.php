@@ -25,6 +25,7 @@ Route::middleware(['web'])->group(function () {
             Route::get("/photos", [PostController::class, 'show_photos'])->name("posts.show_photos");
             Route::get("/videos", [PostController::class, 'show_videos'])->name('posts.show_videos');
 
+            Route::post('/load-post-comments', [PostController::class, 'load_post_comments'])->name('comments.fetch');
             Route::post("/load-post", [PostController::class, 'generate_post_content'])->name('posts.generate_post_content');
             Route::post("/manage-like-dislike", [PostController::class, 'toggleLike'])->name('posts.toggle_like');
             Route::post("/delete-post", [PostController::class, 'delete_post'])->name('posts.delete');

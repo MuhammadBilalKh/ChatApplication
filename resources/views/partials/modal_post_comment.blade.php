@@ -11,7 +11,7 @@
         <span class="rtmedia-comment-author">
             <a href="{{ route('users.profile', ['id' => $comment->commentPostedBy->user_id ?? 0]) }}"
                 title="{{ $comment->commentPostedBy->name ?? 'User' }}">
-                {{ $comment->commentPostedBy->name ?? 'Unknown User' }}
+                {{ $comment->commentPostedBy->username ?? 'Unknown User' }}
             </a>
         </span>
         <span class="rtmedia-comment-date">
@@ -21,7 +21,7 @@
             <p>{{ $comment->comment_text }}</p>
         </div>
         <div class="rtmedia-comment-extra"></div>
-        @if (Auth::user()->user_id === ($comment->commentPostedBy->user_id ?? null))
+        @if (Auth::user()->user_id === ($comment->commented_by ?? null))
             <i data-id="{{ $comment->comment_id }}" class="rtmedia-delete-comment dashicons dashicons-no-alt"
                 title="Delete Comment"></i>
         @endif

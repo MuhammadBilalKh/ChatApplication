@@ -86,13 +86,7 @@
 
                     </ul>
 
-                    {{ $photos->links() }}
-
-                    <div class="rtmedia_next_prev rtm-load-more clearfix">
-                        <!-- these links will be handled by backbone -->
-                        <a id="rtMedia-galary-next" class="color-primary hide-it" href="">Load More</a>
-                    </div>
-
+                    {{ $photos->links('pagination::bootstrap-4') }}
 
                 </div>
             </div>

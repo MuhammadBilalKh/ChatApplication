@@ -11453,8 +11453,8 @@ body.kmk-editor-active nav.kmk-navbar {
 .kmk-element-image-slider .swiper-button-next,
 .kmk-element-image-slider .swiper-button-prev {
     background: rgba(0, 0, 0, 0.7);
-    height: 40px;
-    width: 40px;
+    /* height: 60px;
+    width: 60px; */
     border-radius: 50%;
     top: initial;
     bottom: 50px

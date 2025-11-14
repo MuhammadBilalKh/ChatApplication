@@ -148,7 +148,7 @@ class PostController extends Controller
     public function show_photos()
     {
         $userPosts = Post::where(['user_id' => Auth::user()->user_id])->pluck('post_id')->toArray();
-        $postMedia = PostMedia::with('getPost')->whereIn('post_id', $userPosts)->where(['media_type' => MEDIA_TYPE_IMAGE])->paginate(50);
+        $postMedia = PostMedia::with('getPost')->whereIn('post_id', $userPosts)->where(['media_type' => MEDIA_TYPE_IMAGE])->paginate(5);
 
         return view('users.photos', ['photos' => $postMedia]);
     }
@@ -426,6 +426,25 @@ class PostController extends Controller
                 'postData' => $postData,
                 'depth' => $depth,
             ])->render(),
+        ]);
+    }
+
+    public function load_post_comments(Request $request)
+    {
+        $postID = $request->post_id;
+
+        $comments = Comment::with([
+            'commentPostedBy',
+            'commentParent',
+            'commentPost',
+            'replies.commentPostedBy',
+        ])
+        ->where('post_id', $postID)
+        ->get();
+
+        return response()->json([
+            'status' => REQUEST_PROCESSED,
+            'comments' => $comments,
         ]);
     }
 }
