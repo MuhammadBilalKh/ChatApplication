@@ -1,10 +1,10 @@
-@extends('layout.master.main')
+@extends('layout.master.profile-main')
 
-@section('title', "Profile")
+@section('title', 'Profile')
 
 @section('dashboard-breadcrumbs')
     @include('layout.master.breadcrumbs', [
-        'pageHeader' => "Profile",
+        'pageHeader' => 'Profile',
     ])
 @endsection
 

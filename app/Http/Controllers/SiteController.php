@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\FriendShip;
 use App\Models\JobPosting;
+use App\Models\Post;
+use App\Models\PostMedia;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -61,10 +63,10 @@ class SiteController extends Controller
             $jobPostingQuery->where('title', 'LIKE', '%'.$request->search_keywords.'%');
         }
 
-        if (!empty($request->filter_job_type) && is_array($request->filter_job_type)) {
+        if (! empty($request->filter_job_type) && is_array($request->filter_job_type)) {
             $validJobTypes = array_filter($request->filter_job_type);
 
-            if (!empty($validJobTypes)) {
+            if (! empty($validJobTypes)) {
                 $jobPostingQuery->where(function ($query) use ($validJobTypes) {
                     foreach ($validJobTypes as $type) {
                         $query->orWhere('job_type', $type);
@@ -167,6 +169,32 @@ class SiteController extends Controller
 
         return view('users.jobs.manage_job_posting', [
             'list' => $jobPostingsList,
+        ]);
+    }
+
+    public function load_profile_pictures(Request $request)
+    {
+        $page = $request->get('page', 1);
+        $perPage = 6;
+
+        $getUploadedPosts = Post::where(['user_id' => Auth::user()->user_id])->pluck('post_id')->toArray();
+
+        $getMediaPosts = PostMedia::with('getPost', 'getPost.postUploadedBy')
+            ->whereIn('post_id', $getUploadedPosts)
+            ->where('media_type', MEDIA_TYPE_IMAGE)
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage, ['*'], 'page', $page);
+
+        return response()->json([
+            'status' => REQUEST_PROCESSED,
+            'images' => $getMediaPosts->items(),
+            'pagination' => [
+                'current_page' => $getMediaPosts->currentPage(),
+                'last_page' => $getMediaPosts->lastPage(),
+                'per_page' => $getMediaPosts->perPage(),
+                'total' => $getMediaPosts->total(),
+                'has_more' => $getMediaPosts->hasMorePages(),
+            ],
         ]);
     }
 }

@@ -19,6 +19,7 @@ Route::middleware(['web'])->group(function () {
 
         Route::get("/profile", [UserController::class, 'show_profile'])->name('users.profile');
 
+        Route::post("/load-images-media", [SiteController::class, 'load_profile_pictures'])->name('site.load_profile_pictures');
         Route::prefix("post")->group(function(){
             Route::get("/load", [PostController::class, 'load_posts'])->name('posts.load');
             Route::get("/photos", [PostController::class, 'show_photos'])->name("posts.show_photos");

@@ -1382,9 +1382,3 @@ display: none; /* Remove the text when FontAwesome icon is used */
     font-size: 18px;
 }
 }
-
-
-#header-cover-image {
-height: 280px;
-background-image: url(https://mythemestore.com/beehive-preview/wp-content/uploads/buddypress/groups/4/cover-image/5e2cc36891950-bp-cover-image.jpg);
-}
