@@ -322,7 +322,7 @@
 
                                                                         <li id="friends-personal-li"
                                                                             class="bp-personal-tab">
-                                                                            <a href="./friends/" id="user-friends"
+                                                                            <a href="{{ route('users.manage_friend_requests') }}" id="user-friends"
                                                                                 title="Friends">
                                                                                 <span
                                                                                     class="nav-link-text">Friends</span>

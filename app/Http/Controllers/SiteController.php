@@ -140,8 +140,20 @@ class SiteController extends Controller
         return view('users.jobs.create_jobs');
     }
 
-    public function cancel_friend_request()
+    public function cancel_friend_request(Request $request)
     {
+        FriendShip::where(function ($query) use ($request) {
+            $authUserId = Auth::user()->user_id;
+            $memberId = $request->member_id;
+            $query->where('sender_id', $authUserId)
+                ->where('receiver_id', $memberId);
+        })->orWhere(function ($query) use ($request) {
+            $authUserId = Auth::user()->user_id;
+            $memberId = $request->member_id;
+            $query->where('sender_id', $memberId)
+                ->where('receiver_id', $authUserId);
+        })->delete();
+
         return response()->json([
             'status' => REQUEST_PROCESSED,
             'message' => 'Friend request cancelled successfully',
@@ -195,6 +207,58 @@ class SiteController extends Controller
                 'total' => $getMediaPosts->total(),
                 'has_more' => $getMediaPosts->hasMorePages(),
             ],
+        ]);
+    }
+
+    public function list_friends()
+    {
+        $friends = FriendShip::with('getSender', 'getReceiver')
+            ->where(function ($query) {
+                $query->where('sender_id', Auth::user()->user_id)
+                    ->orWhere('receiver_id', Auth::user()->user_id);
+            })
+            ->where('status', FRIEND_REQUEST_STATUS_ACCEPTED)
+            ->get();
+
+        return view('users.profile.friends', [
+            'friends' => $friends,
+        ])->render();
+    }
+
+    public function list_requests()
+    {
+        $request = FriendShip::where([
+            'receiver_id' => Auth::user()->user_id,
+            'status' => FRIEND_REQUEST_STATUS_PENDING,
+        ])->get();
+
+        return view('users.profile.requests', [
+            'requests' => $request,
+        ])->render();
+    }
+
+    public function manage_request_response(Request $request)
+    {
+        $requestType = $request->request_type;
+        $receiverId = Auth::user()->user_id;
+        $memberID = $request->member_id;
+
+        if ($requestType == 'accept') {
+            FriendShip::where([
+                'receiver_id' => $receiverId,
+                'sender_id' => $memberID,
+            ])->update([
+                'status' => FRIEND_REQUEST_STATUS_ACCEPTED,
+            ]);
+        } else if($requestType == "reject") {
+            FriendShip::where([
+                'receiver_id' => $receiverId,
+                'sender_id' => $memberID,
+            ])->delete();
+        }
+
+        return response()->json([
+            'status' => REQUEST_PROCESSED,
         ]);
     }
 }

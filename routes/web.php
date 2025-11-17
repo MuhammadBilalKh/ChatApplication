@@ -48,6 +48,10 @@ Route::middleware(['web'])->group(function () {
             Route::get('/list', [SiteController::class, 'list'])->name('peoples.list');
             Route::get('/games', [SiteController::class, 'games'])->name('peoples.games');
 
+            Route::get("/load-friends", [SiteController::class, 'list_friends'])->name('peoples.list_friends');
+            Route::get("/load-requests", [SiteController::class, 'list_requests'])->name("peoples.list_requests");
+
+            Route::post("/manage_request_response", [SiteController::class, 'manage_request_response'])->name('peoples.manage_request_response');
             Route::post('/send_friend_request', [SiteController::class, 'create_friend_request'])->name('peoples.create_friend_request');
             Route::post('/cancel_friend_request', [SiteController::class, 'cancel_friend_request'])->name('peoples.cancel_friend_request');
         });
