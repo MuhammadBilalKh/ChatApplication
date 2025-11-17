@@ -4,6 +4,7 @@
         $topLevelCommentsCount = $topLevelComments->count();
         $markedFavorite = $post->getMarkedFavorite->contains('user_id', Auth::user()->user_id);
         $userLiked = $post->getLikedBy->contains('user_id', Auth::user()->user_id);
+        $isSpecialMiniActivity = $post->new_joining_post == NEW_JOINING_USER_POST || $post->is_profile_info_updated_post == 1;
     @endphp
     <li class="activity-item animate-item slideInUp" data-id="{{ $post->post_id }}">
         <div class="activity-avatar item-avatar">
@@ -23,16 +24,12 @@
                             <span>{{ $post->description }}</span>
                         @endif
                     </p>
+                    <div class="date mute">{{ $post->created_at->diffForHumans() }}</div>
                 </div>
-                <div class="date mute">{{ $post->created_at->diffForHumans() }}</div>
-                @if ($post->new_joining_post != NEW_JOINING_USER_POST && !empty($post->description))
-                    <div class="mt-1">
-                        <span>{{ $post->description }}</span>
-                    </div>
-                @endif
+
             </div>
 
-            @if ($post->new_joining_post != NEW_JOINING_USER_POST)
+            @if (!$isSpecialMiniActivity)
                 <div class="activity-inner">
                     @if ($post->postMedia && $post->postMedia->count())
                         @php
@@ -73,40 +70,7 @@
                             </div>
                         </div>
                     @endif
-                    <div class="activity-meta action">
-                        <div class="generic-button">
-                            <a class="button acomment-reply bp-primary-action bp-tooltip show-comments-btn"
-                                data-bp-tooltip="Comment" role="button"
-                                data-comments-count="{{ $topLevelCommentsCount }}"
-                                data-post-id="{{ $post->post_id }}">
-                                <span> Comments</span>
-                            </a>
-                        </div>
-                        <div class="generic-button">
-                            <a type="button" data-id="post-{{ $post->post_id }}"
-                                class="button btnMarkFavorite fav bp-secondary-action {{ $markedFavorite ? 'unlike' : 'like' }} bp-tooltip"
-                                data-bp-tooltip="Mark as Favorite">
-                                <span>{{ $markedFavorite ? 'Remove Marked' : 'Mark as Favorite' }}</span>
-                            </a>
-                        </div>
-                        @if (Auth::user()->user_id == $post->postUploadedBy->user_id)
-                            <div class="generic-button">
-                                <a type="button" data-id="post-{{ $post->post_id }}"
-                                    class="button delPost fav bp-secondary-action bp-tooltip" data-bp-tooltip="Delete">
-                                    <span>Delete</span>
-                                </a>
-                            </div>
-                        @endif
-                        <div class="generic-button kmk-like">
-                            <a type="button" id="post-{{ $post->post_id }}" data-id="post-{{ $post->post_id }}"
-                                class="button btnLikeUnlike bp-primary-action {{ $userLiked ? 'unlike' : 'like' }}">
-                                <i
-                                    class="{{ $userLiked ? 'uil-thumbs-down' : 'uil-thumbs-up' }} post-{{ $post->post_id }}"></i>
-                                <span class="like-text">{{ count($post->getLikedBy) }} Like</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
+
             @else
                 <div class="kmk-mini-activity member">
                     <div class="mini-activity-inner">
@@ -130,7 +94,7 @@
                                             class="uil-at"></i>{{ $post->postUploadedBy->username }}</span>
                                 </div>
                             </div>
-                            @if (Auth::user()->user_id != $post->user_id)
+                            @if ($post->new_joining_post == NEW_JOINING_USER_POST && Auth::user()->user_id != $post->user_id)
                                 <div class="mini-actions">
                                     <div class="friendship-button pending_friend generic-button"
                                         id="friendship-button-1">
@@ -147,8 +111,7 @@
                 </div>
             @endif
 
-            <div class="activity-meta action"
-                style="{{ $post->new_joining_post == NEW_JOINING_USER_POST ? '' : 'display:none;' }}">
+            <div class="activity-meta action">
                 <div class="generic-button">
                     <a class="button acomment-reply bp-primary-action bp-tooltip show-comments-btn"
                         data-bp-tooltip="Comment" role="button" data-comments-count="{{ $topLevelCommentsCount }}"
@@ -182,16 +145,13 @@
             </div>
         </div>
 
-        <!-- Comments Section -->
         <div class="activity-comments post-comments" id="comments-{{ $post->post_id }}" style="display: none;">
-            <!-- Comments List -->
             <ul class="comment-list">
                 @foreach ($topLevelComments as $comment)
                     @include('partials.comment_item', ['comment' => $comment, 'depth' => 0])
                 @endforeach
             </ul>
 
-            <!-- Add Comment Form -->
             <form action="{{ route('comments.store') }}" method="POST" class="add-comment-form">
                 @csrf
                 <input type="hidden" name="post_id" value="{{ $post->post_id }}">
