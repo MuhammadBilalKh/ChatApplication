@@ -77,10 +77,10 @@
                     <a class="nav-link dropdown-toggle" href="#" id="nav_my_account" role="button"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <img alt=""
-                            src="https://www.clientbetalink.xyz/MIGVELv1/wp-content/uploads/avatars/2/1761166349-bpthumb.jpg"
+                            src="{{ asset(Auth::user()->profile_picture) }}"
                             class="avatar avatar-30 photo" height="30" width="30"> <span
                             class="account-name">@
-                            sandlas</span>
+                            {{ Auth::user()->username }}</span>
                     </a>
                     <div class="dropdown-menu" aria-labelledby="nav_my_account">
                         <ul id="menu-account-menu" class="member-account-menu">

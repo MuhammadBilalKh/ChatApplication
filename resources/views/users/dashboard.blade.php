@@ -35,7 +35,7 @@
                         <div id="whats-new-avatar">
 
                             <a href="https://www.clientbetalink.xyz/MIGVELv1/members-2/novipa/">
-                                <img src="{{ asset('/storage/'.Auth::user()->profile_picture) }}"
+                                <img src="{{ asset(Auth::user()->profile_picture) }}"
                                     class="avatar user-8-avatar avatar-50 photo" width="50" height="50"
                                     alt="Profile photo of {{ Auth::user()->username }}">
                             </a>
@@ -162,7 +162,6 @@
             const fileInput = document.getElementById('html5_1j8u2f1q1aon1eei190eik911tu3');
             const fileListContainer = document.getElementById('rtmedia_uploader_filelist');
 
-            // Initially hide alert
             document.title = "Welcome {{ Auth::user()->name }}";
 
             loadPosts();

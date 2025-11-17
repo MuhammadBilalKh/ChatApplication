@@ -8,7 +8,7 @@
     <li class="activity-item animate-item slideInUp" data-id="{{ $post->post_id }}">
         <div class="activity-avatar item-avatar">
             <a href="#">
-                <img src="{{ asset('/storage/' . $post->postUploadedBy->profile_picture ?? 'assets/images/default.png') }}"
+                <img src="{{ asset($post->postUploadedBy->profile_picture ?? 'assets/images/default.png') }}"
                     width="50" height="50" class="avatar user-7-avatar avatar-200 photo"
                     alt="User Profile Picture" />
             </a>
@@ -18,49 +18,22 @@
             <div class="activity-header">
                 <div class="posted-meta">
                     <p>
-                        <a href="{{ route('users.profile') }}">{{ Auth::user()->username }}</a>
+                        <a href="{{ route('users.profile') }}" class="h5">{{ Auth::user()->username }}</a>
+                        @if ($post->new_joining_post == NEW_JOINING_USER_POST)
+                            <span>{{ $post->description }}</span>
+                        @endif
                     </p>
                 </div>
                 <div class="date mute">{{ $post->created_at->diffForHumans() }}</div>
-            </div>
-
-            @if ($post->is_new_joining_post == NEW_JOINING_USER_POST || $post->is_profile_info_updated_post == 1)
-                <div class="activity-inner">
-                    <div class="beehive-mini-activity member">
-                        <div class="mini-activity-inner">
-                            <div class="mini-cover"></div>
-                            <div class="mini-content">
-                                <div class="mini-avatar">
-                                    <a href="https://www.clientbetalink.xyz/MIGVELv1/members-2/david/">
-                                        <img loading="lazy"
-                                            src="{{ asset('/storage/' . Auth::user()->profile_picture) }}"
-                                            class="avatar user-6-avatar avatar-200 photo" width="200" height="200"
-                                            alt="Profile Photo"> </a>
-                                </div>
-                                <div class="mini-info">
-                                    <h5 class="mini-title"><a
-                                            href="https://www.clientbetalink.xyz/MIGVELv1/members-2/david/"
-                                            class="ellipsis">Mùchén</a></h5>
-                                    <div class="mini-meta">
-                                        <span class="ellipsis"><i class="uil-at"></i>david</span>
-                                    </div>
-                                </div>
-                                <div class="mini-actions">
-                                    <div class="friendship-button is_friend generic-button" id="friendship-button-6"><a
-                                            href="https://www.clientbetalink.xyz/MIGVELv1/members-2/wpdeveloper/friends/remove-friend/6/?_wpnonce=7d4735fa0a"
-                                            class="friendship-button is_friend remove" id="friend-6" rel="remove"
-                                            title="Cancel Friendship" data-bp-btn-action="is_friend">Cancel
-                                            Friendship</a></div>
-                                </div>
-                            </div>
-                        </div>
+                @if ($post->new_joining_post != NEW_JOINING_USER_POST && !empty($post->description))
+                    <div class="mt-1">
+                        <span>{{ $post->description }}</span>
                     </div>
-                </div>
-            @endif
+                @endif
+            </div>
 
             @if ($post->new_joining_post != NEW_JOINING_USER_POST)
                 <div class="activity-inner">
-                    <p>{{ $post->description }} </p>
                     @if ($post->postMedia && $post->postMedia->count())
                         @php
                             $firstMedia = $post->postMedia->first();
@@ -138,13 +111,12 @@
                 <div class="kmk-mini-activity member">
                     <div class="mini-activity-inner">
                         <div class="mini-cover"
-                            style="background-image: url('{{ asset('/storage/' . $post->postUploadedBy->cover_image) }}')">
+                            style="background-image: url('{{ asset($post->postUploadedBy->cover_image) }}')">
                         </div>
                         <div class="mini-content">
                             <div class="mini-avatar">
                                 <a href="./members-2/wpdeveloper/">
-                                    <img loading="lazy"
-                                        src="{{ asset('/storage/' . $post->postUploadedBy->profile_picture) }}"
+                                    <img loading="lazy" src="{{ asset($post->postUploadedBy->profile_picture) }}"
                                         class="avatar user-1-avatar avatar-200 photo" width="200" height="200"
                                         alt="Profile Photo" />
                                 </a>
@@ -158,15 +130,18 @@
                                             class="uil-at"></i>{{ $post->postUploadedBy->username }}</span>
                                 </div>
                             </div>
-                            <div class="mini-actions">
-                                <div class="friendship-button pending_friend generic-button" id="friendship-button-1">
-                                    <a href="./members-2/novipa/friends/requests/cancel/1/?_wpnonce=b59a45b00b"
-                                        class="friendship-button pending_friend requested" id="friend-1"
-                                        rel="remove" title="Cancel Friendship Requested"
-                                        data-bp-btn-action="pending">Cancel
-                                        Friendship Request</a>
+                            @if (Auth::user()->user_id != $post->user_id)
+                                <div class="mini-actions">
+                                    <div class="friendship-button pending_friend generic-button"
+                                        id="friendship-button-1">
+                                        <a href="./members-2/novipa/friends/requests/cancel/1/?_wpnonce=b59a45b00b"
+                                            class="friendship-button pending_friend requested" id="friend-1"
+                                            rel="remove" title="Cancel Friendship Requested"
+                                            data-bp-btn-action="pending">Cancel
+                                            Friendship Request</a>
+                                    </div>
                                 </div>
-                            </div>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -224,7 +199,7 @@
 
                 <div class="ac-reply-avatar">
                     <img loading="lazy"
-                        src="{{ asset('/storage/' . Auth::user()->profile_picture ?? 'assets/images/default.png') }}"
+                        src="{{ asset(Auth::user()->profile_picture ?? 'assets/images/default.png') }}"
                         class="avatar user-{{ Auth::user()->user_id }}-avatar avatar-50 photo" width="50"
                         height="50" alt="Profile picture of {{ Auth::user()->name }}" />
                 </div>

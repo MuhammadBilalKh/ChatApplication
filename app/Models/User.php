@@ -31,6 +31,7 @@ class User extends Authenticatable
         "cover_image",
         "city_name",
         "gender",
+        "is_online",
     ];
 
     /**

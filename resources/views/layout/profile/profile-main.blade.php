@@ -220,6 +220,8 @@
         }
     </style>
 
+    @stack("css")
+
 </head>
 
 <body
@@ -266,7 +268,7 @@
                                                                     <div id="item-header-avatar">
                                                                         <div class="item-avatar">
                                                                             <a href="/members-2/">
-                                                                                <img src="{{ asset('/storage/'.Auth::user()->profile_picture) }}"
+                                                                                <img src="{{ asset(Auth::user()->profile_picture) }}"
                                                                                     class="avatar user-2-avatar avatar-200 photo"
                                                                                     width="200" height="200"
                                                                                     alt="Profile picture of {{ Auth::user()->username }}">
@@ -687,8 +689,6 @@
                                     <div class="chat-window__input--emoji">
                                         <button id="emojiBtn" type="button">😊</button>
                                     </div>
-                                    <!-- <a href="#" class="chat-window__btn--enter"><span
-                                            class="dashicons dashicons-yes"></span></a> -->
                                 </div>
                             </div>
                         </div>
@@ -720,54 +720,6 @@
     <script src="/assets/js/kmk.min.js"></script>
 
 </body>
-
-<script>
-    const button = document.getElementById('bp-browse-button');
-    const fileInput = document.getElementById('html5_1j9dk63tav751hempgv6698el5');
-    const preview = document.getElementById('avatar-preview').querySelector('img');
-
-    // When the visible button is clicked, open the hidden file input
-    button.addEventListener('click', () => {
-        fileInput.click();
-    });
-
-    // When a file is selected, show the preview
-    fileInput.addEventListener('change', function() {
-        const file = this.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                preview.src = e.target.result;
-                preview.style.display = 'block';
-            }
-            reader.readAsDataURL(file);
-        }
-    });
-</script>
-
-<script>
-    const button = document.getElementById('bp-browse-button');
-    const fileInput = document.getElementById('html5_1j9dk63tav751hempgv6698el5');
-    const preview = document.getElementById('avatar-preview').querySelector('img');
-
-    // When the visible button is clicked, open the hidden file input
-    button.addEventListener('click', () => {
-        fileInput.click();
-    });
-
-    // When a file is selected, show the preview
-    fileInput.addEventListener('change', function() {
-        const file = this.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                preview.src = e.target.result;
-                preview.style.display = 'block';
-            }
-            reader.readAsDataURL(file);
-        }
-    });
-</script>
 
 <script>
     $(document).ready(function() {
@@ -863,10 +815,6 @@
 </script>
 
 
-
-
-
-<!-- chat -->
 <script>
     const chatBuddies = document.getElementById('buddy-chat-buddies');
     const collapserButton = document.getElementById('buddy-chat-buddies__collapser');
@@ -997,5 +945,7 @@
     ['DOMContentLoaded', 'kmk/lazyload/observe']
     .forEach(e => document.addEventListener(e, lazyloadRunObserver));
 </script>
+
+@stack('script')
 
 </html>

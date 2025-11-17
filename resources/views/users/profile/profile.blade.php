@@ -8,6 +8,15 @@
     ])
 @endsection
 
+@push('css')
+    <style>
+        #header-cover-image{
+            height: 300px;
+            background-image: url('{{ asset('/storage/'.Auth::user()->cover_image) }}');
+        }
+        </style>
+@endpush
+
 @section('profile-content')
     <nav class="bp-navs bp-subnavs no-ajax user-subnav" id="subnav" role="navigation" aria-label="Profile menu">
         <ul id="member-secondary-nav" class="subnav bp-priority-subnav-nav-items">
@@ -153,8 +162,8 @@
                         </legend>
                         <div class="row">
                             <div class="form-group col-md-12">
-                                <input id="field_6" name="city_name" type="text" class="form-control" value="{{ Auth::user()->city_name }}"
-                                    aria-required="true" aria-labelledby="field_6-1"
+                                <input id="field_6" name="city_name" type="text" class="form-control"
+                                    value="{{ Auth::user()->city_name }}" aria-required="true" aria-labelledby="field_6-1"
                                     aria-describedby="field_6-3">
                             </div>
                         </div>
@@ -170,10 +179,11 @@
                         <div class="row">
                             <div class="form-group col-md-12">
                                 <select id="field_7" name="country_id" class="form-control" aria-required="true"
-                                 aria-labelledby="field_7-1" aria-describedby="field_7-3">
+                                    aria-labelledby="field_7-1" aria-describedby="field_7-3">
                                     <option value="">----</option>
                                     @foreach ($countries as $id => $country_name)
-                                        <option @if (Auth::user()->country_id == $id) selected @endif value="{{ $id }}">{{ $country_name }}</option>
+                                        <option @if (Auth::user()->country_id == $id) selected @endif
+                                            value="{{ $id }}">{{ $country_name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -217,6 +227,39 @@
 
                 <input type="hidden" name="field_ids" id="field_ids" value="1,2,3,6,7">
 
+                <div class="bp-avatar">
+                    <div class="bp-uploader-window">
+                        <div id="bp-upload-ui" style="position: relative;" class="drag-drop">
+                            <div id="drag-drop-area" style="position: relative;">
+                                <div class="drag-drop-inside">
+                                    <p class="drag-drop-info p-3">
+                                        Please Upload Your Cover Picture</p>
+                                    <p class="drag-drop-buttons p-3">
+                                        <label for="bp-browse-button-cover" class="bp-screen-reader-text">
+                                            Select your file
+                                        </label>
+                                        <input id="bp-browse-button-cover" type="button" value="Select your file"
+                                            class="button" style="position: relative; z-index: 1;">
+                                    </p>
+
+                                    <div id="avatar-preview-cover" class="m-3" style="margin-top: 10px;">
+                                        <img src="" alt="Profile Preview"
+                                            style="max-width: 50px;  display: none; border-radius: 10%;">
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div id="html5_1j9dk63tav751hempgv6698el5_container" class="moxie-shim moxie-shim-html5"
+                                style="position: absolute; top: 71px; left: 184px; width: 169px; height: 40px; overflow: hidden; z-index: 0;">
+                                <input id="html5_1j9dk63tav751hempgv6698el5-cover" type="file"
+                                    style="font-size: 999px; opacity: 0; position: absolute; top: 0px; left: 0px; width: 100%; height: 100%;"
+                                    accept="image/jpeg,.jpg,.jpeg,.jpe,image/gif,.gif,image/png,.png,.webp"
+                                    name="cover_image" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="submit">
                     <input type="submit" name="profile-group-edit-submit" id="profile-group-edit-submit"
                         value="Save Changes">
@@ -225,3 +268,46 @@
         </div>
     </div>
 @endsection
+
+@push('script')
+    <script>
+        const button = document.getElementById('bp-browse-button');
+        const coverImageButton = document.getElementById('bp-browse-button-cover');
+        const fileInput = document.getElementById('html5_1j9dk63tav751hempgv6698el5');
+        const fileInputCover = document.getElementById('html5_1j9dk63tav751hempgv6698el5-cover');
+        const preview = document.getElementById('avatar-preview').querySelector('img');
+        const coverPreview = document.getElementById('avatar-preview-cover').querySelector('img');
+
+        coverImageButton.addEventListener('click', () => {
+            fileInputCover.click();
+        });
+
+        button.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        fileInputCover.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    coverPreview.src = e.target.result;
+                    coverPreview.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+@endpush

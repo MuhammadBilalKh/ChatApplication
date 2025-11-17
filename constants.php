@@ -45,3 +45,6 @@ defined("USER_TYPE_ADMIN") || define("USER_TYPE_ADMIN", "admin");
 defined("USER_TYPE_USER") || define("USER_TYPE_USER", "user");
 
 defined("COMMENT_TYPE_TEXT") || define("COMMENT_TYPE_TEXT", "text");
+
+defined("USER_STATUS_MARK_ONLINE") || define("USER_STATUS_MARK_ONLINE", 1);
+defined("USER_STATUS_MARL_OFFLINE") || define("USER_STATUS_MARK_OFFLINE", 0);

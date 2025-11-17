@@ -51,6 +51,7 @@
         }
     </style>
 @endpush
+
 <li class="comment-item comment-container" id="comment-{{ $comment->comment_id }}"
     data-comment-id="{{ $comment->comment_id }}" style="margin-left: {{ $depth * 30 }}px;">
 

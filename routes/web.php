@@ -22,6 +22,7 @@ Route::middleware(['web'])->group(function () {
         });
 
         Route::get('/profile', [UserController::class, 'show_profile'])->name('users.profile');
+        Route::get("/friend-requests", [UserController::class, 'manage_friend_requests'])->name('users.manage_friend_requests');
 
         Route::post('/load-images-media', [SiteController::class, 'load_profile_pictures'])->name('site.load_profile_pictures');
         Route::prefix('post')->group(function () {

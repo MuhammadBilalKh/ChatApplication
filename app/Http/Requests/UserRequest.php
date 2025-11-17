@@ -22,7 +22,7 @@ class UserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'signup_username' => "required",
+            'signup_username' => "required|unique:users,username",
             'signup_email' => "required|email|unique:users,email",
             'signup_password' => "required|min:8",
             'signup_password_confirm' => 'required|same:signup_password',
@@ -35,6 +35,7 @@ class UserRequest extends FormRequest
     {
         return [
             'signup_username.required' => "Username is Required",
+            "signup_username.unique" => "This Username is Already Taken",
             'signup_email.required' => "Email Addres is Required",
             'signup_email.email' => "Invalid Email Address",
             "singup_email.unique" => "This Email Address Is Already Exist",
