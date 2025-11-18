@@ -65,6 +65,15 @@ class PostController extends Controller
             }
         }
 
+        Notification::createNotification(
+            $post->user_id,
+            Auth::user()->username.' created a new post.',
+            NOTIFICATION_TYPE_SYSTEM,
+            $post->post_id,
+            Post::class,
+            Auth::user()->username.' have created a new post.'
+        );
+
         return redirect()->back()->with('post-upload-success', 'Post Uploaded Successfully.');
     }
 
@@ -75,12 +84,7 @@ class PostController extends Controller
         $userFriends = FriendShip::where(function ($q) use ($authId) {
             $q->where('sender_id', $authId)
                 ->orWhere('receiver_id', $authId);
-        })
-            ->where('status', FRIEND_REQUEST_STATUS_ACCEPTED)
-            ->pluck('sender_id', 'receiver_id')
-            ->flatten()
-            ->unique()
-            ->toArray();
+        })->where('status', FRIEND_REQUEST_STATUS_ACCEPTED)->pluck('sender_id', 'receiver_id')->flatten()->unique()->toArray();
 
         $userIds = array_unique(array_merge([$authId], $userFriends));
 
@@ -221,6 +225,15 @@ class PostController extends Controller
             ]);
         }
 
+        Notification::createNotification(
+            $comment->getPost->user_id,
+            Auth::user()->username.' commented on your post.',
+            NOTIFICATION_TYPE_COMMENT,
+            $comment->post_id,
+            Post::class,
+            'A new comment has been added to your post.'
+        );
+
         return back()->with('post-upload-success', 'Comment added successfully.');
     }
 
@@ -326,6 +339,15 @@ class PostController extends Controller
             ]);
         }
 
+        Notification::createNotification(
+            Post::find($postID)->user_id,
+            Auth::user()->username.' liked your post.',
+            NOTIFICATION_TYPE_LIKE,
+            $postID,
+            Post::class,
+            Auth::user()->username.' liked your post.'
+        );
+
         return response()->json([
             'status' => REQUEST_PROCESSED,
             'likesCount' => PostLike::where(['post_id' => $postID])->count(),
@@ -354,6 +376,15 @@ class PostController extends Controller
             ]);
 
             $markType = 'create';
+
+            Notification::createNotification(
+                Post::find($postID)->user_id,
+                Auth::user()->username.' marked your post as favorite.',
+                NOTIFICATION_TYPE_FAVORITE,
+                $postID,
+                Post::class,
+                Auth::user()->username.' marked your post as favorite.'
+            );
 
             return response()->json([
                 'status' => REQUEST_PROCESSED,

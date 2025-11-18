@@ -19,8 +19,8 @@
             <div class="activity-header">
                 <div class="posted-meta">
                     <p>
-                        <a href="{{ route('users.profile') }}" class="h5">{{ Auth::user()->username }}</a>
-                        @if ($post->new_joining_post == NEW_JOINING_USER_POST)
+                        <a href="{{ route('users.profile') }}" class="h5">{{ $post->postUploadedBy->username }}</a>
+                        @if ($isSpecialMiniActivity)
                             <span>{{ $post->description }}</span>
                         @endif
                     </p>
@@ -75,7 +75,7 @@
                 <div class="kmk-mini-activity member">
                     <div class="mini-activity-inner">
                         <div class="mini-cover"
-                            style="background-image: url('{{ asset($post->postUploadedBy->cover_image) }}')">
+                            style="background-image: url('{{ asset('/storage/'.$post->postUploadedBy->cover_image) }}')">
                         </div>
                         <div class="mini-content">
                             <div class="mini-avatar">
@@ -161,7 +161,7 @@
                     <img loading="lazy"
                         src="{{ asset(Auth::user()->profile_picture ?? 'assets/images/default.png') }}"
                         class="avatar user-{{ Auth::user()->user_id }}-avatar avatar-50 photo" width="50"
-                        height="50" alt="Profile picture of {{ Auth::user()->name }}" />
+                        height="50" alt="Profile picture of {{ $post->postUploadedBy->username }}" />
                 </div>
 
                 <div class="ac-reply-content">

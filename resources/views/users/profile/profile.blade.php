@@ -10,11 +10,11 @@
 
 @push('css')
     <style>
-        #header-cover-image{
+        #header-cover-image {
             height: 300px;
-            background-image: url('{{ asset('/storage/'.Auth::user()->cover_image) }}');
+            background-image: url('{{ asset('/storage/' . Auth::user()->cover_image) }}');
         }
-        </style>
+    </style>
 @endpush
 
 @section('profile-content')
@@ -48,7 +48,7 @@
                 </div>
             @endif
 
-            <form action={{ route('users.update_profile') }} method="{{ FORM_METHOD_POST }}" enctype="multipart/form-data">
+            <form action="{{ route('users.update_profile') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="editfield mt-3 field_1 field_name required-field visibility-public field_type_textbox">
                     <fieldset>
@@ -270,6 +270,8 @@
 @endsection
 
 @push('script')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script>
         const button = document.getElementById('bp-browse-button');
         const coverImageButton = document.getElementById('bp-browse-button-cover');

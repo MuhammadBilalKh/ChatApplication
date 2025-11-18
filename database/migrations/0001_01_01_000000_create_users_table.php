@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string("date_of_birth")->nullable();
             $table->string("profile_picture");
             $table->enum("gender", ['male', "female"])->nullable();
+            $table->unsignedTinyInteger("is_online");
             $table->rememberToken();
             $table->unsignedTinyInteger("status");
             $table->timestamps();

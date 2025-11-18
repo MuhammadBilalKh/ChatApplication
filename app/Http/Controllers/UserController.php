@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Country;
 use App\Models\FriendShip;
 use Illuminate\Http\Request;
+use App\Models\Notification;
 use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\Auth;
 
@@ -28,7 +29,7 @@ class UserController extends Controller
 
     public function store_user(UserRequest $request)
     {
-        $user = new User;
+        $user = new User();
 
         $profilePicturePath = null;
 
@@ -106,6 +107,16 @@ class UserController extends Controller
             'recentPosts' => $recentPosts,
             'totalFriends' => $totalFriendsCount,
             'pendingFriendRequests' => $pendingFriendRequests,
+        ]);
+    }
+
+    public function show_notifications(){
+        $notifications = Notification::where('user_id', Auth::user()->user_id)
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+        return view('users.notifications.index', [
+            'notifications' => $notifications,
         ]);
     }
 

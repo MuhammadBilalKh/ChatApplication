@@ -172,13 +172,13 @@
                                 </main>
                             </div>
                             @include('layout.master.right_panel')
-                            @include('layout.master.chat_windows')
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    @include('layout.master.chat_windows')
     @include('layout.master.chatbar')
 
     @include('partials.content_modal')
@@ -211,116 +211,6 @@
     src="https://www.clientbetalink.xyz/MIGVELv1/wp-content/plugins/buddypress-media/app/assets/js/vendors/emoji-picker.js?ver=4.7.3">
 </script> --}}
 
-<script>
-    const chatBuddies = document.getElementById('buddy-chat-buddies');
-    const collapserButton = document.getElementById('buddy-chat-buddies__collapser');
-    const chatWindowCloseButtons = document.querySelectorAll('.chat_window__close-btn');
-    const chatBuddiesItems = document.querySelectorAll('.bpc-item');
-    const emojiBtn = document.getElementById('emojiBtn');
-    const inputField = document.querySelector('.chat-window__input--field');
-    const placeholder = document.querySelector('.chat-window__input--placeholder');
-    const sendButton = document.querySelector('.chat-window__btn--enter');
-    const chatList = document.querySelector('.bpc-chat-list');
-
-    // Toggle sidebar
-    // collapserButton.addEventListener('click', () => {
-    //     chatBuddies.classList.toggle('collapsed');
-    // });
-
-    // Close chat
-    chatWindowCloseButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const chatWindow = button.closest('.chat-window');
-            chatWindow.style.display = 'none';
-        });
-    });
-
-    // Open chat
-    chatBuddiesItems.forEach(item => {
-        item.addEventListener('click', () => {
-            const userName = item.querySelector('.chat-buddy').textContent.trim();
-            const chatWindow = document.getElementById(`chat-window-${userName.replace(" ", "-")}`);
-            if (chatWindow) chatWindow.style.display = 'block';
-        });
-    });
-
-    // Input placeholder logic
-    if (inputField) {
-        inputField.addEventListener('input', function() {
-            placeholder.style.display = this.textContent.trim() ? 'none' : 'block';
-        });
-    }
-
-    // Send message
-    function sendMessage() {
-        const message = inputField.textContent.trim();
-        if (!message) return;
-
-        const newMsg = document.createElement('li');
-        newMsg.classList.add('message--self');
-        newMsg.innerHTML = `
-            <time>${new Date().toLocaleString()}</time>
-            <div class="message-block">
-                <div class="messages">
-                    <div class="message">${message}</div>
-                </div>
-            </div>
-        `;
-
-        chatList.appendChild(newMsg);
-        inputField.textContent = '';
-        placeholder.style.display = 'block';
-
-        // ✅ Scroll to latest message
-        chatList.scrollTop = chatList.scrollHeight;
-    }
-
-    // Send on button click
-    if (sendButton) {
-        sendButton.addEventListener('click', e => {
-            e.preventDefault();
-            sendMessage();
-        });
-    }
-
-    // Send on Enter key
-    if (inputField) {
-        inputField.addEventListener('keydown', e => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendMessage();
-            }
-        });
-    }
-
-    // === Emoji Picker ===
-    // Only initialize if emojiBtn exists
-    if (emojiBtn) {
-        const picker = new EmojiButton({
-            position: 'top-start',
-            theme: 'light'
-        });
-
-        picker.on('emoji', emoji => {
-            inputField.textContent += emoji;
-            inputField.focus();
-            placeholder.style.display = 'none';
-        });
-
-        emojiBtn.addEventListener('click', () => picker.togglePicker(emojiBtn));
-    }
-
-    //mobile toggle chat
-    $('#toggle-chat').on('click', function() {
-
-        // Check screen width for mobile (under 768px)
-        if ($(window).width() < 768) {
-            $('#buddy-chat-app').toggleClass('d-none');
-        } else {
-            console.log('Not mobile view — no toggle.');
-        }
-    });
-</script>
 <!-- chat -->
 
 @stack('script')
@@ -473,6 +363,117 @@
             }
 
             jQuery("#totalFriendsCount").html(resp.totalFriends);
+        }
+    });
+</script>
+
+<script>
+    const chatBuddies = document.getElementById('buddy-chat-buddies');
+    const collapserButton = document.getElementById('buddy-chat-buddies__collapser');
+    const chatWindowCloseButtons = document.querySelectorAll('.chat_window__close-btn');
+    const chatBuddiesItems = document.querySelectorAll('.bpc-item');
+    const emojiBtn = document.getElementById('emojiBtn');
+    const inputField = document.querySelector('.chat-window__input--field');
+    const placeholder = document.querySelector('.chat-window__input--placeholder');
+    const sendButton = document.querySelector('.chat-window__btn--enter');
+    const chatList = document.querySelector('.bpc-chat-list');
+
+    // Toggle sidebar
+    // collapserButton.addEventListener('click', () => {
+    //     chatBuddies.classList.toggle('collapsed');
+    // });
+
+    // Close chat
+    chatWindowCloseButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const chatWindow = button.closest('.chat-window');
+            chatWindow.style.display = 'none';
+        });
+    });
+
+    // Open chat
+    chatBuddiesItems.forEach(item => {
+        item.addEventListener('click', () => {
+            const userName = item.querySelector('.chat-buddy').textContent.trim();
+            const chatWindow = document.getElementById(`chat-window-${userName.replace(" ", "-")}`);
+            if (chatWindow) chatWindow.style.display = 'block';
+        });
+    });
+
+    // Input placeholder logic
+    if (inputField) {
+        inputField.addEventListener('input', function() {
+            placeholder.style.display = this.textContent.trim() ? 'none' : 'block';
+        });
+    }
+
+    // Send message
+    function sendMessage() {
+        const message = inputField.textContent.trim();
+        if (!message) return;
+
+        const newMsg = document.createElement('li');
+        newMsg.classList.add('message--self');
+        newMsg.innerHTML = `
+            <time>${new Date().toLocaleString()}</time>
+            <div class="message-block">
+                <div class="messages">
+                    <div class="message">${message}</div>
+                </div>
+            </div>
+        `;
+
+        chatList.appendChild(newMsg);
+        inputField.textContent = '';
+        placeholder.style.display = 'block';
+
+        // ✅ Scroll to latest message
+        chatList.scrollTop = chatList.scrollHeight;
+    }
+
+    // Send on button click
+    if (sendButton) {
+        sendButton.addEventListener('click', e => {
+            e.preventDefault();
+            sendMessage();
+        });
+    }
+
+    // Send on Enter key
+    if (inputField) {
+        inputField.addEventListener('keydown', e => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+    }
+
+    // === Emoji Picker ===
+    // Only initialize if emojiBtn exists
+    if (emojiBtn) {
+        const picker = new EmojiButton({
+            position: 'top-start',
+            theme: 'light'
+        });
+
+        picker.on('emoji', emoji => {
+            inputField.textContent += emoji;
+            inputField.focus();
+            placeholder.style.display = 'none';
+        });
+
+        emojiBtn.addEventListener('click', () => picker.togglePicker(emojiBtn));
+    }
+
+    //mobile toggle chat
+    $('#toggle-chat').on('click', function() {
+
+        // Check screen width for mobile (under 768px)
+        if ($(window).width() < 768) {
+            $('#buddy-chat-app').toggleClass('d-none');
+        } else {
+            console.log('Not mobile view — no toggle.');
         }
     });
 </script>

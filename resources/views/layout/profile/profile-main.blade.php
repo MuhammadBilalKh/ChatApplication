@@ -715,15 +715,13 @@
     <script src="/assets/js/jquery.fitvids.min.js"></script>
     <script src="/assets/js/emoji-button-3.0.3.min.js"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
-
     <script src="/assets/js/kmk.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
 
 </body>
 
 <script>
     $(document).ready(function() {
-
 
         $('#openModalBtn').on('click', function() {
             $.fancybox.open();
