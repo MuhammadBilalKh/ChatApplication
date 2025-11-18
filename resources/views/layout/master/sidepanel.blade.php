@@ -18,7 +18,7 @@
                         </div>
                     </div>
                     <ul class="connections ml-4">
-                        <li><span class="count" id="totalFriendsCount"></span>
+                        <li><span class="count" id="totalFriendsCount">{{ $friends }}</span>
                             <p class="mute">Friends</p>
                         </li>
                         <li><span class="count">0</span>
@@ -97,7 +97,7 @@
                     </li>
                     <li id="menu-item-476"
                         class="menu-item menu-item-type-post_type menu-item-object-page menu-item-476"><a
-                            href="./adverts/"><i class="uil-tv-retro"></i><span
+                            href="{{ route('users.advertisments') }}"><i class="uil-tv-retro"></i><span
                                 class="nav-link-text">Adverts</span></a>
                     </li>
                     <li id="menu-item-482"

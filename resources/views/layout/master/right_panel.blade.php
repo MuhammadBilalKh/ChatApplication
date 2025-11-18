@@ -55,22 +55,14 @@
         <div id="categories-1" class="widget widget_categories">
             <h5 class="widget-title">Categories</h5>
             <ul>
-                <li class="cat-item cat-item-47"><a href="./category/food/">Food</a>
-                </li>
-                <li class="cat-item cat-item-48"><a href="./category/fun/">Fun</a>
-                </li>
-                <li class="cat-item cat-item-49"><a href="./category/health/">Health</a>
-                </li>
-                <li class="cat-item cat-item-51"><a href="./category/lifestyle/">Lifestyle</a>
-                </li>
-                <li class="cat-item cat-item-52"><a href="./category/sports/">Sports</a>
-                </li>
-                <li class="cat-item cat-item-53"><a href="./category/technology/">Technology</a>
-                </li>
-                <li class="cat-item cat-item-54"><a href="./category/traveling/">Traveling</a>
-                </li>
-                <li class="cat-item cat-item-1"><a href="./category/uncategorized/">Uncategorized</a>
-                </li>
+                @forelse ($categories as $key => $value)
+                    <li class="cat-item cat-item-47"><a type="button"
+                            data-id="category-{{ $value->category_id }}">{{ $value->category_title }}</a>
+                    </li>
+                @empty
+                    <li class="cat-item cat-item-47"><a type="button">No Categories Found</a>
+                    </li>
+                @endforelse
             </ul>
 
         </div>

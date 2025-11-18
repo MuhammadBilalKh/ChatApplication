@@ -26,6 +26,7 @@
     <link rel="stylesheet" href="/assets/css/rtmedia.min.css" media="all" />
     <link rel="stylesheet" href="/assets/css/kmk.min.css" media="all" />
     <link rel="stylesheet" href="/assets/css/dynamic-styles.css" media="all" />
+    <link rel="stylesheet" href="/assets/css/adverts.css" media="all" />
 
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700,300italic,400italic,600italic,700italic|Quicksand:700&ver=1.4.5" />
@@ -50,100 +51,6 @@
     <link rel="stylesheet" href="/assets/css/post-95.css?ver=1761620622" />
 
     <link rel="stylesheet" href="/assets/css/mainCss.css" media="all" />
-
-
-    <style>
-        .fancybox-content {
-            background: transparent;
-            display: inline-block;
-            margin: 0;
-            max-width: 100%;
-            overflow: visible;
-            -webkit-overflow-scrolling: touch;
-            position: relative;
-            text-align: left;
-            vertical-align: middle;
-        }
-
-        .mfp-container {
-            max-width: 100%;
-            height: auto;
-        }
-
-        .fancybox-button {
-            background-color: #333;
-            color: #fff;
-            border-radius: 5px;
-            transition: background 0.3s;
-        }
-
-        .fancybox-button:hover {
-            background-color: #555;
-        }
-
-        .emoji-picker,
-        #emojiBtn2 {
-            font-size: 20px;
-            cursor: pointer;
-        }
-
-        .modal-contentPost {
-            width: 1200px;
-            height: auto;
-            max-width: 95vw;
-            max-height: none;
-            /* background: #fff; */
-            border-radius: 10px;
-            overflow: visible;
-        }
-
-        button.rtmedia-edit.rtmedia-action-buttons.button,
-        button.rtmedia-delete-media.rtmedia-action-buttons.button {
-            background: transparent;
-            box-shadow: none;
-            padding: 9px;
-        }
-
-        .rtmedia-single-container button.rtmedia-like:hover,
-        .rtmedia-single-container button.rtmedia-like:active,
-        .rtmedia-single-container button.rtmedia-like:focus {
-            color: #f5bd02;
-        }
-
-        .fancybox-close-small {
-            display: none;
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 992px) {
-            .modal-contentPost {
-                width: 90vw;
-                height: 600px;
-                max-height: none;
-                overflow-y: auto;
-                -webkit-overflow-scrolling: touch;
-            }
-        }
-
-        @media (max-width: 600px) {
-            .modal-contentPost {
-                width: 95vw;
-                height: auto;
-                max-height: none;
-                overflow-y: auto;
-                -webkit-overflow-scrolling: touch;
-                padding-bottom: 20px;
-            }
-
-            textarea#comment_content {
-                font-size: 14px;
-            }
-
-            .fancybox-content {
-                padding: 0;
-            }
-        }
-    </style>
 
     @stack('css')
 </head>
@@ -201,7 +108,7 @@
 {{-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script> --}}
 {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script> --}}
 
-{{-- <script type="text/javascript"
+<script type="text/javascript"
     src="https://www.clientbetalink.xyz/MIGVELv1/wp-content/plugins/buddypress-media/lib/media-element/mediaelement-and-player.min.js?ver=4.7.3">
 </script>
 <script type="text/javascript"
@@ -209,7 +116,7 @@
 </script>
 <script type="text/javascript"
     src="https://www.clientbetalink.xyz/MIGVELv1/wp-content/plugins/buddypress-media/app/assets/js/vendors/emoji-picker.js?ver=4.7.3">
-</script> --}}
+</script>
 
 <!-- chat -->
 
@@ -348,23 +255,6 @@
     };
     ['DOMContentLoaded', 'kmk/lazyload/observe']
     .forEach(e => document.addEventListener(e, lazyloadRunObserver));
-
-    jQuery.ajax({
-        url: "{{ route('users.show_stats') }}",
-        type: "{{ FORM_METHOD_POST }}",
-        headers: {
-            "X-CSRF-TOKEN": "{{ csrf_token() }}",
-        },
-        success: function(resp) {
-            if (resp.pendingFriendRequests == 0) {
-                jQuery("#pendingFriendRequestCount").html("No Pending Request Found")
-            } else {
-                jQuery("#pendingFriendRequestCount").html(resp.pendingFriendRequests + " Pending Request")
-            }
-
-            jQuery("#totalFriendsCount").html(resp.totalFriends);
-        }
-    });
 </script>
 
 <script>

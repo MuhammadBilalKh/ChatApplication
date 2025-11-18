@@ -18,6 +18,18 @@ Route::middleware(['web'])->group(function () {
         Route::get('/', [UserController::class, 'show_dashboard'])->name('users.show_dashboard');
 
         Route::prefix('users')->group(function () {
+            Route::get("/categories", [SiteController::class, 'manage_categories'])->name('users.manage_categories');
+
+            Route::prefix("advertisments")->group(function(){
+                Route::get("/", [SiteController::class, 'manage_advertisments'])->name('users.advertisments');
+                Route::get("/list", [SiteController::class, 'show_advertisment_content'])->name('adverts.list');
+                Route::get("/category/edit", [SiteController::class, 'edit_category'])->name('categories.edit');
+
+                Route::post("/save", [SiteController::class, 'save_advert'])->name("adverts.save_advert");
+                Route::post("/category/store", [SiteController::class, 'store_category'])->name('categories.store');
+                Route::post("/category/{id}/update", [SiteController::class, 'update_category'])->name('categories.update');
+                Route::post("/create", [SiteController::class, 'manage_advertisments'])->name('adverts.create');
+            });
             Route::post('/update-profile', [UserController::class, 'update_profile'])->name('users.update_profile');
         });
 

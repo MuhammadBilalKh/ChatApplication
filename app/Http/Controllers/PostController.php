@@ -10,6 +10,7 @@ use App\Models\PostLike;
 use App\Models\PostMedia;
 use App\Models\FriendShip;
 use App\Models\MarkFavorite;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
