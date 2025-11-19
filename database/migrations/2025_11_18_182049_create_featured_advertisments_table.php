@@ -15,6 +15,7 @@ return new class extends Migration
             $table->unsignedBigInteger("featured_advertisments_id");
             $table->unsignedBigInteger("advertisment_id");
             $table->string("is_featured");
+            $table->unsignedBigInteger("package_id");
             $table->timestamps();
         });
     }

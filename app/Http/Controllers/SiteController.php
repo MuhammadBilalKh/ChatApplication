@@ -2,20 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use Exception;
-use App\Models\User;
-use App\Models\Post;
 use App\Models\Advert;
+use App\Models\AdvertMedia;
 use App\Models\Category;
-use App\Models\PostMedia;
+use App\Models\FeaturedAdvert;
+use App\Models\FeaturedPackage;
 use App\Models\FriendShip;
 use App\Models\JobPosting;
-use App\Models\AdvertMedia;
-use Illuminate\Support\Str;
+use App\Models\Post;
+use App\Models\PostMedia;
+use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
-use App\Models\FeaturedAdvert;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Str;
 
 class SiteController extends Controller
 {
@@ -321,7 +322,7 @@ class SiteController extends Controller
         $view = '';
 
         if ($viewType == 'list') {
-            $featuredAdverts = FeaturedAdvert::with('getAdvertisment')->get();
+            $featuredAdverts = FeaturedAdvert::with('getAdvertisment')->where('is_featured', 2)->get();
             $view = view('users.advertisment.list', [
                 'featuredAdverts' => $featuredAdverts,
             ])->render();
@@ -335,14 +336,24 @@ class SiteController extends Controller
             $view = view('users.advertisment.submit', [
                 'categories' => Category::whereStatus(CATEGORY_STATUS_ACTIVE)->get(),
             ]);
-        } else if($viewType == "mark-featured"){
-            $pendingFeaturedAds = Advert::with("getAdvertMedia","getCategory")->where([
+        } elseif ($viewType == 'mark-featured') {
+            $pendingFeaturedAds = Advert::with('getAdvertMedia', 'getCategory')->where([
                 'approval_status' => ADVERT_STATUS_PENDING,
                 'posted_by' => Auth::user()->user_id,
             ])->get();
 
             $view = view('users.advertisment.mark_featured', [
                 'pendingAdverts' => $pendingFeaturedAds,
+                'packages' => FeaturedPackage::all(),
+            ]);
+        } elseif ($viewType == 'pending-for-approval') {
+
+            $pendingApproval = FeaturedAdvert::with('getAdvertisment', 'getAdvertisment.getAdvertMedia')->where([
+                'is_featured' => 1,
+            ])->orderByDesc('created_at')->get();
+
+            return view('users.advertisment.pending_for_approval', [
+                'pendingApproval' => $pendingApproval,
             ]);
         }
 
@@ -396,7 +407,7 @@ class SiteController extends Controller
             'adverts_price' => 'required',
             'adverts_location' => 'nullable',
             'website_address' => 'nullable',
-            'media_input.*' => 'file|mimes:jpg,jpeg,png,gif,pdf,doc,docx|max:10240', // validate multiple files
+            'media_input.*' => 'file|mimes:jpg,jpeg,png,gif,pdf,doc,docx|max:10240',
         ]);
 
         $createAdvert = Advert::create([
@@ -409,6 +420,7 @@ class SiteController extends Controller
             'posted_by' => Auth::user()->user_id,
             'price' => $request->adverts_price,
             'advertisment_code' => Str::uuid(),
+            'ip_address' => $request->ip(),
         ]);
 
         if ($createAdvert && $request->hasFile('media_input')) {
@@ -426,9 +438,86 @@ class SiteController extends Controller
         return redirect()->back()->with('success', 'Advertisment Posted Successfully.');
     }
 
-    public function ViewAdvert($id){
-        return view('users.advertisment.view', [
-            'advert' => Advert::with("getCategory", "advertPostedBy", "getAdvertMedia")->findOrFail($id),
+    public function ViewAdvert($id)
+    {
+        $advertPackageID = FeaturedAdvert::where([
+            'advertisment_id' => $id,
+        ])->value('package_id');
+
+        if(!empty($advertPackageID)){
+            $packageData = FeaturedPackage::where(['package_id' => $advertPackageID])->first();
+        } else {
+            $packageData = [];
+        }
+
+        $advertData = Advert::with('getCategory', 'advertPostedBy', 'getAdvertMedia')->findOrFail($id);
+
+        if($advertData->posted_by != Auth::user()->user_id){
+            abort(403, "Unauthorized Access");
+        } else {
+            return view('users.advertisment.view', [
+                'advert' => $advertData,
+                'packageData' => $packageData,
+            ]);
+        }
+    }
+
+    public function mark_advertisment_for_featured(Request $request)
+    {
+        $advertismentCode = Advert::whereAdvertismentCode($request->advertisment_id)->value('advertisment_id');
+
+        $alreadyFeatured = FeaturedAdvert::where([
+            'advertisment_id' => $advertismentCode,
+            'is_featured' => 1,
+        ])->exists();
+
+        $alreadyApprovedFeatured = FeaturedAdvert::where([
+            'advertisment_id' => $advertismentCode,
+            'is_featured' => 2,
+        ])->exists();
+
+        if ($alreadyFeatured || $alreadyApprovedFeatured) {
+            return redirect()->back()->with('error', 'The Selected Advertisment is Already Pending for Approval Or Approved');
+        } else {
+            FeaturedAdvert::create([
+                'advertisment_id' => $advertismentCode,
+                'package_id' => $request->package,
+                'is_featured' => Auth::user()->user_type == USER_TYPE_ADMIN ? 2 : 1,
+            ]);
+
+            Advert::where([
+                'advertisment_code' => $request->advertisment_id,
+            ])->update([
+                'approval_status' => 2,
+            ]);
+
+            return redirect()->back()->with('success', 'Advertisment Have Been Forwarded to Admin For Approval');
+        }
+    }
+
+    public function manageFeaturedAdvertStatus(Request $request)
+    {
+        $advertismentID = Advert::where(['advertisment_code' => $request->advertisment_id])->value("advertisment_id");
+
+        $packageID = FeaturedAdvert::where([
+            'advertisment_id' => $advertismentID,
+            'is_featured' => 1,
+        ])->value("package_id");
+
+        Advert::where([
+            'advertisment_id' => $advertismentID,
+        ])->update([
+            'approval_status' => 2,
         ]);
+
+        FeaturedAdvert::where([
+            'advertisment_id' => $advertismentID,
+            'package_id' => $packageID,
+            'is_featured' => 1,
+        ])->update([
+            'is_featured' => $request->approval_status == 'approve' ? 2 : 3,
+        ]);
+
+        return redirect()->back()->with('success', 'Selected Featured Have Been Marked '.ucfirst($request->approval_status). " Successfully.");
     }
 }

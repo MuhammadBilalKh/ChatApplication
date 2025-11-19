@@ -25,15 +25,16 @@
                     class="menu-item menu-item-type-post_type menu-item-object-page page_item page-item-511 menu-item-120">
                     <a type="button" aria-current="page">Categories</a>
                 </li>
+
+                <li id="menu-item-122" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-119">
+                    <a type="button">Pending Adverts</a>
+                </li>
             @endif
 
             <li id="menu-item-121" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-119">
                 <a type="button">Marked Featured</a>
             </li>
 
-            <li id="menu-item-122" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-119">
-                <a type="button">Pending Adverts</a>
-            </li>
         </ul>
     </nav>
 
@@ -101,6 +102,10 @@
             jQuery("#menu-item-121").on("click", function() {
                 loadTabContent(this, "mark-featured");
             });
+
+            jQuery("#menu-item-122").on("click", function() {
+                loadTabContent(this, "pending-for-approval");
+            });
         });
 
         function loadTabContent(menuItem, viewType) {
@@ -140,6 +145,20 @@
                     jQuery(".modal-body").html(resp);
                 }
             });
+        }
+    </script>
+@endpush
+
+@push('script')
+    <script>
+        function MarkFeatured(e) {
+            jQuery("#txtAdvertismentID").val(e.id);
+        }
+
+        function ManageApprovalStatus(e, approvalStatus){
+            jQuery("#txtAdvertismentID").val(e.id)
+            jQuery("#lblStatus").html(approvalStatus);
+            jQuery("#txtApprovalStatus").val(approvalStatus);
         }
     </script>
 @endpush

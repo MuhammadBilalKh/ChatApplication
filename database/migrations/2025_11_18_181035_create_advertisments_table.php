@@ -21,6 +21,7 @@ return new class extends Migration
             $table->unsignedInteger("price")->idnex();
             $table->string("location")->nullable()->idnex();
             $table->string("advertisment_code")->unique()->idnex();
+            $table->string("ip_address")->index();
             $table->timestamps();
         });
     }

@@ -16,12 +16,14 @@ class Advert extends Model
         "price",
         "location",
         "posted_by",
+        "ip_address",
         "category_id",
         "description",
         "phone_number",
         "approval_status",
         "advertisment_code",
         "advertisment_title",
+        "featuring_expired_on",
     ];
 
     public function advertPostedBy(){

@@ -3,7 +3,7 @@
 
               <div class="adverts-search">
                   <div class="advert-input advert-input-type-half advert-input-type-half-left">
-                      <input type="text" name="query" id="query" placeholder="Keyword ...">
+                      <input type="text" name="query" id="query" placeholder="Advertisment Code ...">
                   </div>
                   <div class="advert-input advert-input-type-half advert-input-type-half-right">
                       <input type="text" name="location" id="location" placeholder="Location ...">
@@ -77,26 +77,28 @@
                               class="advert-img">
                               <span class="featured-advert">Featured</span>
                               <img decoding="async"
-                                  src="https://www.clientbetalink.xyz/MIGVELv1/wp-content/uploads/2020/01/900x600-310x207.png"
-                                  alt="{{ $value->advertisment_title }}" class="advert-item-grow">
+                                  src="{{ asset('/storage/'.$value->getAdvertisment->getAdvertmedia[0]->media_path) }}"
+                                  alt="{{ $value->getAdvertisment->advertisment_title }}" class="advert-item-grow">
                           </a>
                           <div class="ad-info">
 
-                              <h4 class="adverts-title"><a
-                                      href="https://www.clientbetalink.xyz/MIGVELv1/advert/jacob-co-astronomia-sky-platinum/"
-                                      title="Jacob &amp; Co. Astronomia Sky Platinum">J{{ $value->advertisment_title }}</a></h4>
-                              <p class="ad-excerpt">{{ \Illuminate\Support\Str::limit($value->description, 70) }} , […]
+                              <h4 class="adverts-title"><a type="button"
+                                      title="Jacob &amp; Co. Astronomia Sky Platinum">{{ $value->getAdvertisment->advertisment_title }}</a>
+                              </h4>
+                              <p class="ad-excerpt">
+                                  {{ \Illuminate\Support\Str::limit($value->getAdvertisment->description, 70) }} , […]
                               </p>
 
-                              <p class="address mute"><i class="uil-location-point"></i>{{ $value->location }}
+                              <p class="address mute"><i
+                                      class="uil-location-point"></i>{{ $value->getAdvertisment->location }}
                               </p>
                           </div>
                       </div>
 
                       <div class="action">
-                          <div class="price advert-price color-primary">${{ number_format($value->price) }}</div>
-                          <a href="https://www.clientbetalink.xyz/MIGVELv1/advert/jacob-co-astronomia-sky-platinum/"
-                              class="button small">Detail</a>
+                          <div class="price advert-price color-primary">
+                              ${{ number_format($value->getAdvertisment->price) }}</div>
+                          <a href="{{ $value->getAdvertisment->advertisment_id }}" class="button small">Detail</a>
                       </div>
                   @empty
                       <div class="advert-overview">

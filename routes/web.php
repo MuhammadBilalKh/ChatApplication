@@ -26,6 +26,8 @@ Route::middleware(['web'])->group(function () {
                 Route::get("/category/edit", [SiteController::class, 'edit_category'])->name('categories.edit');
                 Route::get("/{id}", [SiteController::class, 'ViewAdvert'])->name('adverts.view');
 
+                Route::post("/manage-approval-status", [SiteController::class, 'manageFeaturedAdvertStatus'])->name('adverts.manageFeaturedAdvertStatus');
+                Route::post("/mark-for-featured", [SiteController::class, 'mark_advertisment_for_featured'])->name('adverts.mark_advertisment_for_featured');
                 Route::post("/save", [SiteController::class, 'save_advert'])->name("adverts.save_advert");
                 Route::post("/category/store", [SiteController::class, 'store_category'])->name('categories.store');
                 Route::post("/category/{id}/update", [SiteController::class, 'update_category'])->name('categories.update');

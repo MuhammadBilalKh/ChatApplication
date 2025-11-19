@@ -14,6 +14,7 @@ class FeaturedAdvert extends Model
     protected $fillable = [
         "advertisment_id",
         "is_featured",
+        "package_id",
     ];
 
     public function getAdvertisment(){

@@ -13,4 +13,8 @@ class Category extends Model
     public function setCategoryTitleAttribute($val){
         return $this->attributes["category_title"] = ucwords($val);
     }
+
+    public function getAdvertisments(){
+        return $this->hasMany(Advert::class, 'category_id', "category_id");
+    }
 }
