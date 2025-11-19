@@ -17,9 +17,10 @@ namespace App\Models {
      * @property string $phone_number
      * @property int $advertisment_id
      * @property-read mixed $advertisment_title
-     * @property-read \App\Models\User $adverPostedBy
-     * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\AdvertMedia> $getAdverMedia
-     * @property-read int|null $getAdverMedia_count
+     * @property-read \App\Models\User $advertPostedBy
+     * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\AdvertMedia> $getAdvertMedia
+     * @property-read int|null $getAdvertMedia_count
+     * @property-read \App\Models\Category $getCategory
      * @method static \Illuminate\Database\Eloquent\Builder<Advert>|Advert whereAdvertismentId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Advert>|Advert wherePhoneNumber($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Advert>|Advert wherePostedBy($value)

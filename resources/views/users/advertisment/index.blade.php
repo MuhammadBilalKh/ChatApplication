@@ -25,10 +25,11 @@
                     class="menu-item menu-item-type-post_type menu-item-object-page page_item page-item-511 menu-item-120">
                     <a type="button" aria-current="page">Categories</a>
                 </li>
-                <li id="menu-item-121" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-121">
-                    <a href="https://www.clientbetalink.xyz/MIGVELv1/adverts/add/">Mark Add Featured</a>
-                </li>
             @endif
+
+            <li id="menu-item-121" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-119">
+                <a type="button">Marked Featured</a>
+            </li>
 
             <li id="menu-item-122" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-119">
                 <a type="button">Pending Adverts</a>
@@ -95,6 +96,10 @@
 
             jQuery("#menu-item-120").on("click", function() {
                 loadTabContent(this, "categories");
+            });
+
+            jQuery("#menu-item-121").on("click", function() {
+                loadTabContent(this, "mark-featured");
             });
         });
 

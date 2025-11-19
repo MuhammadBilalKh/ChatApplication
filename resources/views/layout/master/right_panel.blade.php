@@ -58,6 +58,7 @@
                 @forelse ($categories as $key => $value)
                     <li class="cat-item cat-item-47"><a type="button"
                             data-id="category-{{ $value->category_id }}">{{ $value->category_title }}</a>
+
                     </li>
                 @empty
                     <li class="cat-item cat-item-47"><a type="button">No Categories Found</a>

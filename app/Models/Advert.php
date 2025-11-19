@@ -13,26 +13,30 @@ class Advert extends Model
     protected $table = "advertisments";
 
     protected $fillable = [
-        "phone_number",
-        "posted_by",
-        "advertisment_title",
-        "category_id",
-        "description",
         "price",
         "location",
-        "advertisment_code",
+        "posted_by",
+        "category_id",
+        "description",
+        "phone_number",
         "approval_status",
+        "advertisment_code",
+        "advertisment_title",
     ];
 
-    public function adverPostedBy(){
-        return $this->belongsTo(User::class, 'user_id', "posted_by");
+    public function advertPostedBy(){
+        return $this->belongsTo(User::class, 'posted_by', "user_id");
     }
 
-    public function getAdverMedia(){
+    public function getAdvertMedia(){
         return $this->hasMany(AdvertMedia::class, 'advertisment_id', "advertisment_id");
     }
 
     public function setAdvertismentTitleAttribute($val){
         return $this->attributes['advertisment_title'] = ucwords($val);
+    }
+
+    public function getCategory(){
+        return $this->hasOne(Category::class, "category_id", "category_id");
     }
 }

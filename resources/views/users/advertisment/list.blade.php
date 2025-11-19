@@ -78,13 +78,13 @@
                               <span class="featured-advert">Featured</span>
                               <img decoding="async"
                                   src="https://www.clientbetalink.xyz/MIGVELv1/wp-content/uploads/2020/01/900x600-310x207.png"
-                                  alt="{{ $value->title }}" class="advert-item-grow">
+                                  alt="{{ $value->advertisment_title }}" class="advert-item-grow">
                           </a>
                           <div class="ad-info">
 
                               <h4 class="adverts-title"><a
                                       href="https://www.clientbetalink.xyz/MIGVELv1/advert/jacob-co-astronomia-sky-platinum/"
-                                      title="Jacob &amp; Co. Astronomia Sky Platinum">J{{ $value->title }}</a></h4>
+                                      title="Jacob &amp; Co. Astronomia Sky Platinum">J{{ $value->advertisment_title }}</a></h4>
                               <p class="ad-excerpt">{{ \Illuminate\Support\Str::limit($value->description, 70) }} , […]
                               </p>
 

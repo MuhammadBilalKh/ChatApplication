@@ -268,20 +268,12 @@ class SiteController extends Controller
 
     public function manage_categories(Request $request)
     {
-
-        if ($request->isMethod(FORM_METHOD_POST)) {
-            dd($request);
-        }
-
         return view('users.category.index');
     }
 
     public function manage_advertisments(Request $request)
     {
         $activeTab = $request->get('tab', 'all');
-
-        // Assume you have relevant models: Advert, Category
-        // If not, replace with actual model names
 
         if ($activeTab === 'categories') {
             $categories = \App\Models\Category::withCount('adverts')->get();
@@ -343,6 +335,15 @@ class SiteController extends Controller
             $view = view('users.advertisment.submit', [
                 'categories' => Category::whereStatus(CATEGORY_STATUS_ACTIVE)->get(),
             ]);
+        } else if($viewType == "mark-featured"){
+            $pendingFeaturedAds = Advert::with("getAdvertMedia","getCategory")->where([
+                'approval_status' => ADVERT_STATUS_PENDING,
+                'posted_by' => Auth::user()->user_id,
+            ])->get();
+
+            $view = view('users.advertisment.mark_featured', [
+                'pendingAdverts' => $pendingFeaturedAds,
+            ]);
         }
 
         return $view;
@@ -352,7 +353,7 @@ class SiteController extends Controller
     {
         $request->validate([
             'status' => 'required',
-            'title' => 'required|min:5',
+            'title' => 'required|min:3',
         ]);
 
         Category::create([
@@ -423,5 +424,11 @@ class SiteController extends Controller
         }
 
         return redirect()->back()->with('success', 'Advertisment Posted Successfully.');
+    }
+
+    public function ViewAdvert($id){
+        return view('users.advertisment.view', [
+            'advert' => Advert::with("getCategory", "advertPostedBy", "getAdvertMedia")->findOrFail($id),
+        ]);
     }
 }

@@ -25,7 +25,7 @@
             <label for="adverts_person">
                 Contact Person <span class="adverts-form-required">*</span>
             </label>
-            <input type="text" name="adverts_person" id="adverts_person" value="wpdeveloper" />
+            <input type="text" name="adverts_person" id="adverts_person" value="{{ Auth::user()->username }}" />
 
         </div>
         <div class="adverts-control-group adverts-field-text adverts-field-name-adverts_email">
@@ -129,7 +129,7 @@
         </div>
 
         <div class="adverts-control-group submit adverts-field-actions">
-            <input type="submit" name="submit" value="Preview" class="adverts-cancel-unload medium" />
+            <input type="submit" name="submit" value="Submit" class="adverts-cancel-unload medium" />
         </div>
 
     </fieldset>

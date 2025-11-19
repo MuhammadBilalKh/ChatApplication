@@ -23,7 +23,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         View::composer('layout.master.main', function($view){
-            $view->with("categories", Category::whereStatus(CATEGORY_STATUS_INACTIVE)->get());
+            $view->with("categories", Category::whereStatus(CATEGORY_STATUS_ACTIVE)->get());
         });
 
         View::composer('layout.master.main', function($view){

@@ -427,6 +427,8 @@ class PostController extends Controller
                 'post_id' => $postID,
             ])->delete();
 
+            Notification::createNotification(Auth::user()->user_id, "Your Post Have Been Deleted By Admin", 'delete', $postID, Post::class, "");
+
             return response()->json([
                 'status' => REQUEST_PROCESSED,
             ]);

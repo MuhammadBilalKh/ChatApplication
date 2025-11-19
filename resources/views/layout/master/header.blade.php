@@ -1,21 +1,6 @@
 <header id="sochead" class="site-header social-header user-nav-active">
     <nav class="navbar kmk-navbar social fixed-top">
         <div class="container">
-            <div id="kmk-ajax-search" class="kmk-ajax-search">
-                <form role="search" method="get" id="ajax-search-form" class="ajax-search-form form-inline"
-                    action="./">
-                    <div class="search-field">
-                        <i class="icon ion-android-search"></i>
-                        <input id="ajax-search-textfield" type="text" name="s" placeholder="Search..."
-                            value="" autocomplete="off" required>
-                        <span class="kmk-loading-ring"></span>
-                    </div>
-                    <div class="search-button">
-                        <button type="submit" class="search-submit"><i class="icon ion-android-search"></i></button>
-                    </div>
-                </form>
-                <div id="ajax-search-result"></div>
-            </div>
 
             <ul id="navbar-user" class="navbar-nav navbar-user">
                 @auth
