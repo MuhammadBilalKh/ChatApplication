@@ -124,13 +124,13 @@ class SiteController extends Controller
                 'twitter_username' => $request->company_twitter,
                 'company_logo' => $path,
                 'location' => $request->location,
-                'is_remotely_available' => $request->remote_position,
+                'is_remotely_available' => 1,
                 'salary' => $request->salary,
                 'posted_by' => Auth::user()->user_id,
                 'publishing_status' => $postingType,
                 'job_notes' => $request->description,
                 'views_count' => 0,
-                'publishing_status' => PUBLISHING_STATUS_DRAFT,
+                'publishing_status' => PUBLISHING_STATUS_PUBLIC,
             ]);
 
             if ($jobPosting) {

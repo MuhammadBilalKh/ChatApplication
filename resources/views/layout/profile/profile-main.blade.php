@@ -7,7 +7,7 @@
     <meta name="viewport"
         content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" />
 
-    <title>Profile</title>
+    <title>@yield("title")</title>
 
     <link rel="stylesheet" href="/assets/css/index.css?ver=6.8.3" media="all" />
     <link rel="stylesheet" href="/assets/css/kkpress.min.css?ver=2.6.14" media="all" />

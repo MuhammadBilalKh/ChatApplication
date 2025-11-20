@@ -25,32 +25,199 @@
 
     <link rel="stylesheet" href="/assets/css/rtmedia.min.css" media="all" />
     <link rel="stylesheet" href="/assets/css/kmk.min.css" media="all" />
-    <link rel="stylesheet" href="/assets/css/dynamic-styles.css" media="all" />
-    <link rel="stylesheet" href="/assets/css/adverts.css" media="all" />
 
+    <link rel="stylesheet" href="/assets/css/dynamic-styles.css" media="all" />
+    <link rel="stylesheet" href="/assets/css/job-manager.css" media="all" />
+
+    <!-- Google Fonts -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700,300italic,400italic,600italic,700italic|Quicksand:700&ver=1.4.5" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900&display=swap" />
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Roboto+Slab:100,300,400,500,700,900&display=swap" />
 
+    <!-- KMK -->
     <link rel="stylesheet" href="/assets/css/frontend.min.css?ver=3.32.4" />
     <link rel="stylesheet" href="/assets/css/post-95.css?ver=1761620622" />
+
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
 
-    <link rel="stylesheet" href="/assets/css/mainCss.css" media="all" />
-
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700,300italic,400italic,600italic,700italic|Quicksand:700&ver=1.4.5" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900&display=swap" />
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Roboto+Slab:100,300,400,500,700,900&display=swap" />
-
-    <link rel="stylesheet" href="/assets/css/frontend.min.css?ver=3.32.4" />
-    <link rel="stylesheet" href="/assets/css/post-95.css?ver=1761620622" />
 
     <link rel="stylesheet" href="/assets/css/mainCss.css" media="all" />
+
+    <style>
+        /* Highest stacking context for chat wrapper */
+        .wrapper {
+            z-index: 999999;
+        }
+
+        .emoji-picker {
+            width: 300px !important;
+        }
+
+        /* ===== Scrollbar styling ===== */
+
+        /* WebKit browsers (Chrome, Edge, Safari) */
+        .chat-window__message-list.vb.vb-invisible::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        .chat-window__message-list.vb.vb-invisible::-webkit-scrollbar-track {
+            background: #fff;
+        }
+
+        .chat-window__message-list.vb.vb-invisible::-webkit-scrollbar-thumb {
+            background-color: #f5bd02;
+            border-radius: 6px;
+            border: 3px solid #fff;
+        }
+
+        /* Firefox scrollbar */
+        .chat-window__message-list.vb.vb-invisible {
+            scrollbar-width: thin;
+            scrollbar-color: #f5bd02 #fff;
+        }
+
+        /* ===== Input area ===== */
+        .chat-window__inputarea {
+            display: flex;
+            align-items: flex-end;
+            /* align emoji + input + send button at bottom */
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            padding: 5px 10px;
+            width: 100%;
+            box-sizing: border-box;
+            border-top: 1px solid #ddd;
+        }
+
+        /* ===== Message input field ===== */
+        .chat-window__input {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            position: relative;
+            border-radius: 6px;
+            min-height: 40px;
+            background: #fff;
+        }
+
+        .chat-window__input--placeholder {
+            position: absolute;
+            top: 50%;
+            left: 12px;
+            transform: translateY(-50%);
+            color: #aaa;
+            pointer-events: none;
+            font-size: 14px;
+            user-select: none;
+        }
+
+        .chat-window__input--field {
+            min-height: 35px;
+            padding: 8px 12px;
+            border: none;
+            outline: none;
+            width: 100%;
+            font-size: 14px;
+            line-height: 20px;
+        }
+
+        /* Hide placeholder when typing */
+        .chat-window__input--field:focus+.chat-window__input--placeholder,
+        .chat-window__input--field:not(:empty)+.chat-window__input--placeholder {
+            display: none;
+        }
+
+        /* ===== Emoji button ===== */
+        .chat-window__input--emoji {
+            display: flex;
+            align-items: flex-end;
+            margin-left: 8px;
+        }
+
+        .chat-window__input--emoji button {
+            background: transparent;
+            border: none;
+            font-size: 19px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            padding: 0;
+            box-shadow: none;
+        }
+
+        .chat-window__input--emoji button:hover {
+            transform: scale(1.2);
+        }
+
+        /* ===== Send button ===== */
+        .chat-window__btn--enter {
+            margin-left: 5px;
+            text-decoration: none;
+            color: #007aff;
+            font-size: 20px;
+        }
+
+        .chat-window__btn--enter:hover {
+            color: #005bb5;
+        }
+
+        /* ===== Emoji images in messages ===== */
+        .message img.emoji {
+            width: 22px;
+            height: 22px;
+            vertical-align: middle;
+        }
+
+        /* Base styles for the floating button */
+        .chat-float {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 99999;
+            display: none;
+            /* Hidden by default (for desktop/tablet) */
+        }
+
+        /* Circle shape and styling */
+        .chat-floatbody {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: #F5BD02;
+            color: #fff;
+            border-radius: 50%;
+            text-decoration: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            font-size: 20px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .chat-floatbody:hover {
+            background-color: #f0c22a;
+            transform: scale(1.1);
+        }
+
+        .chat-floatbody .dropd-control .dashicons {
+            height: 30px;
+            width: 30px;
+            position: absolute;
+            top: 11px;
+            left: 7px;
+        }
+
+        /* Show only on mobile */
+        @media (max-width: 768px) {
+            .chat-float {
+                display: block;
+            }
+        }
+    </style>
 
     @stack('css')
 </head>

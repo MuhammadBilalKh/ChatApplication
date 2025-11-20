@@ -43,8 +43,8 @@
                                 <div class="logo">
                                     <figure>
                                         <img class="company_logo"
-                                            src="{{ $value->company_logo ?? asset('assets/images/no-image.png') }}"
-                                            alt="{{ ucwords($value->company_name) }}">
+                                            src="{{ assets('/storage/'.$value->company_logo) }}"
+                                            alt="{{ ucwords($value->company_name) }}" />
                                     </figure>
                                 </div>
                                 <div class="job-info">
