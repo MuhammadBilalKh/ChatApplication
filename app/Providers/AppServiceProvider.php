@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Blog;
 use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\SUpport\Facades\View;
@@ -17,9 +18,6 @@ class AppServiceProvider extends ServiceProvider
         //
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
         View::composer('layout.master.main', function($view){
@@ -28,6 +26,10 @@ class AppServiceProvider extends ServiceProvider
 
         View::composer('layout.master.main', function($view){
             return $view->with("friends", Auth::user()->getFriends()->count());
+        });
+
+        View::composer("layout.master.main", function($view){
+            return $view->with("recent_blogs", Blog::where(['user_id' => Auth::user()->user_id, 'status' => BLOG_STATUS_PUBLISHED])->get());
         });
     }
 }

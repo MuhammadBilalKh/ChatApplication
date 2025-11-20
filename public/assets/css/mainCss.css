@@ -1831,3 +1831,57 @@ input[type="file"] {
     border-radius: 10px;
     object-fit: contain;
 }
+
+
+/* Prevent dropzone file list from breaking layout */
+#filesList {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+/* Each file item stays inside container */
+.file-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    max-width: 100%;
+    padding: 8px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    background: #f8fafc;
+    box-sizing: border-box;
+}
+
+/* Thumbnail container */
+.file-thumb img {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+/* File meta wraps correctly */
+.file-meta {
+    flex: 1;
+    min-width: 0;
+}
+
+.file-meta .name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Button column stays small */
+.file-actions {
+    flex-shrink: 0;
+}
+
+/* Prevent entire row from pushing layout */
+.file-item * {
+    max-width: 100%;
+}

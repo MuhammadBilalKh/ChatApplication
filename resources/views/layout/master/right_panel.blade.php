@@ -19,7 +19,9 @@
         <div id="recent-posts-1" class="widget widget_recent_entries">
             <h5 class="widget-title">Recent Posts</h5>
             <ul id="recentPosts">
-
+                @foreach ($recent_blogs as $key => $value)
+                    <li>{{ $value->title }}</li>
+                @endforeach
             </ul>
         </div>
         <div id="recent-comments-1" class="widget widget_recent_comments">

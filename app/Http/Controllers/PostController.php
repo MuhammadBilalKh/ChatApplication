@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use getID3;
-use App\Models\Post;
-use App\Models\User;
+use App\Models\Blog;
+use App\Models\BlogMedia;
 use App\Models\Comment;
-use App\Models\PostLike;
-use App\Models\PostMedia;
 use App\Models\FriendShip;
 use App\Models\MarkFavorite;
 use App\Models\Notification;
+use App\Models\Post;
+use App\Models\PostHastags;
+use App\Models\PostLike;
+use App\Models\PostMedia;
+use App\Models\Tag;
+use getID3;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
@@ -21,7 +25,7 @@ class PostController extends Controller
         $request->validate([
             'description' => 'required|string|max:3000',
             'media.*' => 'nullable|file|max:51200',
-        ],[
+        ], [
             'media.*.max' => 'Each file must not exceed 5 MB. Please upload files smaller than 2 MB.',
         ]);
 
@@ -31,7 +35,7 @@ class PostController extends Controller
             'title' => $request->post_title,
             'visibility' => POST_VISIBILITY_PUBLIC,
             'post_type' => POSTING_TYPE_POST,
-            'title' => "posted an update",
+            'title' => 'posted an update',
             'new_joining_post' => 0,
         ]);
 
@@ -93,18 +97,18 @@ class PostController extends Controller
         $page = $request->input('page', 1);
 
         $posts = Post::with([
-                'getLikedBy',
-                'postUploadedBy',
-                'getMarkedFavorite',
-                'postMedia',
-                'comments' => function ($query) {
-                    $query->whereNull('parent_comment_id')
-                        ->with(['commentPostedBy',
-                            'replies' => function ($q) {
-                                $q->with('commentPostedBy');
-                            }]);
-                },
-            ])
+            'getLikedBy',
+            'postUploadedBy',
+            'getMarkedFavorite',
+            'postMedia',
+            'comments' => function ($query) {
+                $query->whereNull('parent_comment_id')
+                    ->with(['commentPostedBy',
+                        'replies' => function ($q) {
+                            $q->with('commentPostedBy');
+                        }]);
+            },
+        ])
             ->whereIn('user_id', $userIds)
             ->where('post_type', POSTING_TYPE_POST)
             ->orWhere('new_joining_post', NEW_JOINING_USER_POST)
@@ -427,7 +431,7 @@ class PostController extends Controller
                 'post_id' => $postID,
             ])->delete();
 
-            Notification::createNotification(Auth::user()->user_id, "Your Post Have Been Deleted By Admin", 'delete', $postID, Post::class, "");
+            Notification::createNotification(Auth::user()->user_id, 'Your Post Have Been Deleted By Admin', 'delete', $postID, Post::class, '');
 
             return response()->json([
                 'status' => REQUEST_PROCESSED,
@@ -450,7 +454,7 @@ class PostController extends Controller
                     ->with(['commentPostedBy',
                         'replies' => function ($q) {
                             $q->with('commentPostedBy');
-                        }
+                        },
                     ]);
             },
         ])->where(['post_id' => $request->post_id])->first();
@@ -479,5 +483,208 @@ class PostController extends Controller
             'status' => REQUEST_PROCESSED,
             'comments' => $comments,
         ]);
+    }
+
+    public function manage_blogs(Request $request)
+    {
+        $manageBlogType = $request->type;
+
+        switch ($manageBlogType) {
+            case 'list-blog':
+                $blogs = Blog::with('getBlog')->where(['status' => BLOG_STATUS_PUBLISHED])->orderByDesc('created_at')->paginate(10);
+
+                return view('users.blogs.index', [
+                    'blogs' => $blogs,
+                ]);
+                break;
+
+            case 'create-blog':
+                return view('users.blogs.submit');
+                break;
+            case 'mark-approval-blog':
+                $pendingBlogs = Blog::where(['status' => BLOG_STATUS_DRAFT, 'user_id' => Auth::user()->user_id])->orderByDesc('created_at')->paginate(10);
+
+                return view('users.blogs.mark_for_approval', [
+                    'pendingBlogs' => $pendingBlogs,
+                ]);
+            case 'manage-blog-approval':
+                $pendingBlogs = Blog::where(['status' => BLOG_STATUS_DRAFT])->orderByDesc('created_at')->paginate(10);
+
+                return view('users.blogs.manage_blog_approval', [
+                    'pendingBlogs' => $pendingBlogs,
+                ]);
+                break;
+            default:
+                return redirect()->route('blogs.list', ['type' => 'list-blog']);
+                break;
+        }
+    }
+
+    public function save_blog(Request $request)
+    {
+        $request->validate([
+            'blog_title' => 'required',
+            'description' => 'required',
+            'media_input' => 'required',
+            'media_input.*' => 'image|mimes:jpg,jpeg,png,gif,webp|max:4096',
+        ], [
+            'blog_title.required' => 'Blog Title is Required',
+            'description.required' => 'Please Enter Blog Description',
+            'media_input.required' => 'Please Select Images for the Blog',
+        ]);
+
+        $slug = str_replace(' ', '_', strtolower($request->blog_title));
+
+        $featured_image = null;
+        $featured_file_name = null;
+
+        $images = $request->file('media_input');
+
+        $firstImage = $images[0];
+        $featured_file_name = uniqid().'_'.time().'.'.$firstImage->getClientOriginalExtension();
+        $featured_image = $firstImage->storeAs('blog_images', $featured_file_name, 'public');
+
+        $blog = Blog::create([
+            'title' => $request->blog_title,
+            'content' => $request->description,
+            'featured_image' => $featured_image,
+            'status' => Auth::user()->user_type == USER_TYPE_ADMIN ? BLOG_STATUS_PUBLISHED : BLOG_STATUS_DRAFT,
+            'slug' => $slug,
+            'published_at' => now()->toDateString(),
+            'user_id' => Auth::user()->user_id,
+        ]);
+
+        if ($blog) {
+
+            $tagsInput = $request->hashtags;
+            preg_match_all('/#(\w+)/', $tagsInput, $matches);
+            $tags = isset($matches[1]) ? $matches[1] : [];
+
+
+            $tagIds = [];
+
+            if (! empty($tags)) {
+                foreach ($tags as $tag) {
+
+                    $cleanTag = strtolower(trim($tag));
+
+                    $tagModel = Tag::updateOrCreate(
+                        ['slug' => Str::slug($cleanTag)],
+                        ['name' => $cleanTag],
+                    );
+
+                    $tagIds[] = $tagModel->tag_id;
+                }
+            }
+
+            if (! empty($tagIds)) {
+                foreach ($tagIds as $tagId) {
+                    PostHastags::updateOrCreate([
+                        'blog_id' => $blog->user_blog_id,
+                        'tag_id' => $tagId,
+                    ]);
+                }
+            }
+
+            unset($images[0]);
+
+            foreach ($images as $img) {
+
+                $fileName = uniqid().'_'.time().'.'.$img->getClientOriginalExtension();
+                $filePath = $img->storeAs('blog_images', $fileName, 'public');
+                $mime = $img->getMimeType();
+
+                BlogMedia::updateOrCreate([
+                    'post_id' => $blog->user_blog_id,
+                ], [
+                    'caption' => $slug,
+                    'file_name' => $fileName,
+                    'file_path' => $filePath,
+                    'media_type' => 'image',
+                    'mime_type' => $mime,
+                ]);
+            }
+        }
+
+        return redirect()->back()->with('success', 'Blog Has Been Uploaded Successfully.');
+    }
+
+    public function view_blog($id)
+    {
+        $blogData = (Blog::with('getBlog', 'blogPostedBy')->findOrFail($id));
+
+        if ($blogData->user_id != Auth::user()->user_id) {
+            return redirect()->route('suspicious');
+        }
+
+        return view('users.blogs.view', [
+            'blogData' => $blogData,
+        ]);
+    }
+
+    public function update_blog($id, Request $request)
+    {
+        if ($request->isMethod(FORM_METHOD_POST)) {
+
+            $request->validate([
+                'blog_title' => 'required',
+                'description' => 'required',
+                'media_input.*' => 'image|mimes:jpg,jpeg,png,gif,webp|max:4096',
+            ], [
+                'blog_title.required' => 'Blog Title is Required',
+                'description.required' => 'Please Enter Blog Description',
+            ]);
+
+            $slug = str_replace(' ', '_', strtolower($request->blog_title));
+
+            $updateData = [
+                'title' => $request->blog_title,
+                'content' => $request->description,
+                'status' => Auth::user()->user_type == USER_TYPE_ADMIN ? BLOG_STATUS_PUBLISHED : BLOG_STATUS_DRAFT,
+                'slug' => $slug,
+                'published_at' => now()->toDateString(),
+                'user_id' => Auth::user()->user_id,
+            ];
+
+            if ($request->hasFile('media_input')) {
+
+                $images = $request->file('media_input');
+
+                $firstImage = $images[0];
+                $featured_file_name = uniqid().'_'.time().'.'.$firstImage->getClientOriginalExtension();
+                $featured_image = $firstImage->storeAs('blog_images', $featured_file_name, 'public');
+
+                $updateData['featured_image'] = $featured_image;
+
+                $blog = Blog::where(['user_blog_id' => $id])->first();
+                $blog->update($updateData);
+
+                unset($images[0]);
+                foreach ($images as $img) {
+                    $fileName = uniqid().'_'.time().'.'.$img->getClientOriginalExtension();
+                    $filePath = $img->storeAs('blog_images', $fileName, 'public');
+                    $mime = $img->getMimeType();
+
+                    BlogMedia::updateOrCreate(['post_id' => $blog->user_blog_id,
+                    ], [
+                        'caption' => $slug,
+                        'file_name' => $fileName,
+                        'file_path' => $filePath,
+                        'media_type' => 'image',
+                        'mime_type' => $mime,
+                    ]);
+                }
+
+            } else {
+                Blog::where(['user_blog_id' => $id])->update($updateData);
+            }
+
+            return redirect()->route('blogs.list', ['type' => 'list-blog'])->with('success', 'Blog Has Been Updated Successfully.');
+
+        } else {
+            return view('users.blogs.edit_blog', [
+                'blogData' => Blog::findOrFail($id),
+            ]);
+        }
     }
 }

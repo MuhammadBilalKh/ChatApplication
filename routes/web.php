@@ -59,6 +59,16 @@ Route::middleware(['web'])->group(function () {
             Route::post('/store', [PostController::class, 'upload_post'])->name('posts.store');
         });
 
+
+        Route::prefix("blogs")->group(function(){
+            Route::get("/", [PostController::class, 'manage_blogs'])->name("blogs.list");
+            Route::get("/{id}", [PostController::class, 'view_blog'])->name('blogs.view');
+            Route::get("/{id}/edit", [PostController::class, 'update_blog'])->name('blogs.update');
+
+            Route::post("/{id}/update", [PostController::class, "update_blog"])->name('blogs.save_update');
+            Route::post("/save", [PostController::class, 'save_blog'])->name('blog.save_blog');
+        });
+
         Route::prefix('peoples')->group(function () {
             Route::get('/list', [SiteController::class, 'list'])->name('peoples.list');
             Route::get('/games', [SiteController::class, 'games'])->name('peoples.games');
@@ -85,6 +95,10 @@ Route::middleware(['web'])->group(function () {
         Route::get('/logout', [UserController::class, 'logout'])->name('users.logout');
     });
 });
+
+Route::get("/suspicious-activity", function(){
+    return view('suspicious');
+})->name('suspicious');
 
 Route::fallback(function () {
     return view('not_found');

@@ -1,10 +1,10 @@
 @extends('layout.master.main')
 
-@section('title', 'Blogs')
+@section('title', 'Mark For Approval')
 
 @section('dashboard-breadcrumbs')
     @include('layout.master.breadcrumbs', [
-        'pageHeader' => 'Blogs',
+        'pageHeader' => 'Mark For Approval',
     ])
 @endsection
 
@@ -21,7 +21,7 @@
             </li>
 
             @if (Auth::user()->user_type == USER_TYPE_USER)
-                <li id="menu-item-119" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-119">
+                <li id="menu-item-119" class="menu-item menu-item-type-post_type current-menu-item current_page_item menu-item-object-page menu-item-119">
                     <a href="{{ route('blogs.list', ['type' => 'mark-approval-blog']) }}">Mark For Approval</a>
                 </li>
 
@@ -40,7 +40,7 @@
 
     <div class="kmk-post-container blog-layout-grid masonry grid-columns-2">
 
-        @forelse ($blogs as $key => $value)
+        @forelse ($pendingBlogs as $key => $value)
             <article id="post-1"
                 class="post-259 post type-post status-publish format-standard has-post-thumbnail hentry category-technology tag-marketing kmk-post">
                 <div class="entry-wrapper">
@@ -60,16 +60,13 @@
                                 <a type="button">{{ $value->published_at }}</a>
                             </span>
                         </div>
-                        <h4 class="entry-title"><a href="#" rel="bookmark">Using Social Network Properly for
-                                Businesses</a></h4>
+                        <h4 class="entry-title"><a href="#" rel="bookmark">{{ $value->title }}</a></h4>
                         <div class="entry-excerpt">
                             <p>
                                 {!! \Illuminate\Support\Str::limit($value->content, 50) !!}... </p>
                         </div>
                         <div class="read-more">
-                            <a href="{{ route('blogs.view', ['id' => $value->user_blog_id]) }}" target="_blank"
-                                class="color-primary">Continue
-                                reading...</a>
+                            <a href="{{ route('blogs.view', ['id' => $value->user_blog_id]) }}" class="text-info">View Blog</a>
                         </div>
                     </div>
                 </div>
@@ -77,11 +74,8 @@
         @empty
             <h3 class="text-center container text-danger">No Blogs Found</h3>
         @endforelse
+
     </div>
 
-    <div class="kmk-pagination">
-        <ul class='page-numbers'>
-            {{ $blogs->links() }}
-        </ul>
-    </div>
+    {{ $pendingBlogs->links() }}
 @endsection

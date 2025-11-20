@@ -34,7 +34,6 @@
             <li id="menu-item-121" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-119">
                 <a type="button">Marked Featured</a>
             </li>
-
         </ul>
     </nav>
 

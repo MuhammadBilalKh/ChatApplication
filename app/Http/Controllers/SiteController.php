@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
+use App\Models\Post;
+use App\Models\User;
 use App\Models\Advert;
-use App\Models\AdvertMedia;
 use App\Models\Category;
-use App\Models\FeaturedAdvert;
-use App\Models\FeaturedPackage;
+use App\Models\PostMedia;
 use App\Models\FriendShip;
 use App\Models\JobPosting;
-use App\Models\Post;
-use App\Models\PostMedia;
-use App\Models\User;
-use Exception;
+use App\Models\AdvertMedia;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\FeaturedAdvert;
+use App\Models\FeaturedPackage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Str;
 
 class SiteController extends Controller
 {

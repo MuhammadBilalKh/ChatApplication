@@ -13,7 +13,7 @@
                         </a>
                         <div class="profile-name">
                             <a href="{{ route('users.profile') }}" class="name ellipsis">{{ Auth::user()->name }}</a>
-                            <small>{{ Auth::user()->user_type == USER_TYPE_ADMIN ? "Administrator" : "User" }}</small>
+                            <small>{{ Auth::user()->user_type == USER_TYPE_ADMIN ? 'Administrator' : 'User' }}</small>
 
                         </div>
                     </div>
@@ -68,14 +68,14 @@
                         class="menu-item menu-item-type-post_type menu-item-object-page
                             @if (Route::currentRouteName() == 'users.show_dashboard') current-menu-item @endif
                             page_item page-item-35 menu-item-475">
-                                                <a href="{{ route('users.show_dashboard') }}">
-                                                    <i class="uil-notebooks"></i>
-                                                    <span class="nav-link-text">Activity</span>
-                                                </a>
-                                            </li>
+                        <a href="{{ route('users.show_dashboard') }}">
+                            <i class="uil-notebooks"></i>
+                            <span class="nav-link-text">Activity</span>
+                        </a>
+                    </li>
 
-                                            <li id="menu-item-481"
-                                                class="menu-item menu-item-type-post_type menu-item-object-page
+                    <li id="menu-item-481"
+                        class="menu-item menu-item-type-post_type menu-item-object-page
                             @if (Route::currentRouteName() == 'posts.show_photos') current-menu-item @endif
                             menu-item-481">
                         <a href="{{ route('posts.show_photos') }}">
@@ -84,16 +84,19 @@
                         </a>
                     </li>
                     <li id="menu-item-483"
-                        class="menu-item menu-item-type-post_type menu-item-object-page @if (Route::currentRouteName() == 'posts.show_videos') current-menu-item @endif menu-item-483"><a
-                            href="{{ route('posts.show_videos') }}"><i class="uil-play"></i><span class="nav-link-text">Watch</span></a>
+                        class="menu-item menu-item-type-post_type menu-item-object-page @if (Route::currentRouteName() == 'posts.show_videos') current-menu-item @endif menu-item-483">
+                        <a href="{{ route('posts.show_videos') }}"><i class="uil-play"></i><span
+                                class="nav-link-text">Watch</span></a>
                     </li>
                     <li id="menu-item-484"
-                        class="menu-item menu-item-type-post_type menu-item-object-page @if (Route::currentRouteName() == 'peoples.list') current-menu-item @endif menu-item-484"><a
-                            href="{{ route('peoples.list') }}"><i class="uil-user"></i><span class="nav-link-text">People</span></a>
+                        class="menu-item menu-item-type-post_type menu-item-object-page @if (Route::currentRouteName() == 'peoples.list') current-menu-item @endif menu-item-484">
+                        <a href="{{ route('peoples.list') }}"><i class="uil-user"></i><span
+                                class="nav-link-text">People</span></a>
                     </li>
                     <li id="menu-item-614"
-                        class="menu-item menu-item-type-post_type menu-item-object-page @if (Route::currentRouteName() == 'peoples.games') current-menu-item @endif menu-item-614"><a
-                            href="{{ route('peoples.games') }}"><i class="uil-users-alt"></i><span class="nav-link-text">Games</span></a>
+                        class="menu-item menu-item-type-post_type menu-item-object-page @if (Route::currentRouteName() == 'peoples.games') current-menu-item @endif menu-item-614">
+                        <a href="{{ route('peoples.games') }}"><i class="uil-users-alt"></i><span
+                                class="nav-link-text">Games</span></a>
                     </li>
                     <li id="menu-item-476"
                         class="menu-item menu-item-type-post_type menu-item-object-page menu-item-476"><a
@@ -105,8 +108,8 @@
                             href="./shop/"><i class="uil-shopping-trolley"></i><span
                                 class="nav-link-text">Shop</span></a></li>
                     <li id="menu-item-480"
-                        class="menu-item menu-item-type-post_type menu-item-object-page @if (Route::currentRouteName() == 'posts.jobs_listing') current-menu-item @endif menu-item-480"><a
-                            href="{{ route('posts.jobs_listing') }}"><i class="uil-briefcase-alt"></i><span
+                        class="menu-item menu-item-type-post_type menu-item-object-page @if (Route::currentRouteName() == 'posts.jobs_listing') current-menu-item @endif menu-item-480">
+                        <a href="{{ route('posts.jobs_listing') }}"><i class="uil-briefcase-alt"></i><span
                                 class="nav-link-text">Jobs</span></a>
                     </li>
                     <li id="menu-item-478"
@@ -115,7 +118,8 @@
                                 class="nav-link-text">Forums</span></a></li>
                     <li id="menu-item-477"
                         class="menu-item menu-item-type-post_type menu-item-object-page menu-item-477"><a
-                            href="./blog/"><i class="uil-newspaper"></i><span class="nav-link-text">Blog</span></a>
+                            href="{{ route('blogs.list') }}"><i class="uil-newspaper"></i><span
+                                class="nav-link-text">Blog</span></a>
                     </li>
                     <li id="menu-item-701"
                         class="menu-item menu-item-type-post_type menu-item-object-page menu-item-701"><a

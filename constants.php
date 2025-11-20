@@ -133,3 +133,11 @@ defined("ADVERT_STATUS_PENDING") || define("ADVERT_STATUS_PENDING", 1);
 defined("ADVERT_STATUS_APPROVED") || define("ADVERT_STATUS_APPROVED", 2);
 
 defined("ADVERT_STATUS_REJECTED") || define("ADVERT_STATUS_REJECTED", 3);
+
+defined("BLOG_STATUS_DRAFT") || define("BLOG_STATUS_DRAFT", "draft");
+
+defined("BLOG_STATUS_PUBLISHED") || define("BLOG_STATUS_PUBLISHED", "published");
+
+defined("BLOG_STATUS_ARCHIVED") || define("BLOG_STATUS_ARCHIVED", "archived");
+
+defined("BLOG_STATUS_REJETED") || define("BLOG_STATUS_REJECTED", "cancelled");
