@@ -6,6 +6,7 @@ use App\Models\Blog;
 use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\SUpport\Facades\View;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -15,7 +16,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        Paginator::useBootstrapFour();
     }
 
     public function boot(): void
@@ -29,7 +30,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         View::composer("layout.master.main", function($view){
-            return $view->with("recent_blogs", Blog::where(['user_id' => Auth::user()->user_id, 'status' => BLOG_STATUS_PUBLISHED])->get());
+            return $view->with("recent_blogs", Blog::where(['user_id' => Auth::user()->user_id, 'status' => BLOG_STATUS_PUBLISHED])->orderByDesc("user_blog_id")->limit(10)->get());
         });
     }
 }

@@ -35,6 +35,10 @@ class Blog extends Model
         return $this->hasMany(BlogMedia::class, 'post_id', "user_blog_id");
     }
 
+    public function getBlogTags(){
+        return $this->hasMany(PostHastags::class, 'blog_id', "tag_id");
+    }
+
     public function setTitleAttribute($val){
         return $this->attributes['title'] = ucwords($val);
     }

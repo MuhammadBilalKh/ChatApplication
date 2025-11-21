@@ -1,0 +1,14 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class BlogCategory extends Model
+{
+    protected $table = "blog_categories";
+
+    protected $primaryKey = "blog_category_id";
+
+    protected $fillable = ["category_title", "slug", "status"];
+}

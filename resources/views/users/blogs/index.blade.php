@@ -45,12 +45,15 @@
                 class="post-259 post type-post status-publish format-standard has-post-thumbnail hentry category-technology tag-marketing kmk-post">
                 <div class="entry-wrapper">
                     <div class="entry-thumbnail">
+                        @php
+                            $filePath = optional($value->getBlog->first())->file_path;
+                        @endphp
 
                         <div class="post-medias">
                             <div class="item-media">
                                 <a href="#"
-                                    style="background-image: url({{ asset('/storage/' . $value->getBlog[0]->file_path) }});"></a>
-
+                                    style="background-image: url('{{ $filePath ? asset('storage/' . $filePath) : asset('default.jpg') }}');">
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -79,9 +82,7 @@
         @endforelse
     </div>
 
-    <div class="kmk-pagination">
-        <ul class='page-numbers'>
-            {{ $blogs->links() }}
-        </ul>
+    <div class="container">
+        {{ $blogs->appends(['type' => 'list-blog'])->links() }}
     </div>
 @endsection

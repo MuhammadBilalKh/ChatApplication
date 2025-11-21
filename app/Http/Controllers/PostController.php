@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Blog;
+use App\Models\BlogCategory;
+use App\Models\BlogHasCategory;
 use App\Models\BlogMedia;
 use App\Models\Comment;
 use App\Models\FriendShip;
@@ -491,7 +493,7 @@ class PostController extends Controller
 
         switch ($manageBlogType) {
             case 'list-blog':
-                $blogs = Blog::with('getBlog')->where(['status' => BLOG_STATUS_PUBLISHED])->orderByDesc('created_at')->paginate(10);
+                $blogs = Blog::with('getBlog')->where(['status' => BLOG_STATUS_PUBLISHED])->orderByDesc('user_blog_id')->paginate(10);
 
                 return view('users.blogs.index', [
                     'blogs' => $blogs,
@@ -502,13 +504,14 @@ class PostController extends Controller
                 return view('users.blogs.submit');
                 break;
             case 'mark-approval-blog':
-                $pendingBlogs = Blog::where(['status' => BLOG_STATUS_DRAFT, 'user_id' => Auth::user()->user_id])->orderByDesc('created_at')->paginate(10);
+                $pendingBlogs = Blog::where(['status' => BLOG_STATUS_DRAFT, 'user_id' => Auth::user()->user_id])->orderByDesc('user_blog_id')->paginate(10);
 
                 return view('users.blogs.mark_for_approval', [
                     'pendingBlogs' => $pendingBlogs,
                 ]);
+                break;
             case 'manage-blog-approval':
-                $pendingBlogs = Blog::where(['status' => BLOG_STATUS_DRAFT])->orderByDesc('created_at')->paginate(10);
+                $pendingBlogs = Blog::where(['status' => BLOG_STATUS_DRAFT])->orderByDesc('user_blog_id')->paginate(10);
 
                 return view('users.blogs.manage_blog_approval', [
                     'pendingBlogs' => $pendingBlogs,
@@ -527,10 +530,19 @@ class PostController extends Controller
             'description' => 'required',
             'media_input' => 'required',
             'media_input.*' => 'image|mimes:jpg,jpeg,png,gif,webp|max:4096',
+            'categories' => [
+                'nullable',
+                'regex:/^[^,]+(,\s*[^,]+)*$/',
+            ],
+
+            'hashtags' => "nullable|regex:/^(#\S+)(\s+#\S+)*$/",
+
         ], [
             'blog_title.required' => 'Blog Title is Required',
             'description.required' => 'Please Enter Blog Description',
             'media_input.required' => 'Please Select Images for the Blog',
+            'categories.regex' => 'Categories must be comma-separated without trailing or repeated commas.',
+            'hashtags.regex' => 'Hashtags must start with "#" and contain no spaces or special characters.',
         ]);
 
         $slug = str_replace(' ', '_', strtolower($request->blog_title));
@@ -557,11 +569,26 @@ class PostController extends Controller
         if ($blog) {
 
             $tagsInput = $request->hashtags;
+            $categories = $request->category;
             preg_match_all('/#(\w+)/', $tagsInput, $matches);
+            preg_match_all('/,(\w+)/', $categories, $categoryMatch);
             $tags = isset($matches[1]) ? $matches[1] : [];
-
+            $allCategories = isset($categoryMatch[1]) ? $categoryMatch[1] : [];
 
             $tagIds = [];
+            $categoryIds = [];
+
+            if (! empty($allCategories)) {
+                foreach ($allCategories as $cat) {
+                    $cleanTag = strtolower(trim($cat));
+
+                    $categoryModel = BlogCategory::updateOrCreate([
+                        ['category_title' => $cleanTag],
+                    ], ['slug' => Str::slug($cleanTag)]);
+
+                    $categoryIds[] = $categoryModel->category_id;
+                }
+            }
 
             if (! empty($tags)) {
                 foreach ($tags as $tag) {
@@ -581,8 +608,15 @@ class PostController extends Controller
                 foreach ($tagIds as $tagId) {
                     PostHastags::updateOrCreate([
                         'blog_id' => $blog->user_blog_id,
+                    ], [
                         'tag_id' => $tagId,
                     ]);
+                }
+            }
+
+            if (! empty($categoryIds)) {
+                foreach ($categoryIds as $catID) {
+                    BlogHasCategory::updateOrCreate(['blog_id' => $blog->user_blog_id], ['category_id' => $catID]);
                 }
             }
 
@@ -611,14 +645,26 @@ class PostController extends Controller
 
     public function view_blog($id)
     {
-        $blogData = (Blog::with('getBlog', 'blogPostedBy')->findOrFail($id));
+        $blogData = (Blog::with('getBlog', 'blogPostedBy', 'getBlogTags.gettags')->findOrFail($id));
 
-        if ($blogData->user_id != Auth::user()->user_id) {
-            return redirect()->route('suspicious');
+        $tags = [];
+        $categories = [];
+
+        $blogCategory = BlogHasCategory::with('CreatedCategory')->where(['blog_id' => $id])->get();
+        $blogTags = PostHastags::with('getTags')->where(['blog_id' => $id])->get();
+
+        foreach ($blogTags as $key => $value) {
+            $tags[] = ucfirst($value->getTags()->first()->name);
+        }
+
+        foreach ($blogCategory as $key => $value) {
+            $categories[] = ucfirst($value->CreatedCategory->first()->category_title);
         }
 
         return view('users.blogs.view', [
             'blogData' => $blogData,
+            'tags' => $tags,
+            'categories' => $categories,
         ]);
     }
 
@@ -630,61 +676,136 @@ class PostController extends Controller
                 'blog_title' => 'required',
                 'description' => 'required',
                 'media_input.*' => 'image|mimes:jpg,jpeg,png,gif,webp|max:4096',
+                'categories' => [
+                    'nullable',
+                    'regex:/^[^,]+(,\s*[^,]+)*$/',
+                ],
+                'hashtags' => "nullable|regex:/^(#\S+)(\s+#\S+)*$/",
             ], [
                 'blog_title.required' => 'Blog Title is Required',
                 'description.required' => 'Please Enter Blog Description',
+                'categories.regex' => 'Categories must be comma-separated without trailing or repeated commas.',
+                'hashtags.regex' => 'Hashtags must start with "#" and contain no spaces or special characters.',
             ]);
+
+            $blog = Blog::findOrFail($id);
+
+            if ($blog->user_id != Auth::id()) {
+                return redirect()->route('suspicious');
+            }
 
             $slug = str_replace(' ', '_', strtolower($request->blog_title));
 
             $updateData = [
                 'title' => $request->blog_title,
                 'content' => $request->description,
-                'status' => Auth::user()->user_type == USER_TYPE_ADMIN ? BLOG_STATUS_PUBLISHED : BLOG_STATUS_DRAFT,
+                'status' => Auth::user()->user_type == USER_TYPE_ADMIN
+                    ? BLOG_STATUS_PUBLISHED
+                    : BLOG_STATUS_DRAFT,
                 'slug' => $slug,
                 'published_at' => now()->toDateString(),
-                'user_id' => Auth::user()->user_id,
             ];
 
             if ($request->hasFile('media_input')) {
 
                 $images = $request->file('media_input');
-
                 $firstImage = $images[0];
+
                 $featured_file_name = uniqid().'_'.time().'.'.$firstImage->getClientOriginalExtension();
-                $featured_image = $firstImage->storeAs('blog_images', $featured_file_name, 'public');
+                $featured_image_path = $firstImage->storeAs('blog_images', $featured_file_name, 'public');
 
-                $updateData['featured_image'] = $featured_image;
-
-                $blog = Blog::where(['user_blog_id' => $id])->first();
-                $blog->update($updateData);
+                $updateData['featured_image'] = $featured_image_path;
 
                 unset($images[0]);
+            }
+
+            $blog->update($updateData);
+
+            $tagsInput = $request->hashtags;
+            preg_match_all('/#(\w+)/', $tagsInput, $matches);
+            $tags = isset($matches[1]) ? $matches[1] : [];
+
+            $tagIds = [];
+
+            if (! empty($tags)) {
+                foreach ($tags as $tag) {
+                    $cleanTag = strtolower(trim($tag));
+
+                    $tagModel = Tag::updateOrCreate(
+                        ['slug' => Str::slug($cleanTag)],
+                        ['name' => $cleanTag]
+                    );
+
+                    $tagIds[] = $tagModel->tag_id;
+                }
+            }
+
+            PostHastags::where('blog_id', $blog->user_blog_id)->delete();
+
+            foreach ($tagIds as $tagId) {
+                PostHastags::create([
+                    'blog_id' => $blog->user_blog_id,
+                    'tag_id' => $tagId,
+                ]);
+            }
+
+            $categories = $request->categories;
+            preg_match_all('/[^,]+/', $categories, $catMatches);
+            $allCategories = isset($catMatches[0]) ? $catMatches[0] : [];
+
+            $categoryIds = [];
+
+            if (! empty($allCategories)) {
+                foreach ($allCategories as $cat) {
+                    $cleanCat = strtolower(trim($cat));
+
+                    $categoryModel = BlogCategory::updateOrCreate(
+                        ['category_title' => $cleanCat],
+                        ['slug' => Str::slug($cleanCat)]
+                    );
+
+                    $categoryIds[] = $categoryModel->category_id;
+                }
+            }
+
+            BlogHasCategory::where('blog_id', $blog->user_blog_id)->delete();
+
+            foreach ($categoryIds as $catID) {
+                BlogHasCategory::create([
+                    'blog_id' => $blog->user_blog_id,
+                    'category_id' => $catID,
+                ]);
+            }
+
+            if ($request->hasFile('media_input')) {
+
                 foreach ($images as $img) {
                     $fileName = uniqid().'_'.time().'.'.$img->getClientOriginalExtension();
                     $filePath = $img->storeAs('blog_images', $fileName, 'public');
-                    $mime = $img->getMimeType();
 
-                    BlogMedia::updateOrCreate(['post_id' => $blog->user_blog_id,
-                    ], [
+                    BlogMedia::create([
+                        'post_id' => $blog->user_blog_id,
                         'caption' => $slug,
                         'file_name' => $fileName,
                         'file_path' => $filePath,
                         'media_type' => 'image',
-                        'mime_type' => $mime,
+                        'mime_type' => $img->getMimeType(),
                     ]);
                 }
-
-            } else {
-                Blog::where(['user_blog_id' => $id])->update($updateData);
             }
 
-            return redirect()->route('blogs.list', ['type' => 'list-blog'])->with('success', 'Blog Has Been Updated Successfully.');
+            return redirect()
+                ->route('blogs.list', ['type' => 'list-blog'])
+                ->with('success', 'Blog Updated Successfully');
 
-        } else {
-            return view('users.blogs.edit_blog', [
-                'blogData' => Blog::findOrFail($id),
-            ]);
         }
+
+        $blogData = Blog::findOrFail($id);
+
+        if ($blogData->user_id != Auth::id()) {
+            return redirect()->route('suspicious');
+        }
+
+        return view('users.blogs.edit_blog', compact('blogData'));
     }
 }

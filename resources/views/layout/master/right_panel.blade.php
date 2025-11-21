@@ -1,4 +1,4 @@
-<div class="col-lg-4 col-aside">
+<div class="@if(Route::currentRouteName() == "blogs.list") col-lg-12 @else col-lg-4 @endif col-aside">
     <aside id="default_sidebar" class="widget-area sidebar-widget-area sticky-sidebar">
         <div id="search-1" class="widget widget_search">
             <form role="search" method="get" class="search-form form-inline" action="./">
@@ -19,9 +19,11 @@
         <div id="recent-posts-1" class="widget widget_recent_entries">
             <h5 class="widget-title">Recent Posts</h5>
             <ul id="recentPosts">
-                @foreach ($recent_blogs as $key => $value)
+                @forelse ($recent_blogs as $key => $value)
                     <li>{{ $value->title }}</li>
-                @endforeach
+                    @empty
+                        <li>No Published Blogs.</li>
+                @endforelse
             </ul>
         </div>
         <div id="recent-comments-1" class="widget widget_recent_comments">

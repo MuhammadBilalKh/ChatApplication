@@ -21,8 +21,20 @@
                         value="{{ $blogData->title }}" />
                 </div>
             </div>
-            <div class="col-sm-12">
 
+            <div class="col-sm-12">
+                <div class="field required-field"> <label>Enter Tags (Seperated By '#')</label>
+                    <input type="text" name="hashtags" class="form-control" />
+                </div>
+            </div>
+
+            <div class="col-sm-12">
+                <div class="field required-field"> <label>Enter Category (Seperated By ',')</label>
+                    <input type="text" name="categories" class="form-control" />
+                </div>
+            </div>
+
+            <div class="col-sm-12">
                 <div class="field required-field">
                     <label>Enter Description: </label>
                     <textarea name="description" rows='12' id="txtDescription">{!! $blogData->content !!}</textarea>
