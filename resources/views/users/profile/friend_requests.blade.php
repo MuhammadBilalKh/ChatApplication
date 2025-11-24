@@ -95,9 +95,8 @@
             loadFriends();
         });
 
-        function ManageFriendRequest(senderID, status){
+        /*function ManageFriendRequest(senderID, status){
             jQuery.ajax({
-                url:"{{ route('') }}",
                 type:"{{ FORM_METHOD_GET }}",
                 data:{
                     request_type: status,
@@ -110,6 +109,6 @@
                     }
                 }
             });
-        }
+        }*/
     </script>
 @endpush

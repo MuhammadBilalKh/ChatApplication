@@ -4,7 +4,8 @@
         $topLevelCommentsCount = $topLevelComments->count();
         $markedFavorite = $post->getMarkedFavorite->contains('user_id', Auth::user()->user_id);
         $userLiked = $post->getLikedBy->contains('user_id', Auth::user()->user_id);
-        $isSpecialMiniActivity = $post->new_joining_post == NEW_JOINING_USER_POST || $post->is_profile_info_updated_post == 1;
+        $isSpecialMiniActivity =
+            $post->new_joining_post == NEW_JOINING_USER_POST || $post->is_profile_info_updated_post == 1;
     @endphp
     <li class="activity-item animate-item slideInUp" data-id="{{ $post->post_id }}">
         <div class="activity-avatar item-avatar">
@@ -70,45 +71,53 @@
                             </div>
                         </div>
                     @endif
-
-            @else
-                <div class="kmk-mini-activity member">
-                    <div class="mini-activity-inner">
-                        <div class="mini-cover"
-                            style="background-image: url('{{ asset('/storage/'.$post->postUploadedBy->cover_image) }}')">
-                        </div>
-                        <div class="mini-content">
-                            <div class="mini-avatar">
-                                <a href="./members-2/wpdeveloper/">
-                                    <img loading="lazy" src="{{ asset($post->postUploadedBy->profile_picture) }}"
-                                        class="avatar user-1-avatar avatar-200 photo" width="200" height="200"
-                                        alt="Profile Photo" />
-                                </a>
+                @else
+                    <div class="kmk-mini-activity member">
+                        <div class="mini-activity-inner">
+                            <div class="mini-cover"
+                                style="background-image: url('{{ asset('/storage/' . $post->postUploadedBy->cover_image) }}')">
                             </div>
-                            <div class="mini-info">
-                                <h5 class="mini-title"><a href="./members-2/wpdeveloper/"
-                                        class="ellipsis">{{ $post->postUploadedBy->username }}</a>
-                                </h5>
-                                <div class="mini-meta">
-                                    <span class="ellipsis"><i
-                                            class="uil-at"></i>{{ $post->postUploadedBy->username }}</span>
+                            <div class="mini-content">
+                                <div class="mini-avatar">
+                                    <a href="./members-2/wpdeveloper/">
+                                        <img loading="lazy" src="{{ asset($post->postUploadedBy->profile_picture) }}"
+                                            class="avatar user-1-avatar avatar-200 photo" width="200" height="200"
+                                            alt="Profile Photo" />
+                                    </a>
                                 </div>
-                            </div>
-                            @if ($post->new_joining_post == NEW_JOINING_USER_POST && Auth::user()->user_id != $post->user_id)
-                                <div class="mini-actions">
-                                    <div class="friendship-button pending_friend generic-button"
-                                        id="friendship-button-1">
-                                        <a href="./members-2/novipa/friends/requests/cancel/1/?_wpnonce=b59a45b00b"
-                                            class="friendship-button pending_friend requested" id="friend-1"
-                                            rel="remove" title="Cancel Friendship Requested"
-                                            data-bp-btn-action="pending">Cancel
-                                            Friendship Request</a>
+                                <div class="mini-info">
+                                    <h5 class="mini-title"><a href="./members-2/wpdeveloper/"
+                                            class="ellipsis">{{ $post->postUploadedBy->username }}</a>
+                                    </h5>
+                                    <div class="mini-meta">
+                                        <span class="ellipsis"><i
+                                                class="uil-at"></i>{{ $post->postUploadedBy->username }}</span>
                                     </div>
                                 </div>
-                            @endif
+                                @if ($post->new_joining_post == NEW_JOINING_USER_POST && Auth::user()->user_id != $post->user_id)
+                                    <div class="mini-actions">
+                                        @if ($post->friend_status == 'none')
+                                            <div class="friendship-button pending_friend generic-button"
+                                                id="friendship-button-1">
+                                                <a type="button" data-action="send" onclick="ManageFriendRequest(this)" class="friendship-button pending_friend requested"
+                                                    id="friend-{{ $post->user_id }}" title="Send Friendship Request"
+                                                    data-bp-btn-action="none">Send
+                                                    Friendship Request</a>
+                                            </div>
+                                        @elseif($post->friend_status == 'sent' || $post->friend_status == 'accepted')
+                                            <div class="friendship-button pending_friend generic-button"
+                                                id="friendship-button-1">
+                                                <a type="button" data-action="remove" onclick="ManageFriendRequest(this)" class="friendship-button pending_friend remove"
+                                                    id="friend-{{ $post->user_id }}"
+                                                    title="Cancel Friendship Requested" data-bp-btn-action="none">Cancel
+                                                    Friendship Request</a>
+                                            </div>
+                                        @endif
+                                    </div>
+                                @endif
+                            </div>
                         </div>
                     </div>
-                </div>
             @endif
 
             <div class="activity-meta action">

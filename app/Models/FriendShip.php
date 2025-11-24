@@ -18,11 +18,11 @@ class FriendShip extends Model
 
     public function getSender()
     {
-        return $this->belongsTo(User::class, 'user_id', "sender_id");
+        return $this->belongsTo(User::class, 'sender_id', "user_id");
     }
 
     public function getReceiver()
     {
-        return $this->belongsTo(User::class, 'user_id', "receiver_id");
+        return $this->belongsTo(User::class, 'receiver_id', "user_id");
     }
 }

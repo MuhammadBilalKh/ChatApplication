@@ -7,7 +7,7 @@
     <meta name="viewport"
         content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" />
 
-    <title>@yield("title")</title>
+    <title>@yield('title')</title>
 
     <link rel="stylesheet" href="/assets/css/index.css?ver=6.8.3" media="all" />
     <link rel="stylesheet" href="/assets/css/kkpress.min.css?ver=2.6.14" media="all" />
@@ -220,7 +220,14 @@
         }
     </style>
 
-    @stack("css")
+    <style>
+        #header-cover-image {
+            height: 300px;
+            background-image: url('{{ asset('/storage/' . Auth::user()->cover_image) }}');
+        }
+    </style>
+
+    @stack('css')
 
 </head>
 
@@ -236,6 +243,13 @@
                 <div class="layout social">
                     <div class="container-fluid">
                         <div class="row">
+                            @if (session()->has('success'))
+                                <div class="col-lg-12 mt-1">
+                                    <div class="alert alert-success">
+                                        <span>{{ session()->get('success') }}</span>
+                                    </div>
+                                </div>
+                            @endif
 
                             <div class="col-lg-12 col-main">
                                 <main id="main" class="main-content">
@@ -322,8 +336,8 @@
 
                                                                         <li id="friends-personal-li"
                                                                             class="bp-personal-tab">
-                                                                            <a href="{{ route('users.manage_friend_requests') }}" id="user-friends"
-                                                                                title="Friends">
+                                                                            <a href="{{ route('peoples.list_requests') }}"
+                                                                                id="user-friends" title="Friends">
                                                                                 <span
                                                                                     class="nav-link-text">Friends</span>
 
@@ -459,13 +473,19 @@
 
                                                                     <div class="widget">
                                                                         <h5 class="widget-title">My photos</h5>
-                                                                        <ul class="member-photo-list" style="padding:0;margin:0;">
+                                                                        <ul class="member-photo-list"
+                                                                            style="padding:0;margin:0;">
                                                                             @php
                                                                                 $latestImages = Auth::user()
                                                                                     ->getPosts()
                                                                                     ->with([
-                                                                                        'postMedia' => function ($query) {
-                                                                                            $query->where('media_type', MEDIA_TYPE_IMAGE);
+                                                                                        'postMedia' => function (
+                                                                                            $query,
+                                                                                        ) {
+                                                                                            $query->where(
+                                                                                                'media_type',
+                                                                                                MEDIA_TYPE_IMAGE,
+                                                                                            );
                                                                                         },
                                                                                     ])
                                                                                     ->orderByDesc('created_at')
@@ -476,34 +496,43 @@
                                                                                     })
                                                                                     ->sortByDesc('created_at')
                                                                                     ->take(5);
-                                                                                $imagesChunked = $latestImages->chunk(3);
+                                                                                $imagesChunked = $latestImages->chunk(
+                                                                                    3,
+                                                                                );
                                                                             @endphp
-                                                                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                                                            <div
+                                                                                style="display: flex; flex-direction: column; gap: 8px;">
                                                                                 @foreach ($imagesChunked as $row)
-                                                                                    <div style="display: flex; gap: 8px;">
+                                                                                    <div
+                                                                                        style="display: flex; gap: 8px;">
                                                                                         @foreach ($row as $media)
                                                                                             @php $count = 0; @endphp
-                                                                                            <div style="width: 60px; height: 60px; overflow: hidden; border-radius: 6px; border: 1px solid #ddd;">
-                                                                                                <a href="{{ asset($media->file_path) }}" target="_blank" style="display: block; width: 100%; height: 100%;">
+                                                                                            <div
+                                                                                                style="width: 60px; height: 60px; overflow: hidden; border-radius: 6px; border: 1px solid #ddd;">
+                                                                                                <a href="{{ asset($media->file_path) }}"
+                                                                                                    target="_blank"
+                                                                                                    style="display: block; width: 100%; height: 100%;">
                                                                                                     <img src="{{ asset($media->file_path) }}"
-                                                                                                         alt="User photo"
-                                                                                                         style="width: 100%; height: 100%; object-fit: cover;">
+                                                                                                        alt="User photo"
+                                                                                                        style="width: 100%; height: 100%; object-fit: cover;">
                                                                                                 </a>
                                                                                             </div>
                                                                                             @php $count++; @endphp
-                                                                                            @if($loop->parent->last && $loop->last && $count == 5)
-                                                                                                <div style="margin-left: 8px; display: flex; align-items: center;">
+                                                                                            @if ($loop->parent->last && $loop->last && $count == 5)
+                                                                                                <div
+                                                                                                    style="margin-left: 8px; display: flex; align-items: center;">
                                                                                                     <a href="{{ route('posts.show_photos') }}"
-                                                                                                       title="View All"
-                                                                                                       style="font-size: 13px; padding: 0; background: none; border: none; color: #007bff; text-decoration: underline; cursor: pointer;">
-                                                                                                       View All
+                                                                                                        title="View All"
+                                                                                                        style="font-size: 13px; padding: 0; background: none; border: none; color: #007bff; text-decoration: underline; cursor: pointer;">
+                                                                                                        View All
                                                                                                     </a>
                                                                                                 </div>
                                                                                             @endif
                                                                                         @endforeach
                                                                                     </div>
                                                                                 @endforeach
-                                                                                <div style="margin-top: 6px; display: flex; align-items: center;">
+                                                                                <div
+                                                                                    style="margin-top: 6px; display: flex; align-items: center;">
                                                                                     <a href="{{ route('posts.show_photos') }}"
                                                                                         title="View All"
                                                                                         class="float-right text-warning"
@@ -599,21 +628,32 @@
                                 <div class="vue-recycle-scroller bpc-buddy-list friends ready direction-vertical">
                                     <div class="vue-recycle-scroller__item-wrapper">
                                         <div class="vue-recycle-scroller__item-view">
-                                            <!-- User contact item -->
-                                            <div class="bpc-item mb-3" data-user="Natalie Berry">
-                                                <div class="avatar-container"><img
-                                                        src="https://www.clientbetalink.xyz/MIGVELv1/wp-content/uploads/avatars/3/1760986305-bpthumb.jpg"
-                                                        alt="Natalie Berry" class="avatar"> <span
-                                                        class="status online"></span>
-                                                </div>
-                                                <div class="bpc-item-body">
-                                                    <div class="flex-r">
-                                                        <div class="buddy">
-                                                            <div class="chat-buddy anchor ellipsis">Natalie Berry</div>
+                                            @foreach ($all_friends as $value)
+                                                @php
+                                                    $friend =
+                                                        $value->sender_id == Auth::user()->user_id
+                                                            ? $value->getReceiver
+                                                            : $value->getSender;
+                                                @endphp
+
+                                                <div class="bpc-item mb-3" data-user="{{ $friend->username }}">
+                                                    <div class="avatar-container">
+                                                        <img src="{{ asset($friend->profile_picture) }}"
+                                                            alt="{{ $friend->username }}" class="avatar">
+                                                        <span class="status online"></span>
+                                                    </div>
+
+                                                    <div class="bpc-item-body">
+                                                        <div class="flex-r">
+                                                            <div class="buddy">
+                                                                <div class="chat-buddy anchor ellipsis">
+                                                                    {{ $friend->username }}
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            @endforeach
                                         </div>
                                     </div>
                                 </div>
@@ -635,65 +675,68 @@
 
         <div id="buddy-chat-windows">
             <ul class="bpc-chat-windows-list">
-                <li class="chat-window focused" id="chat-window-Natalie-Berry" style="display: none;">
-                    <div class="chat-window__container">
-                        <div class="chat-window__title">
-                            <div class="avatar-container"><img
-                                    src="https://www.clientbetalink.xyz/MIGVELv1/wp-content/uploads/avatars/3/1760986305-bpthumb.jpg"
-                                    alt="Natalie Berry" class="avatar"> <span class="status"></span></div>
-                            <div class="flex-r">
-                                <div>
-                                    <div class="chat-buddy anchor ellipsis">
-                                        Natalie Berry
-                                    </div>
-                                    <div class="mute">
-                                        Offline
-                                    </div>
-                                </div>
-                            </div>
-                            <a href="#" class="chat_window__close-btn"><span
-                                    class="dashicons dashicons-no-alt"></span></a>
-                        </div>
-                        <div class="chat-window__message-list vb vb-invisible">
-                            <div class="vb-content">
-                                <ul class="bpc-chat-list overflow-auto">
-                                    <li class="message--self">
-                                        <time>Oct 21, 2025, 2:30 AM</time>
-                                        <div class="message-block">
-                                            <div class="messages">
-                                                <div class="message">😍</div>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="message--self">
-                                        <time>Nov 1, 2025, 5:45 AM</time>
-                                        <div class="message-block">
-                                            <div class="messages">
-                                                <div class="message">aaaa</div>
-                                            </div>
-                                        </div>
-                                    </li>
 
-                                </ul>
-                            </div>
-                        </div>
-                        <div>
-                            <div id="3" type="one2one">
-                                <div class="chat-window__inputarea">
-                                    <div class="chat-window__input">
-                                        <div class="chat-window__input--placeholder">
-                                            Write your message
+                @foreach ($all_friends as $value)
+                    @php
+                        $friend = $value->sender_id == Auth::user()->user_id ? $value->getReceiver : $value->getSender;
+
+                        $windowId = 'chat-window-' . preg_replace('/[^A-Za-z0-9\-]/', '-', $friend->username);
+                    @endphp
+
+                    <li class="chat-window" id="{{ $windowId }}" style="display: none;">
+                        <div class="chat-window__container">
+
+                            <div class="chat-window__title">
+                                <div class="avatar-container">
+                                    <img src="{{ asset($friend->profile_picture) }}" alt="{{ $friend->username }}"
+                                        class="avatar">
+                                    <span class="status {{ $friend->online ?? 'offline' }}"></span>
+                                </div>
+
+                                <div class="flex-r">
+                                    <div>
+                                        <div class="chat-buddy anchor ellipsis">
+                                            {{ $friend->username }}
                                         </div>
-                                        <div contenteditable="true" class="chat-window__input--field"></div>
-                                    </div>
-                                    <div class="chat-window__input--emoji">
-                                        <button id="emojiBtn" type="button">😊</button>
+                                        <div class="mute">
+                                            {{ $friend->online ? 'Online' : 'Offline' }}
+                                        </div>
                                     </div>
                                 </div>
+
+                                <a href="#" class="chat_window__close-btn">
+                                    <span class="dashicons dashicons-no-alt"></span>
+                                </a>
                             </div>
+
+                            <div class="chat-window__message-list vb vb-invisible">
+                                <div class="vb-content">
+                                    <ul class="bpc-chat-list overflow-auto" id="messages-{{ $friend->user_id }}">
+                                        <!-- Messages will be loaded here dynamically with JS/AJAX -->
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="chat-window__inputarea" data-friend="{{ $friend->user_id }}">
+                                    <div class="chat-window__input">
+                                        <div class="chat-window__input--placeholder">Write your message</div>
+                                        <div contenteditable="true" class="chat-window__input--field message-input"
+                                            data-friend="{{ $friend->user_id }}">
+                                        </div>
+                                    </div>
+
+                                    <div class="chat-window__input--emoji">
+                                        <button type="button" class="emojiBtn">😊</button>
+                                    </div>
+
+                                </div>
+                            </div>
+
                         </div>
-                    </div>
-                </li>
+                    </li>
+                @endforeach
+
             </ul>
         </div>
     </div>
@@ -764,20 +807,19 @@
             });
         }
 
-        // Handle Like, Comment Submission and Deletion
-        $('.rtmedia-like, .rt_media_comment_submit').on('click', function(e) {
+        jQuery('.rtmedia-like, .rt_media_comment_submit').on('click', function(e) {
             e.preventDefault();
 
-            if ($(this).hasClass('rtmedia-like')) {
+            if (jQuery(this).hasClass('rtmedia-like')) {
                 $(this).toggleClass('liked');
-                if ($(this).hasClass('liked')) {
-                    $(this).find('span').text('Unlike');
+                if (jQuery(this).hasClass('liked')) {
+                    jQuery(this).find('span').text('Unlike');
                 } else {
-                    $(this).find('span').text('Like');
+                    jQuery(this).find('span').text('Like');
                 }
             }
 
-            if ($(this).attr('id') === 'rt_media_comment_submit') {
+            if (jQuery(this).attr('id') === 'rt_media_comment_submit') {
                 var commentText = $('#comment_content').val();
                 if (commentText.trim() !== "") {
                     var newComment = `
@@ -796,18 +838,17 @@
                                         </div>
                                     </div>
                                 </div>
-                            </li>
-                        `;
-                    $('#rtmedia_comment_ul').append(newComment);
-                    $('#comment_content').val(''); // Clear input field
+                            </li> `;
+                    jQuery('#rtmedia_comment_ul').append(newComment);
+                    jQuery('#comment_content').val(''); // Clear input field
                 }
             }
         });
 
         // Handle delete comment
-        $(document).on('click', '.rtmedia-delete-comment', function(e) {
+        jQuery(document).on('click', '.rtmedia-delete-comment', function(e) {
             e.preventDefault();
-            $(this).closest('.rtmedia-comment').remove();
+            jQuery(this).closest('.rtmedia-comment').remove();
         });
     });
 </script>
@@ -865,8 +906,7 @@
                 <div class="messages">
                     <div class="message">${message}</div>
                 </div>
-            </div>
-        `;
+            </div> `;
 
         chatList.appendChild(newMsg);
         inputField.textContent = '';
@@ -909,11 +949,11 @@
     emojiBtn.addEventListener('click', () => picker.togglePicker(emojiBtn));
 
     //mobile toggle chat
-    $('#toggle-chat').on('click', function() {
+    jQuery('#toggle-chat').on('click', function() {
 
         // Check screen width for mobile (under 768px)
-        if ($(window).width() < 768) {
-            $('#buddy-chat-app').toggleClass('d-none');
+        if (jQuery(window).width() < 768) {
+            jQuery('#buddy-chat-app').toggleClass('d-none');
         } else {
             console.log('Not mobile view — no toggle.');
         }
@@ -942,6 +982,8 @@
     };
     ['DOMContentLoaded', 'kmk/lazyload/observe']
     .forEach(e => document.addEventListener(e, lazyloadRunObserver));
+
+    jQuery(".alert").delay(2500).fadeOut();
 </script>
 
 @stack('script')

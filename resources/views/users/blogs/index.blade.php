@@ -63,8 +63,7 @@
                                 <a type="button">{{ $value->published_at }}</a>
                             </span>
                         </div>
-                        <h4 class="entry-title"><a href="#" rel="bookmark">Using Social Network Properly for
-                                Businesses</a></h4>
+                        <h4 class="entry-title"><a href="#" rel="bookmark">{{ $value->title }}</a></h4>
                         <div class="entry-excerpt">
                             <p>
                                 {!! \Illuminate\Support\Str::limit($value->content, 50) !!}... </p>

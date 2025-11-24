@@ -661,10 +661,15 @@ class PostController extends Controller
             $categories[] = ucfirst($value->CreatedCategory->first()->category_title);
         }
 
+        $previous = Blog::where('user_blog_id', '<', $id)->where("status", BLOG_STATUS_PUBLISHED )->orderBy('user_blog_id', 'desc')->first();
+        $next     = Blog::where('user_blog_id', '>', $id)->where("status", BLOG_STATUS_PUBLISHED )->orderBy('user_blog_id', 'asc')->first();
+
         return view('users.blogs.view', [
             'blogData' => $blogData,
             'tags' => $tags,
             'categories' => $categories,
+            'previousBlog' => $previous,
+            'nextBlog' => $next,
         ]);
     }
 

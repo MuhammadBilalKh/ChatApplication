@@ -37,7 +37,6 @@ Route::middleware(['web'])->group(function () {
         });
 
         Route::get('/profile', [UserController::class, 'show_profile'])->name('users.profile');
-        Route::get("/friend-requests", [UserController::class, 'manage_friend_requests'])->name('users.manage_friend_requests');
 
         Route::post('/load-images-media', [SiteController::class, 'load_profile_pictures'])->name('site.load_profile_pictures');
         Route::prefix('post')->group(function () {
@@ -77,8 +76,8 @@ Route::middleware(['web'])->group(function () {
             Route::get("/load-requests", [SiteController::class, 'list_requests'])->name("peoples.list_requests");
 
             Route::post("/manage_request_response", [SiteController::class, 'manage_request_response'])->name('peoples.manage_request_response');
-            Route::post('/send_friend_request', [SiteController::class, 'create_friend_request'])->name('peoples.create_friend_request');
-            Route::post('/cancel_friend_request', [SiteController::class, 'cancel_friend_request'])->name('peoples.cancel_friend_request');
+            Route::post("/manage-friend-request", [SiteController::class, 'manage_friend_request'])->name('peoples.manage_friend_request');
+            Route::post("/request-response", [SiteController::class, 'request_response'])->name("users.request_response");
         });
 
         Route::prefix('jobs')->group(function () {

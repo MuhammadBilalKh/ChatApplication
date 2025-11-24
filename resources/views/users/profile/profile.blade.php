@@ -8,15 +8,6 @@
     ])
 @endsection
 
-@push('css')
-    <style>
-        #header-cover-image {
-            height: 300px;
-            background-image: url('{{ asset('/storage/' . Auth::user()->cover_image) }}');
-        }
-    </style>
-@endpush
-
 @section('profile-content')
     <nav class="bp-navs bp-subnavs no-ajax user-subnav" id="subnav" role="navigation" aria-label="Profile menu">
         <ul id="member-secondary-nav" class="subnav bp-priority-subnav-nav-items">

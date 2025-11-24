@@ -70,6 +70,84 @@
     <div class="container-fluid mt-3">
         {!! $blogData->content !!}
     </div>
+
+    <div id="comments" class="comments-area animate-item slideInUp">
+
+        <div id="respond" class="comment-respond">
+            <div class="block-title">
+                <h3 id="reply-title" class="comment-reply-title">Leave a Reply <small><a rel="nofollow"
+                            id="cancel-comment-reply-link"
+                            href="./MIGVELv1/top-10-fruits-to-make-healthier-and-happier/#respond"
+                            style="display:none;">Cancel reply</a></small></h3>
+            </div>
+            <form action="./wp-comments-post.php" method="post" id="kmk-comment-form" class="comment-form">
+                <p class="comment-notes"><span id="email-notes">Your email address will
+                        not be published.</span> <span class="required-field-message">Required fields are marked <span
+                            class="required">*</span></span></p>
+                <p class="comment-form-comment"><label for="comment">Comment <span class="required">*</span></label>
+                    <textarea id="comment" name="comment" cols="45" rows="8" maxlength="65525" required></textarea>
+                </p>
+                <p class="comment-form-author"><label for="author">Name <span class="required">*</span></label> <input
+                        id="author" name="author" type="text" value="" size="30" maxlength="245"
+                        autocomplete="name" required /></p>
+                <p class="comment-form-email"><label for="email">Email <span class="required">*</span></label> <input
+                        id="email" name="email" type="email" value="" size="30" maxlength="100"
+                        aria-describedby="email-notes" autocomplete="email" required />
+                </p>
+                <p class="comment-form-url"><label for="url">Website</label> <input id="url" name="url"
+                        type="url" value="" size="30" maxlength="200" autocomplete="url" /></p>
+                <p class="comment-form-cookies-consent"><input id="wp-comment-cookies-consent"
+                        name="wp-comment-cookies-consent" type="checkbox" value="yes" />
+                    <label for="wp-comment-cookies-consent">Save my name, email, and
+                        website in this browser for the next time I comment.</label>
+                </p>
+                <p class="form-submit"><input name="submit" type="submit" id="submit" class="submit"
+                        value="Post Comment" /> <input type='hidden' name='comment_post_ID' value='247'
+                        id='comment_post_ID' />
+                    <input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+                </p>
+            </form>
+        </div>
+
+    </div>
+
+    <div class="post-navigation animate-item slideInUp">
+        <div class="wrapper">
+            @if (isset($previousBlog))
+                <div class="previous-post">
+                    <div class="prev">
+                        <a href="{{ route('blogs.view', ['id' => $previousBlog->user_blog_id]) }}" rel="prev"><span
+                                class="nav-icon"><i class="icon ion-ios-arrow-back"></i></span>
+                            <h5 class="post-nav-label">Prev post</h5>
+                        </a>
+                    </div>
+                </div>
+            @endif
+            @if (isset($nextBlog))
+                <div class="next-post">
+                    <div class="next">
+                        <a href="{{ route('blogs.view', ['id' => $nextBlog->user_blog_id]) }}" rel="next"><span
+                                class="nav-icon"><i class="icon ion-ios-arrow-right"></i></span>
+                            <h5 class="post-nav-label">Next post</h5>
+                        </a>
+                    </div>
+                </div>
+            @endif
+        </div>
+    </div>
+
+    @if (Auth::user()->user_type == USER_TYPE_ADMIN &&
+            $blogData->user_id != Auth::user()->user_id &&
+            $blogData->status == BLOG_STATUS_DRAFT)
+        <div class="post-navigation animate-item slideInUp">
+            <form action="" method="{{ FORM_METHOD_POST }}">
+                @csrf
+                <button type="submit" name="{{ BLOG_STATUS_PUBLISHED }}" class="btn btn-success">Published</button>
+                <button type="submit" name="{{ BLOG_STATUS_REJECTED }}" class="btn btn-danger">Discard</button>
+            </form>
+        </div>
+    @endif
+
 @endsection
 
 @push('script')

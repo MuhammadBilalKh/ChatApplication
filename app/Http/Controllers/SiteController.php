@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use Exception;
-use App\Models\Post;
-use App\Models\User;
 use App\Models\Advert;
-use App\Models\Category;
-use App\Models\PostMedia;
-use App\Models\FriendShip;
-use App\Models\JobPosting;
 use App\Models\AdvertMedia;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
+use App\Models\Category;
 use App\Models\FeaturedAdvert;
 use App\Models\FeaturedPackage;
+use App\Models\FriendShip;
+use App\Models\JobPosting;
+use App\Models\Post;
+use App\Models\PostMedia;
+use App\Models\User;
+use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Str;
 
 class SiteController extends Controller
 {
@@ -232,7 +232,7 @@ class SiteController extends Controller
 
     public function list_requests()
     {
-        $request = FriendShip::where([
+        $request = FriendShip::with("getSender")->where([
             'receiver_id' => Auth::user()->user_id,
             'status' => FRIEND_REQUEST_STATUS_PENDING,
         ])->get();
@@ -244,27 +244,29 @@ class SiteController extends Controller
 
     public function manage_request_response(Request $request)
     {
-        $requestType = $request->request_type;
+        $requestType = $request->response;
         $receiverId = Auth::user()->user_id;
-        $memberID = $request->member_id;
+        $memberID = $request->memberID;
+        $acceptanceType = "";
 
-        if ($requestType == 'accept') {
+        if ($requestType == '1') {
+            $acceptanceType = "Accepted";
             FriendShip::where([
                 'receiver_id' => $receiverId,
                 'sender_id' => $memberID,
+                'accepted_at' => now(),
             ])->update([
                 'status' => FRIEND_REQUEST_STATUS_ACCEPTED,
             ]);
-        } elseif ($requestType == 'reject') {
+        } elseif ($requestType == '0') {
+            $acceptanceType = "Rejected";
             FriendShip::where([
                 'receiver_id' => $receiverId,
                 'sender_id' => $memberID,
             ])->delete();
         }
 
-        return response()->json([
-            'status' => REQUEST_PROCESSED,
-        ]);
+        return redirect()->back()->with("success", "Friend Request ".ucwords($acceptanceType). " Successfully.");
     }
 
     public function manage_categories(Request $request)
@@ -444,7 +446,7 @@ class SiteController extends Controller
             'advertisment_id' => $id,
         ])->value('package_id');
 
-        if(!empty($advertPackageID)){
+        if (! empty($advertPackageID)) {
             $packageData = FeaturedPackage::where(['package_id' => $advertPackageID])->first();
         } else {
             $packageData = [];
@@ -452,8 +454,8 @@ class SiteController extends Controller
 
         $advertData = Advert::with('getCategory', 'advertPostedBy', 'getAdvertMedia')->findOrFail($id);
 
-        if($advertData->posted_by != Auth::user()->user_id){
-            abort(403, "Unauthorized Access");
+        if ($advertData->posted_by != Auth::user()->user_id) {
+            abort(403, 'Unauthorized Access');
         } else {
             return view('users.advertisment.view', [
                 'advert' => $advertData,
@@ -497,12 +499,12 @@ class SiteController extends Controller
 
     public function manageFeaturedAdvertStatus(Request $request)
     {
-        $advertismentID = Advert::where(['advertisment_code' => $request->advertisment_id])->value("advertisment_id");
+        $advertismentID = Advert::where(['advertisment_code' => $request->advertisment_id])->value('advertisment_id');
 
         $packageID = FeaturedAdvert::where([
             'advertisment_id' => $advertismentID,
             'is_featured' => 1,
-        ])->value("package_id");
+        ])->value('package_id');
 
         Advert::where([
             'advertisment_id' => $advertismentID,
@@ -518,6 +520,26 @@ class SiteController extends Controller
             'is_featured' => $request->approval_status == 'approve' ? 2 : 3,
         ]);
 
-        return redirect()->back()->with('success', 'Selected Featured Have Been Marked '.ucfirst($request->approval_status). " Successfully.");
+        return redirect()->back()->with('success', 'Selected Featured Have Been Marked '.ucfirst($request->approval_status).' Successfully.');
+    }
+
+    public function manage_friend_request(Request $request)
+    {
+        $friendShip = new FriendShip;
+
+        if ($request->action == 'send') {
+
+            $friendShip->sender_id = Auth::user()->user_id;
+            $friendShip->receiver_id = str_replace('friend-', ' ', $request->receiverID);
+            $friendShip->status = FRIEND_REQUEST_STATUS_PENDING;
+
+            $friendShip->save();
+        } else {
+            $friendShip->where(['sender_id' => Auth::user()->user_id, 'receiver_id' => str_replace('friend-', ' ', $request->receiverID)])->delete();
+        }
+
+        return response()->json([
+            'status' => REQUEST_PROCESSED,
+        ]);
     }
 }

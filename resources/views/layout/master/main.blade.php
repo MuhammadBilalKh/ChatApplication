@@ -488,8 +488,7 @@
                 <div class="messages">
                     <div class="message">${message}</div>
                 </div>
-            </div>
-        `;
+            </div>`;
 
         chatList.appendChild(newMsg);
         inputField.textContent = '';

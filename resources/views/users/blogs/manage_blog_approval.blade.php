@@ -49,15 +49,14 @@
                         <div class="post-medias">
                             <div class="item-media">
                                 <a href="#"
-                                    style="background-image: url({{ asset('/storage/' . $value->getBlog[0]->file_path) }});"></a>
-
+                                    style="background-image: url({{ asset('/storage/' . $value->featured_image) }});"></a>
                             </div>
                         </div>
                     </div>
                     <div class="entry-content">
                         <div class="entry-meta">
                             <span class="link date-links">
-                                <a type="button">{{ $value->published_at }}</a>
+                                <a type="button">{{ $value->published_at }} ({{ ucfirst($value->status) }})</a>
                             </span>
                         </div>
                         <h4 class="entry-title"><a href="#" rel="bookmark">{{ $value->title }}</a></h4>

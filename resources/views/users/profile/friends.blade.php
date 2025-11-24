@@ -51,7 +51,7 @@
             @empty
                 <li class="item-entryanimate-itemslideInUp odd" data-bp-item-id="7" data-bp-item-component="members">
                     <div class="row">
-                        <div class="col-sm-12">
+                        <div class="col-12 col-lg-main">
                             <div class="list-wrap">
                                 <div class="alert alert-warning alert-dismissible">
                                     <span>No Records Found</span>

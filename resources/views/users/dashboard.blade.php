@@ -275,35 +275,6 @@
                     });
             }
 
-            function SendFriendRequest(receiverID) {
-                jQuery.ajax({
-                    url: "{{ route('peoples.create_friend_request') }}",
-                    type: "{{ FORM_METHOD_POST }}",
-                    headers: {
-                        "X-CSRF-TOKEN": "{{ csrf_token() }}",
-                    },
-                    data: {
-                        memberID: receiverID,
-                    },
-                    beforeSend: function() {
-
-                    },
-                    success: function(response) {
-                        if (response.status == {{ REQUEST_PROCESSED }}) {
-                            jQuery("#member-" + receiverID).removeClass("add").addClass("requested")
-                        }
-                    }
-                });
-            }
-
-            function CancelFriendRequest(receiverID) {
-
-            }
-
-            function AcceptFriendRequest(receiverID) {
-
-            }
-
         });
 
         jQuery(document).on("click", ".reply-btn", function() {
@@ -345,7 +316,7 @@
 
             jQuery.ajax({
                 url: "{{ route('comments.reply') }}",
-                type: "POST",
+                method: "{{ FORM_METHOD_POST }}",
                 headers: {
                     "X-CSRF-TOKEN": "{{ csrf_token() }}"
                 },
@@ -400,7 +371,7 @@
 
                 jQuery.ajax({
                     url: "{{ route('comments.store') }}",
-                    type: "POST",
+                    method: "{{ FORM_METHOD_POST }}",
                     data: {
                         post_id: postId,
                         content: $form.find('input[name="content"]').val(),
@@ -461,7 +432,7 @@
 
                 jQuery.ajax({
                     url: "{{ route('comments.store') }}",
-                    type: "POST",
+                    method: "{{ FORM_METHOD_POST }}",
                     data: $form.serialize(),
                     headers: {
                         'X-CSRF-TOKEN': "{{ csrf_token() }}"
@@ -528,7 +499,7 @@
                 if (confirm('Are you sure you want to delete this comment?')) {
                     jQuery.ajax({
                         url: "{{ route('comments.destroy') }}",
-                        type: "{{ FORM_METHOD_POST }}",
+                        method: "{{ FORM_METHOD_POST }}",
                         data: {
                             comment_id: commentId,
                         },
@@ -583,7 +554,7 @@
                 if (window.confirm('Are you sure you want to delete this post?')) {
                     jQuery.ajax({
                         url: "{{ route('posts.delete') }}",
-                        type: "{{ FORM_METHOD_POST }}",
+                        method: "{{ FORM_METHOD_POST }}",
                         data: {
                             post_id: postID,
                             _token: "{{ csrf_token() }}",
@@ -609,7 +580,7 @@
 
                 jQuery.ajax({
                     url: "{{ route('posts.toggle_mark_favorite') }}",
-                    type: "{{ FORM_METHOD_POST }}",
+                    method: "{{ FORM_METHOD_POST }}",
                     data: {
                         _token: "{{ csrf_token() }}",
                         post_id: postID,
@@ -639,7 +610,7 @@
 
                 jQuery.ajax({
                     url: "{{ route('posts.toggle_like') }}",
-                    type: "{{ FORM_METHOD_POST }}",
+                    method: "{{ FORM_METHOD_POST }}",
                     data: {
                         _token: "{{ csrf_token() }}",
                         post_id: postID,
@@ -688,7 +659,7 @@
 
                 jQuery.ajax({
                     url: "{{ route('comments.update') }}",
-                    type: '{{ FORM_METHOD_POST }}',
+                    method: '{{ FORM_METHOD_POST }}',
                     data: {
                         content: content,
                         comment_id: commentId,
@@ -739,7 +710,7 @@
                 let postID = jQuery(this).data("post-id");
                 $.ajax({
                     url: "{{ route('posts.generate_post_content') }}",
-                    type: "{{ FORM_METHOD_POST }}",
+                    method: "{{ FORM_METHOD_POST }}",
                     data: {
                         post_id: postID,
                         _token: "{{ csrf_token() }}",
@@ -755,26 +726,59 @@
                     }
                 });
             });
-
-            function showTempMessage(message, type = 'success') {
-                const $message = jQuery('<div class="temp-message alert alert-' + type + '">' + message + '</div>');
-                jQuery('body').append($message);
-
-                $message.css({
-                    'position': 'fixed',
-                    'top': '20px',
-                    'right': '20px',
-                    'z-index': '9999',
-                    'padding': '10px 20px',
-                    'border-radius': '9px'
-                });
-
-                setTimeout(function() {
-                    $message.fadeOut(300, function() {
-                        jQuery(this).remove();
-                    });
-                }, 2500);
-            }
         });
+
+        function ManageFriendRequest(e) {
+            console.clear()
+            console.log(e, jQuery(e).data('action'))
+
+            let act = jQuery(e).data('action');
+            jQuery.ajax({
+                url: "{{ route('peoples.manage_friend_request') }}",
+                method: "{{ FORM_METHOD_POST }}",
+                data: {
+                    receiverID: e.id,
+                    action: act,
+                    _token: "{{ csrf_token() }}",
+                },
+                success: function(resp) {
+                    if (resp.status == {{ REQUEST_PROCESSED }}) {
+                        if (act == "send") {
+                            showTempMessage("Friend Request Sended", "success");
+                            jQuery("#"+e.id).removeClass("remove").addClass("requested")
+                        } else if (act == "remove") {
+                            showTempMessage("Friend Request Removed", "success");
+                            jQuery("#"+e.id).removeClass("requested").addClass("remove")
+                        }
+                    }
+                },
+                error: function() {
+                    showTempMessage("Error Occured While Processing The Request.", "danger");
+                }
+            });
+
+            jQuery("#listPosts").html('');
+            loadPosts();
+        }
+
+        function showTempMessage(message, type = 'success') {
+            const $message = jQuery('<div class="temp-message alert alert-' + type + '">' + message + '</div>');
+            jQuery('body').append($message);
+
+            $message.css({
+                'position': 'fixed',
+                'top': '20px',
+                'right': '20px',
+                'z-index': '9999',
+                'padding': '10px 20px',
+                'border-radius': '9px'
+            });
+
+            setTimeout(function() {
+                $message.fadeOut(300, function() {
+                    jQuery(this).remove();
+                });
+            }, 2500);
+        }
     </script>
 @endpush

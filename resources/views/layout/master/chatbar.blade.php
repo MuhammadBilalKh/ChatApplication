@@ -198,21 +198,33 @@
                             <div class="vue-recycle-scroller bpc-buddy-list friends ready direction-vertical">
                                 <div class="vue-recycle-scroller__item-wrapper">
                                     <div class="vue-recycle-scroller__item-view">
-                                        <!-- User contact item -->
-                                        <div class="bpc-item mb-3" data-user="Natalie Berry">
-                                            <div class="avatar-container"><img
-                                                    src=""
-                                                    alt="Natalie Berry" class="avatar"> <span
-                                                    class="status online"></span>
-                                            </div>
-                                            <div class="bpc-item-body">
-                                                <div class="flex-r">
-                                                    <div class="buddy">
-                                                        <div class="chat-buddy anchor ellipsis">Natalie Berry</div>
+
+                                        @foreach ($all_friends as $value)
+                                            @php
+                                                $friend =
+                                                    $value->sender_id == Auth::user()->user_id
+                                                        ? $value->getReceiver
+                                                        : $value->getSender;
+                                            @endphp
+
+                                            <div class="bpc-item mb-3" data-user="{{ $friend->username }}">
+                                                <div class="avatar-container">
+                                                    <img src="{{ asset($friend->profile_picture) }}"
+                                                        alt="{{ $friend->username }}" class="avatar">
+                                                    <span class="status online"></span>
+                                                </div>
+
+                                                <div class="bpc-item-body">
+                                                    <div class="flex-r">
+                                                        <div class="buddy">
+                                                            <div class="chat-buddy anchor ellipsis">
+                                                                {{ $friend->username }}
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        @endforeach
                                     </div>
                                 </div>
                             </div>
@@ -236,72 +248,69 @@
     <div id="buddy-chat-windows">
         <ul class="bpc-chat-windows-list">
 
+            @foreach ($all_friends as $value)
+                @php
+                    $friend = $value->sender_id == Auth::user()->user_id ? $value->getReceiver : $value->getSender;
 
+                    $windowId = 'chat-window-' . preg_replace('/[^A-Za-z0-9\-]/', '-', $friend->username);
+                @endphp
 
+                <li class="chat-window" id="{{ $windowId }}" style="display: none;">
+                    <div class="chat-window__container">
 
+                        <div class="chat-window__title">
+                            <div class="avatar-container">
+                                <img src="{{ asset($friend->profile_picture) }}" alt="{{ $friend->username }}"
+                                    class="avatar">
+                                <span class="status {{ $friend->online ?? 'offline' }}"></span>
+                            </div>
 
-            <!-- Chat window for Natalie Berry -->
-            <li class="chat-window focused" id="chat-window-Natalie-Berry" style="display: none;">
-                <div class="chat-window__container">
-                    <div class="chat-window__title">
-                        <div class="avatar-container"><img
-                                src=""
-                                alt="Natalie Berry" class="avatar"> <span class="status"></span></div>
-                        <div class="flex-r">
-                            <div>
-                                <div class="chat-buddy anchor ellipsis">
-                                    Natalie Berry
-                                </div>
-                                <div class="mute">
-                                    Offline
+                            <div class="flex-r">
+                                <div>
+                                    <div class="chat-buddy anchor ellipsis">
+                                        {{ $friend->username }}
+                                    </div>
+                                    <div class="mute">
+                                        {{ $friend->is_online ? 'Online' : 'Offline' }}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <a href="#" class="chat_window__close-btn"><span
-                                class="dashicons dashicons-no-alt"></span></a>
-                    </div>
-                    <div class="chat-window__message-list vb vb-invisible">
-                        <div class="vb-content">
-                            <ul class="bpc-chat-list overflow-auto">
-                                <li class="message--self">
-                                    <time>Oct 21, 2025, 2:30 AM</time>
-                                    <div class="message-block">
-                                        <div class="messages">
-                                            <div class="message">😍</div>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="message--self">
-                                    <time>Nov 1, 2025, 5:45 AM</time>
-                                    <div class="message-block">
-                                        <div class="messages">
-                                            <div class="message">aaaa</div>
-                                        </div>
-                                    </div>
-                                </li>
 
-                            </ul>
+                            <a href="#" class="chat_window__close-btn">
+                                <span class="dashicons dashicons-no-alt"></span>
+                            </a>
                         </div>
-                    </div>
-                    <div>
-                        <div id="3" type="one2one">
-                            <div class="chat-window__inputarea">
+
+                        <!-- MESSAGE LIST -->
+                        <div class="chat-window__message-list vb vb-invisible">
+                            <div class="vb-content">
+                                <ul class="bpc-chat-list overflow-auto" id="messages-{{ $friend->user_id }}">
+                                    <!-- Messages will be loaded here dynamically with JS/AJAX -->
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- INPUT AREA -->
+                        <div>
+                            <div class="chat-window__inputarea" data-friend="{{ $friend->user_id }}">
                                 <div class="chat-window__input">
-                                    <div class="chat-window__input--placeholder">
-                                        Write your message
+                                    <div class="chat-window__input--placeholder">Write your message</div>
+                                    <div contenteditable="true" class="chat-window__input--field message-input"
+                                        data-friend="{{ $friend->user_id }}">
                                     </div>
-                                    <div contenteditable="true" class="chat-window__input--field"></div>
                                 </div>
+
                                 <div class="chat-window__input--emoji">
-                                    <button id="emojiBtn" type="button">😊</button>
+                                    <button type="button" class="emojiBtn">😊</button>
                                 </div>
-                                <!-- <a href="#" class="chat-window__btn--enter"><span
-                                        class="dashicons dashicons-yes"></span></a> -->
+
                             </div>
                         </div>
+
                     </div>
-                </div>
-            </li>
+                </li>
+            @endforeach
+
         </ul>
     </div>
 </div>
