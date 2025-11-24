@@ -12,7 +12,7 @@ class Message extends Model
 
     protected $fillable = [
         "sender_id",
-        "recevier_id",
+        "receiver_id",
         "message_type",
         "attachment_path",
         "message",

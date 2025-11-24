@@ -44,8 +44,6 @@
 
     <link rel="stylesheet" href="/assets/css/mainCss.css" media="all" />
 
-    @stack('css')
-
     <style>
         .col-aside {
             position: relative;
@@ -70,6 +68,8 @@
         }
 
         /* ===== Scrollbar styling ===== */
+
+        /* WebKit browsers (Chrome, Edge, Safari) */
         .chat-window__message-list.vb.vb-invisible::-webkit-scrollbar {
             width: 12px;
         }
@@ -84,6 +84,7 @@
             border: 3px solid #fff;
         }
 
+        /* Firefox scrollbar */
         .chat-window__message-list.vb.vb-invisible {
             scrollbar-width: thin;
             scrollbar-color: #f5bd02 #fff;
@@ -93,6 +94,7 @@
         .chat-window__inputarea {
             display: flex;
             align-items: flex-end;
+            /* align emoji + input + send button at bottom */
             background: #fff;
             border: 1px solid #ddd;
             border-radius: 25px;
@@ -100,22 +102,29 @@
             width: 100%;
             box-sizing: border-box;
             border-top: 1px solid #ddd;
-            min-height: 50px;
         }
 
+        /* ===== Message input field ===== */
         .chat-window__input {
             flex: 1;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
-            /* Ensure text is aligned at the top */
+            justify-content: flex-end;
             position: relative;
             border-radius: 6px;
             min-height: 40px;
             background: #fff;
-            padding: 0;
-            /* Ensure padding is not causing misalignment */
-            box-sizing: border-box;
+        }
+
+        .chat-window__input--placeholder {
+            position: absolute;
+            top: 50%;
+            left: 12px;
+            transform: translateY(-50%);
+            color: #aaa;
+            pointer-events: none;
+            font-size: 14px;
+            user-select: none;
         }
 
         .chat-window__input--field {
@@ -126,48 +135,18 @@
             width: 100%;
             font-size: 14px;
             line-height: 20px;
-            /* Adjust line height to ensure correct text alignment */
-            position: relative;
-            z-index: 2;
-            overflow-y: auto;
-            max-height: 120px;
-            display: block;
-            white-space: pre-wrap;
-            /* Ensure the content wraps correctly */
-            text-align: left;
-            /* Ensure text aligns left, unless center is desired */
         }
 
-       .chat-window__input--placeholder {
-            position: absolute;
-            top: 50%;
-            left: 12px;
-            transform: translateY(-50%); /* Center the placeholder vertically */
-            color: #aaa;
-            pointer-events: none;
-            font-size: 14px;
-            user-select: none;
-            z-index: 1;
-        }
-
-        /* Hide placeholder when there's content */
+        /* Hide placeholder when typing */
+        .chat-window__input--field:focus+.chat-window__input--placeholder,
         .chat-window__input--field:not(:empty)+.chat-window__input--placeholder {
             display: none;
-        }
-
-        .chat-window__input--field:empty:before {
-            content: none;
-        }
-
-        /* Ensure proper cursor alignment */
-        .chat-window__input--field:focus {
-            outline: none;
         }
 
         /* ===== Emoji button ===== */
         .chat-window__input--emoji {
             display: flex;
-            align-items: center;
+            align-items: flex-end;
             margin-left: 8px;
         }
 
@@ -179,11 +158,6 @@
             transition: transform 0.2s ease;
             padding: 0;
             box-shadow: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 30px;
-            width: 30px;
         }
 
         .chat-window__input--emoji button:hover {
@@ -196,11 +170,6 @@
             text-decoration: none;
             color: #007aff;
             font-size: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 30px;
-            width: 30px;
         }
 
         .chat-window__btn--enter:hover {
@@ -221,6 +190,7 @@
             left: 20px;
             z-index: 99999;
             display: none;
+            /* Hidden by default (for desktop/tablet) */
         }
 
         /* Circle shape and styling */
@@ -258,14 +228,9 @@
                 display: block;
             }
         }
-
-        @media screen and (min-width: 1024px) {
-            .chat-window__container {
-                right: 296px;
-            }
-        }
     </style>
 
+    @stack('css')
 </head>
 
 <body
@@ -296,9 +261,9 @@
                     </div>
                 </div>
             </div>
-            @include('layout.master.chatbar')
-            @include('layout.master.chat_windows')
         </div>
+        @include('layout.master.chat_windows')
+        @include('layout.master.chatbar')
     </div>
 
     @include('partials.content_modal')
@@ -319,6 +284,22 @@
 <script src="https://js.pusher.com/8.4.0/pusher.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
 
+{{-- <script src="/assets/js/jquery.min.js"></script>
+<script src="/assets/js/bootstrap.min.js"></script>
+<script src="/assets/js/popper.min.js"></script>
+<script src="/assets/js/mscrollbar.min.js"></script>
+<script src="/assets/js/wow.min.js"></script>
+<script src="/assets/js/hiraku.min.js"></script>
+<script src="/assets/js/flexmenu.min.js"></script>
+<script src="/assets/js/masonry.min.js"></script>
+<script src="/assets/js/jquery.fitvids.min.js"></script>
+<script src="/assets/js/emoji-button-3.0.3.min.js"></script>
+<script src="/assets/js/kmk.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+{{-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script> --}}
+{{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script> --}}
+
 <script type="text/javascript"
     src="https://www.clientbetalink.xyz/MIGVELv1/wp-content/plugins/buddypress-media/lib/media-element/mediaelement-and-player.min.js?ver=4.7.3">
 </script>
@@ -334,24 +315,23 @@
 @stack('script')
 
 <script>
-    jQuery(document).ready(function($) {
-        // Initialize Fancybox
-        $('#openModalBtn').on('click', function() {
+    jQuery(document).ready(function() {
+
+        jQuery('#openModalBtn').on('click', function() {
             $.fancybox.open();
         });
 
-        $('#postCloser').on('click', function() {
+        jQuery('#postCloser').on('click', function() {
             $.fancybox.close();
         });
 
-        $('[data-fancybox]').fancybox({
+        jQuery('[data-fancybox]').fancybox({
             loop: true,
             buttons: ["zoom", "share", "close"],
             smallBtn: true,
             closeBtn: true,
         });
 
-        // Emoji Picker for comments
         const emojiBtn2 = document.getElementById('emojiBtn2');
         const inputField2 = document.getElementById('comment_content');
 
@@ -373,20 +353,20 @@
             });
         }
 
-        // Comment functionality
-        $(document).on('click', '.rt_media_comment_submit', function(e) {
+        // Rewritten to correctly append new comments
+        jQuery(document).on('click', '.rt_media_comment_submit', function(e) {
             e.preventDefault();
 
-            var commentText = $('#comment_content').val();
+            var commentText = jQuery('#comment_content').val();
             if (commentText.trim() !== "") {
-                var $commentUl = $('#rtmedia_comment_ul');
+                var $commentUl = jQuery('#rtmedia_comment_ul');
                 if ($commentUl.length === 0) {
-                    $commentUl = $(this).closest('.rtm-media-single-comments')
+                    $commentUl = jQuery(this).closest('.rtm-media-single-comments')
                         .siblings('.rtmedia-item-comments').find('#rtmedia_comment_ul');
                 }
 
-                var $submitBtn = $(this);
-                var postIdValue = $("#txtPostID").val();
+                var $submitBtn = jQuery(this);
+                var postIdValue = jQuery("#txtPostID").val();
 
                 var newComment = `
                         <li class="rtmedia-comment">
@@ -406,7 +386,7 @@
                             </div>
                         </li>`;
 
-                $.ajax({
+                jQuery.ajax({
                     url: "{{ route('comments.store') }}",
                     type: "{{ FORM_METHOD_POST }}",
                     data: {
@@ -420,274 +400,37 @@
                             if ($commentUl.length) {
                                 $commentUl.append(newComment);
                             }
-                            $('#comment_content').val('');
+                            jQuery('#comment_content').val('');
                         }
                     }
                 });
             }
         });
 
-        // Delete comment
-        $(document).on('click', '.rtmedia-delete-comment', function(e) {
+        jQuery(document).on('click', '.rtmedia-delete-comment', function(e) {
             e.preventDefault();
 
             if (window.confirm('Are you sure you want to delete this comment?')) {
-                var $comment = $(this).closest('.rtmedia-comment');
-                $.ajax({
+                jQuery.ajax({
                     url: "{{ route('comments.destroy') }}",
                     type: "{{ FORM_METHOD_POST }}",
                     data: {
-                        comment_id: $(this).data("id"),
+                        comment_id: jQuery(this).data("id"),
                         _token: "{{ csrf_token() }}",
                     },
                     success: function(resp) {
-                        if (resp.status == "success") {
-                            $comment.remove();
+                        if (resp.status == "status") {
+                            jQuery(this).closest('.rtmedia-comment').remove();
                         }
                     }
                 });
             }
-        });
 
-        // Initialize chat system
-        initializeChatSystem();
+        });
     });
+</script>
 
-    // Chat System Functions
-    function initializeChatSystem() {
-        const chatBuddies = document.getElementById('buddy-chat-buddies');
-        const collapserButton = document.getElementById('buddy-chat-buddies__collapser');
-        const emojiPickers = new Map();
-        let activeInputField = null;
-
-        // Collapser functionality
-        if (collapserButton) {
-            collapserButton.addEventListener('click', () => {
-                chatBuddies.classList.toggle('collapsed');
-            });
-        }
-
-        // Chat buddy click handlers
-        document.querySelectorAll('.bpc-item').forEach(item => {
-            item.addEventListener('click', () => {
-                const userName = item.getAttribute('data-user');
-                openChatWindow(userName);
-            });
-        });
-
-        // Close button handlers
-        document.querySelectorAll('.chat_window__close-btn').forEach(button => {
-            button.addEventListener('click', (e) => {
-                e.preventDefault();
-                const chatWindow = button.closest('.chat-window');
-                chatWindow.style.display = 'none';
-            });
-        });
-
-        // Initialize emoji pickers for each chat window
-        document.querySelectorAll('.chat-window').forEach(chatWindow => {
-            const emojiBtn = chatWindow.querySelector('.emojiBtn');
-            const inputField = chatWindow.querySelector('.chat-window__input--field');
-
-            if (emojiBtn && inputField) {
-                const picker = new EmojiButton({
-                    position: 'top-start',
-                    theme: 'light',
-                    autoFocusSearch: false
-                });
-
-                picker.on('emoji', emoji => {
-                    if (inputField === activeInputField) {
-                        insertEmojiAtCursor(inputField, emoji);
-                        updatePlaceholderVisibility(inputField);
-                        inputField.focus();
-                    }
-                });
-
-                emojiBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    activeInputField = inputField;
-                    picker.togglePicker(emojiBtn);
-                });
-
-                emojiPickers.set(inputField, picker);
-            }
-        });
-
-        // Input field event handlers
-        document.querySelectorAll('.chat-window__input--field').forEach(inputField => {
-            inputField.addEventListener('focus', function() {
-                activeInputField = this;
-                updatePlaceholderVisibility(this);
-                setTimeout(() => {
-                    placeCaretAtEnd(this);
-                }, 0);
-            });
-
-            inputField.addEventListener('input', function() {
-                updatePlaceholderVisibility(this);
-            });
-
-            inputField.addEventListener('blur', function() {
-                if (activeInputField === this) {
-                    activeInputField = null;
-                }
-            });
-
-            inputField.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    sendMessage(this);
-                }
-            });
-
-            inputField.addEventListener('click', function() {
-                setTimeout(() => {
-                    placeCaretAtEnd(this);
-                }, 0);
-            });
-        });
-
-        // Send button handlers
-        document.querySelectorAll('.chat-window__btn--enter').forEach(button => {
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-                const inputArea = this.closest('.chat-window__inputarea');
-                const inputField = inputArea.querySelector('.chat-window__input--field');
-                if (inputField) {
-                    sendMessage(inputField);
-                }
-            });
-        });
-
-        // Mobile chat toggle
-        const toggleChat = document.getElementById('toggle-chat');
-        if (toggleChat) {
-            toggleChat.addEventListener('click', function() {
-                if (window.innerWidth < 768) {
-                    document.getElementById('buddy-chat-app').classList.toggle('d-none');
-                }
-            });
-        }
-    }
-
-    function openChatWindow(username) {
-        const chatWindow = document.getElementById(`chat-window-${username.replace(/[^A-Za-z0-9\-]/g, '-')}`);
-
-        if (chatWindow) {
-            // Hide all chat windows first
-            document.querySelectorAll('.chat-window').forEach(window => {
-                window.style.display = 'none';
-            });
-
-            // Show the selected chat window
-            chatWindow.style.display = 'block';
-
-            // Focus on the input field
-            const inputField = chatWindow.querySelector('.chat-window__input--field');
-            if (inputField) {
-                setTimeout(() => {
-                    inputField.focus();
-                    placeCaretAtEnd(inputField);
-                }, 100);
-            }
-        }
-    }
-
-    function updatePlaceholderVisibility(inputField) {
-        const placeholder = inputField.parentNode.querySelector('.chat-window__input--placeholder');
-        if (placeholder) {
-            placeholder.style.display = inputField.textContent.trim() ? 'none' : 'block';
-        }
-    }
-
-    function placeCaretAtEnd(element) {
-        element.focus();
-        if (typeof window.getSelection !== "undefined" && typeof document.createRange !== "undefined") {
-            const range = document.createRange();
-            range.selectNodeContents(element);
-            range.collapse(false);
-            const selection = window.getSelection();
-            selection.removeAllRanges();
-            selection.addRange(range);
-        }
-    }
-
-    function insertEmojiAtCursor(element, emoji) {
-        const selection = window.getSelection();
-        if (selection.rangeCount > 0) {
-            const range = selection.getRangeAt(0);
-            range.deleteContents();
-            const textNode = document.createTextNode(emoji);
-            range.insertNode(textNode);
-            range.setStartAfter(textNode);
-            range.setEndAfter(textNode);
-            selection.removeAllRanges();
-            selection.addRange(range);
-        } else {
-            element.textContent += emoji;
-        }
-
-        const event = new Event('input', {
-            bubbles: true
-        });
-        element.dispatchEvent(event);
-    }
-
-    function sendMessage(inputField) {
-        const message = inputField.textContent.trim();
-        if (!message) return;
-
-        const friendId = inputField.getAttribute('data-friend');
-        const messagesList = document.getElementById(`messages-${friendId}`);
-
-        if (messagesList) {
-            const newMsg = document.createElement('li');
-            newMsg.classList.add('message--self');
-            newMsg.innerHTML = `<time>${new Date().toLocaleString()}</time>
-                <div class="message-block">
-                    <div class="messages">
-                        <div class="message">${message}</div>
-                    </div>
-                </div>`;
-
-            messagesList.appendChild(newMsg);
-
-            inputField.textContent = '';
-            updatePlaceholderVisibility(inputField);
-
-            messagesList.scrollTop = messagesList.scrollHeight;
-
-            inputField.focus();
-        }
-
-        // AJAX call to send message to backend would go here
-        console.log(`Sending message to friend ${friendId}: ${message}`);
-
-        // Example AJAX implementation:
-        /*
-        fetch('/send-message', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            },
-            body: JSON.stringify({
-                friend_id: friendId,
-                message: message
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Message sent successfully
-            }
-        });
-        */
-    }
-
-    // Lazy load observer
+<script>
     const lazyloadRunObserver = () => {
         const lazyloadBackgrounds = document.querySelectorAll('.e-con.e-parent:not(.e-lazyloaded)');
         const observer = new IntersectionObserver(entries => {
@@ -702,8 +445,118 @@
         });
         lazyloadBackgrounds.forEach(el => observer.observe(el));
     };
+    ['DOMContentLoaded', 'kmk/lazyload/observe']
+    .forEach(e => document.addEventListener(e, lazyloadRunObserver));
+</script>
 
-    ['DOMContentLoaded', 'kmk/lazyload/observe'].forEach(e => document.addEventListener(e, lazyloadRunObserver));
+<script>
+    const chatBuddies = document.getElementById('buddy-chat-buddies');
+    const collapserButton = document.getElementById('buddy-chat-buddies__collapser');
+    const chatWindowCloseButtons = document.querySelectorAll('.chat_window__close-btn');
+    const chatBuddiesItems = document.querySelectorAll('.bpc-item');
+    const emojiBtn = document.getElementById('emojiBtn');
+    const inputField = document.querySelector('.chat-window__input--field');
+    const placeholder = document.querySelector('.chat-window__input--placeholder');
+    const sendButton = document.querySelector('.chat-window__btn--enter');
+    const chatList = document.querySelector('.bpc-chat-list');
+
+    // Toggle sidebar
+    collapserButton.addEventListener('click', () => {
+        chatBuddies.classList.toggle('collapsed');
+    });
+
+    // Close chat
+    chatWindowCloseButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const chatWindow = button.closest('.chat-window');
+            chatWindow.style.display = 'none';
+        });
+    });
+
+    // Open chat
+    chatBuddiesItems.forEach(item => {
+        item.addEventListener('click', () => {
+            const userName = item.querySelector('.chat-buddy').textContent.trim();
+            const chatWindow = document.getElementById(`chat-window-${userName.replace(" ", "-")}`);
+            if (chatWindow) chatWindow.style.display = 'block';
+        });
+    });
+
+    // Input placeholder logic
+    if (inputField) {
+        inputField.addEventListener('input', function() {
+            placeholder.style.display = this.textContent.trim() ? 'none' : 'block';
+        });
+    }
+
+    // Send message
+    function sendMessage() {
+        const message = inputField.textContent.trim();
+        if (!message) return;
+
+        const newMsg = document.createElement('li');
+        newMsg.classList.add('message--self');
+        newMsg.innerHTML = `
+            <time>${new Date().toLocaleString()}</time>
+            <div class="message-block">
+                <div class="messages">
+                    <div class="message">${message}</div>
+                </div>
+            </div>`;
+
+        chatList.appendChild(newMsg);
+        inputField.textContent = '';
+        placeholder.style.display = 'block';
+
+        // ✅ Scroll to latest message
+        chatList.scrollTop = chatList.scrollHeight;
+    }
+
+    // Send on button click
+    if (sendButton) {
+        sendButton.addEventListener('click', e => {
+            e.preventDefault();
+            sendMessage();
+        });
+    }
+
+    // Send on Enter key
+    if (inputField) {
+        inputField.addEventListener('keydown', e => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+    }
+
+    // === Emoji Picker ===
+    // Only initialize if emojiBtn exists
+    if (emojiBtn) {
+        const picker = new EmojiButton({
+            position: 'top-start',
+            theme: 'light'
+        });
+
+        picker.on('emoji', emoji => {
+            inputField.textContent += emoji;
+            inputField.focus();
+            placeholder.style.display = 'none';
+        });
+
+        emojiBtn.addEventListener('click', () => picker.togglePicker(emojiBtn));
+    }
+
+    //mobile toggle chat
+    jQuery('#toggle-chat').on('click', function() {
+
+        // Check screen width for mobile (under 768px)
+        if (jQuery(window).width() < 768) {
+            jQuery('#buddy-chat-app').toggleClass('d-none');
+        } else {
+            console.log('Not mobile view — no toggle.');
+        }
+    });
 </script>
 
 </html>

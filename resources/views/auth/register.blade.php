@@ -52,28 +52,18 @@
     <link rel="stylesheet" href="/assets/css/frontend.min.css?ver=3.32.4" />
     <link rel="stylesheet" href="/assets/css/post-95.css?ver=1761620622" />
 
-    <!-- <link rel="stylesheet" href="/assets/css/swiper.min.css?ver=8.4.5" />
-<link rel="stylesheet" href="/assets/css/post-30.css?ver=1761244154" />
-<link rel="stylesheet" href="/assets/css/fadeIn.min.css?ver=3.32.4" />
-<link rel="stylesheet" href="/assets/css/widget-heading.min.css?ver=3.32.4" />
-<link rel="stylesheet" href="/assets/css/fadeInDown.min.css?ver=3.32.4" />
-<link rel="stylesheet" href="/assets/css/widget-image.min.css?ver=3.32.4" />
-<link rel="stylesheet" href="/assets/css/fadeInUp.min.css?ver=3.32.4" /> -->
-
-
-
-    <!-- <link rel='stylesheet' href='/assets/css/kmk-icons.min.css?ver=5.44.0' /> -->
-    <!-- <link rel='stylesheet' id='contact-form-7-css'
-  href='./wp-content/plugins/contact-form-7/includes/css/styles.css?ver=6.1.2'
-  media='all' /> -->
-    <!-- <link rel='stylesheet' id='wc-blocks-style-css'
-  href='./wp-content/plugins/woocommerce/assets/client/blocks/wc-blocks.css?ver=wc-10.3.0'
-  type='text/css' media='all' /> -->
-
-
     <link rel="stylesheet" href="/assets/css/mainCss.css" media="all" />
 
-
+    <style>
+        #signup_profile_picture {
+            position: relative !important;
+            opacity: 1 !important;
+            width: auto !important;
+            height: auto !important;
+            top: auto !important;
+            left: auto !important;
+        }
+    </style>
 </head>
 
 <body
@@ -289,21 +279,27 @@
 
 
                                                                 <h2 class="bp-heading">Account Details</h2>
-                                                                <label for="signup_username">Profile Picture
-                                                                    (required)</label><input type="file"
+                                                                <label for="signup_profile_picture">Profile Picture
+                                                                    (required)</label>
+                                                                <input type="file" accept="image/*"
                                                                     name="signup_profile_picture"
-                                                                    id="signup_username" />
+                                                                    id="signup_profile_picture" />
+
                                                                 <label for="signup_username">Username
-                                                                    (required)</label><input type="text"
-                                                                    name="signup_username" id="signup_username"
-                                                                    value="" aria-required="true"
-                                                                    autocomplete="off" autocapitalize="none" /><label
-                                                                    for="signup_email">Email Address
-                                                                    (required)</label><input type="email"
-                                                                    name="signup_email" id="signup_email"
-                                                                    value="" aria-required="true"
-                                                                    value="{{ old('signup_email') }}" /> <label
-                                                                    for="pass1">Choose a Password (required)</label>
+                                                                    (required)</label>
+                                                                <input type="text" name="signup_username"
+                                                                    id="signup_username_field" value=""
+                                                                    aria-required="true" autocomplete="off"
+                                                                    autocapitalize="none" />
+
+                                                                <label for="signup_email">Email Address
+                                                                    (required)</label>
+                                                                <input type="email" name="signup_email"
+                                                                    id="signup_email" value=""
+                                                                    aria-required="true" required="required" />
+
+                                                                <label for="pass1">Choose a Password
+                                                                    (required)</label>
 
                                                                 <div class="user-pass1-wrap">
                                                                     <div class="wp-pwd">
@@ -436,119 +432,50 @@
 
 
     </div><!-- #kmk-page -->
-
-
-    <div class="modal fade login-modal" id="login-modal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <div class="inner">
-                        <img src="https://secure.gravatar.com/avatar/?s=96&#038;d=mm&#038;r=g" alt="Guest"
-                            class="avatar guest-avatar">
-                    </div>
-                </div>
-                <div class="modal-body">
-                    <h4 class="modal-title">Log into your account</h4>
-                    <form action="{{ route('users.authenticate') }}" method="{{ FORM_METHOD_POST }}"
-                        id="modal-login-form" class="kmk-login-form modal-login-form" name="modal-login-form">
-                        @csrf
-                        <div class="form-group">
-                            <div class="user-name">
-                                <label class="screen-reader-text">Email/username</label>
-                                <span class="icon"><i class="uil-user"></i></span>
-                                <input type="text" id="modal-username" class="username-control" required
-                                    name="log" value="" placeholder="Email or username">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="pass">
-                                <label class="screen-reader-text">Password</label>
-                                <span class="icon"><i class="uil-key-skeleton-alt"></i></span>
-                                <input type="password" id="modal-password" class="password-control" required
-                                    name="pwd" value="" placeholder="Password">
-                            </div>
-                        </div>
-                        <div class="modal-options">
-                            <div class="row">
-                                <div class="col-6">
-                                    <div class="forgetmenot">
-                                        <label for="modal-rememberme">
-                                            <input id="modal-rememberme" name="rememberme" type="checkbox"
-                                                value="forever" /> Remember Me </label>
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="forgot-password">
-                                        <a href="./my-account/lost-password/">
-                                            Lost Password? </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="kmk-login-result"></div>
-                        <div class="submit">
-                            <button type="submit" id="modal_login_submit" class="submit-login" name="wp-submit">Log
-                                Into
-                                Your Account</button>
-                        </div>
-                        <input type="hidden" id="modal-login-security" name="modal-login-security"
-                            value="f9716ba2fa" /><input type="hidden" name="_wp_http_referer"
-                            value="/MIGVELv1/register/" />
-                        <div class="register-link">
-                            <a href="./register/" class="register color-primary">Create an account</a>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <i class="icon ion-close-round"></i>
-        </button>
-    </div>
-
-    <script src="/assets/js/jquery.min.js"></script>
-    <script src="/assets/js/popper.min.js"></script>
-    <script src="/assets/js/bootstrap.min.js"></script>
-    <script src="/assets/js/mscrollbar.min.js"></script>
-    <script src="/assets/js/wow.min.js"></script>
-    <script src="/assets/js/hiraku.min.js"></script>
-    <script src="/assets/js/flexmenu.min.js"></script>
-    <script src="/assets/js/masonry.min.js"></script>
-    <script src="/assets/js/jquery.fitvids.min.js"></script>
-
-    <script type="text/javascript"
-        src="https://www.clientbetalink.xyz/MIGVELv1/wp-content/plugins/buddypress-media/lib/media-element/mediaelement-and-player.min.js?ver=4.7.3">
-    </script>
-    <script type="text/javascript"
-        src="https://www.clientbetalink.xyz/MIGVELv1/wp-content/plugins/buddypress-media/lib/media-element/wp-mediaelement.min.js?ver=4.7.3">
-    </script>
-    <script type="text/javascript"
-        src="https://www.clientbetalink.xyz/MIGVELv1/wp-content/plugins/buddypress-media/app/assets/js/vendors/emoji-picker.js?ver=4.7.3">
-    </script>
-
-    <script src="/assets/js/kmk.min.js"></script>
-
-    <script>
-        document.title = "Create An Account";
-        const lazyloadRunObserver = () => {
-            const lazyloadBackgrounds = document.querySelectorAll('.e-con.e-parent:not(.e-lazyloaded)');
-            const observer = new IntersectionObserver(entries => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('e-lazyloaded');
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, {
-                rootMargin: '200px 0px 200px 0px'
-            });
-            lazyloadBackgrounds.forEach(el => observer.observe(el));
-        };
-        ['DOMContentLoaded', 'kmk/lazyload/observe']
-        .forEach(e => document.addEventListener(e, lazyloadRunObserver));
-    </script>
-
-
 </body>
+
+<script src="/assets/js/jquery.min.js"></script>
+<script src="/assets/js/popper.min.js"></script>
+<script src="/assets/js/bootstrap.min.js"></script>
+<script src="/assets/js/mscrollbar.min.js"></script>
+<script src="/assets/js/wow.min.js"></script>
+<script src="/assets/js/hiraku.min.js"></script>
+<script src="/assets/js/flexmenu.min.js"></script>
+<script src="/assets/js/masonry.min.js"></script>
+<script src="/assets/js/jquery.fitvids.min.js"></script>
+
+<script type="text/javascript"
+    src="https://www.clientbetalink.xyz/MIGVELv1/wp-content/plugins/buddypress-media/lib/media-element/mediaelement-and-player.min.js?ver=4.7.3">
+</script>
+<script type="text/javascript"
+    src="https://www.clientbetalink.xyz/MIGVELv1/wp-content/plugins/buddypress-media/lib/media-element/wp-mediaelement.min.js?ver=4.7.3">
+</script>
+<script type="text/javascript"
+    src="https://www.clientbetalink.xyz/MIGVELv1/wp-content/plugins/buddypress-media/app/assets/js/vendors/emoji-picker.js?ver=4.7.3">
+</script>
+
+<script src="/assets/js/kmk.min.js"></script>
+
+<script>
+    document.title = "Create An Account";
+    const lazyloadRunObserver = () => {
+        const lazyloadBackgrounds = document.querySelectorAll('.e-con.e-parent:not(.e-lazyloaded)');
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('e-lazyloaded');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {
+            rootMargin: '200px 0px 200px 0px'
+        });
+        lazyloadBackgrounds.forEach(el => observer.observe(el));
+    };
+    ['DOMContentLoaded', 'kmk/lazyload/observe']
+    .forEach(e => document.addEventListener(e, lazyloadRunObserver));
+</script>
+
+
 
 </html>

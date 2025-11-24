@@ -1,14 +1,12 @@
 <!DOCTYPE html>
-
 <html lang="en-US">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-        content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" />
 
     <title>@yield('title')</title>
 
+    <!-- CSS Stylesheets -->
     <link rel="stylesheet" href="/assets/css/index.css?ver=6.8.3" media="all" />
     <link rel="stylesheet" href="/assets/css/kkpress.min.css?ver=2.6.14" media="all" />
     <link rel="stylesheet" href="/assets/css/kmkcommerce-core.css?ver=1.0.8" />
@@ -16,7 +14,6 @@
     <link rel="stylesheet" href="/assets/css/kmkpress.min.css?ver=14.4.0" media="screen" />
     <link rel="stylesheet" href="/assets/css/job-listings.css?ver=598383a28ac5f9f156e4" media="all" />
     <link rel="stylesheet" href="/assets/css/brands.css?ver=10.3.0" media="all" />
-
     <link rel="stylesheet" href="/assets/css/bootstrap.min.css" media="all" />
     <link rel="stylesheet" href="/assets/css/dashicons.min.css?ver=6.8.3" media="all" />
     <link rel="stylesheet" href="/assets/css/ionicons.min.css" media="all" />
@@ -24,27 +21,19 @@
     <link rel="stylesheet" href="/assets/css/mscrollbar.min.css" media="all" />
     <link rel="stylesheet" href="/assets/css/animate.min.css" media="all" />
     <link rel="stylesheet" href="/assets/css/hiraku.min.css" media="all" />
-
     <link rel="stylesheet" href="/assets/css/rtmedia.min.css" media="all" />
     <link rel="stylesheet" href="/assets/css/kmk.min.css" media="all" />
-
     <link rel="stylesheet" href="/assets/css/dynamic-styles.css" media="all" />
 
     <!-- Google Fonts -->
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700,300italic,400italic,600italic,700italic|Quicksand:700&ver=1.4.5" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700,300italic,400italic,600italic,700italic|Quicksand:700&ver=1.4.5" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900&display=swap" />
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Roboto+Slab:100,300,400,500,700,900&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab:100,300,400,500,700,900&display=swap" />
 
     <!-- KMK -->
     <link rel="stylesheet" href="/assets/css/frontend.min.css?ver=3.32.4" />
     <link rel="stylesheet" href="/assets/css/post-95.css?ver=1761620622" />
-
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
-
-
     <link rel="stylesheet" href="/assets/css/mainCss.css" media="all" />
 
     <style>
@@ -58,8 +47,6 @@
         }
 
         /* ===== Scrollbar styling ===== */
-
-        /* WebKit browsers (Chrome, Edge, Safari) */
         .chat-window__message-list.vb.vb-invisible::-webkit-scrollbar {
             width: 12px;
         }
@@ -74,7 +61,6 @@
             border: 3px solid #fff;
         }
 
-        /* Firefox scrollbar */
         .chat-window__message-list.vb.vb-invisible {
             scrollbar-width: thin;
             scrollbar-color: #f5bd02 #fff;
@@ -84,7 +70,6 @@
         .chat-window__inputarea {
             display: flex;
             align-items: flex-end;
-            /* align emoji + input + send button at bottom */
             background: #fff;
             border: 1px solid #ddd;
             border-radius: 25px;
@@ -92,6 +77,7 @@
             width: 100%;
             box-sizing: border-box;
             border-top: 1px solid #ddd;
+            min-height: 50px;
         }
 
         /* ===== Message input field ===== */
@@ -99,7 +85,7 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            justify-content: flex-end;
+            justify-content: center;
             position: relative;
             border-radius: 6px;
             min-height: 40px;
@@ -115,6 +101,7 @@
             pointer-events: none;
             font-size: 14px;
             user-select: none;
+            z-index: 1;
         }
 
         .chat-window__input--field {
@@ -125,18 +112,30 @@
             width: 100%;
             font-size: 14px;
             line-height: 20px;
+            position: relative;
+            z-index: 2;
+            overflow-y: auto;
+            max-height: 120px;
         }
 
-        /* Hide placeholder when typing */
-        .chat-window__input--field:focus+.chat-window__input--placeholder,
-        .chat-window__input--field:not(:empty)+.chat-window__input--placeholder {
+        /* Hide placeholder when there's content */
+        .chat-window__input--field:not(:empty) + .chat-window__input--placeholder {
             display: none;
+        }
+
+        .chat-window__input--field:empty:before {
+            content: none;
+        }
+
+        /* Ensure proper cursor alignment */
+        .chat-window__input--field:focus {
+            outline: none;
         }
 
         /* ===== Emoji button ===== */
         .chat-window__input--emoji {
             display: flex;
-            align-items: flex-end;
+            align-items: center;
             margin-left: 8px;
         }
 
@@ -148,6 +147,11 @@
             transition: transform 0.2s ease;
             padding: 0;
             box-shadow: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 30px;
+            width: 30px;
         }
 
         .chat-window__input--emoji button:hover {
@@ -160,6 +164,11 @@
             text-decoration: none;
             color: #007aff;
             font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 30px;
+            width: 30px;
         }
 
         .chat-window__btn--enter:hover {
@@ -180,7 +189,6 @@
             left: 20px;
             z-index: 99999;
             display: none;
-            /* Hidden by default (for desktop/tablet) */
         }
 
         /* Circle shape and styling */
@@ -218,9 +226,8 @@
                 display: block;
             }
         }
-    </style>
 
-    <style>
+        /* Profile header styles */
         #header-cover-image {
             height: 300px;
             background-image: url('{{ asset('/storage/' . Auth::user()->cover_image) }}');
@@ -228,11 +235,9 @@
     </style>
 
     @stack('css')
-
 </head>
 
-<body
-    class="directory activity kmkpress bp-nouveau blog  page-template-default page page-id-35 logged-in wp-theme-kmk theme-kmk  kmk kmk-user buddychat-is-active   title-bar-active kmk-social-layout panel-expanded has-page-sidebar">
+<body class="directory activity kmkpress bp-nouveau blog  page-template-default page page-id-35 logged-in wp-theme-kmk theme-kmk  kmk kmk-user buddychat-is-active   title-bar-active kmk-social-layout panel-expanded has-page-sidebar">
 
     @include('layout.master.sidepanel')
 
@@ -253,7 +258,6 @@
 
                             <div class="col-lg-12 col-main">
                                 <main id="main" class="main-content">
-
                                     <div class="kmk-title-bar social">
                                         <div class="title-bar-wrapper">
                                             <div class="title-wrapper screen-reader-text">
@@ -262,185 +266,103 @@
                                         </div>
                                     </div>
 
-                                    <article id="post-0"
-                                        class="bp_members type-bp_members post-0 page type-page status-publish hentry kmk-post">
+                                    <article id="post-0" class="bp_members type-bp_members post-0 page type-page status-publish hentry kmk-post">
                                         <div class="entry-content clearfix">
                                             <div id="buddypress" class="buddypress-wrap kmk bp-dir-hori-nav alignwide">
-
-                                                <div id="item-header" role="complementary" data-bp-item-id="2"
-                                                    data-bp-item-component="members"
-                                                    class="users-header single-headers">
-
-
+                                                <div id="item-header" role="complementary" data-bp-item-id="2" data-bp-item-component="members" class="users-header single-headers">
                                                     <div id="cover-image-container">
                                                         <div id="header-cover-image"></div>
-
                                                         <div id="item-header-cover-image">
                                                             <div class="row">
-
                                                                 <div class="col-lg-3">
                                                                     <div id="item-header-avatar">
                                                                         <div class="item-avatar">
                                                                             <a href="/members-2/">
-                                                                                <img src="{{ asset(Auth::user()->profile_picture) }}"
-                                                                                    class="avatar user-2-avatar avatar-200 photo"
-                                                                                    width="200" height="200"
-                                                                                    alt="Profile picture of {{ Auth::user()->username }}">
+                                                                                <img src="{{ asset(Auth::user()->profile_picture) }}" class="avatar user-2-avatar avatar-200 photo" width="200" height="200" alt="Profile picture of {{ Auth::user()->username }}">
                                                                             </a>
-
                                                                         </div>
-                                                                        <h3 class="profile-name">
-                                                                            {{ Auth::user()->username }}</h3>
-                                                                    </div><!-- #item-header-avatar -->
+                                                                        <h3 class="profile-name">{{ Auth::user()->username }}</h3>
+                                                                    </div>
                                                                 </div>
-
                                                                 <div class="col-lg-9">
-
                                                                     <div id="item-header-content">
-
-                                                                        <h2 class="user-nicename text-white">@
-                                                                            {{ Auth::user()->username }}
-                                                                        </h2>
-
+                                                                        <h2 class="user-nicename text-white">@ {{ Auth::user()->username }}</h2>
                                                                         <div class="item-meta">
-                                                                            <span class="activity d-none">Active 44
-                                                                                seconds ago</span>
-                                                                        </div><!-- #item-meta -->
-                                                                    </div><!-- #item-header-content -->
+                                                                            <span class="activity d-none">Active 44 seconds ago</span>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="bp-wrap">
-
-
-                                                    <nav class="main-navs no-ajax bp-navs single-screen-navs horizontal users-nav"
-                                                        id="object-nav" role="navigation" aria-label="Member menu">
-
+                                                    <nav class="main-navs no-ajax bp-navs single-screen-navs horizontal users-nav" id="object-nav" role="navigation" aria-label="Member menu">
                                                         <div class="row">
                                                             <div class="col-lg-6  mx-auto">
                                                                 <div class="nav-container">
-
                                                                     <ul class="profile-nav p-0">
-
-                                                                        <li id="xprofile-personal-li"
-                                                                            class="bp-personal-tab selected current">
-                                                                            <a href="." id="user-xprofile"
-                                                                                title="Profile">
-                                                                                <span
-                                                                                    class="nav-link-text ">Profile</span>
-
+                                                                        <li id="xprofile-personal-li" class="bp-personal-tab selected current">
+                                                                            <a href="." id="user-xprofile" title="Profile">
+                                                                                <span class="nav-link-text ">Profile</span>
                                                                             </a>
                                                                         </li>
-
-                                                                        <li id="friends-personal-li"
-                                                                            class="bp-personal-tab">
-                                                                            <a href="{{ route('peoples.list_requests') }}"
-                                                                                id="user-friends" title="Friends">
-                                                                                <span
-                                                                                    class="nav-link-text">Friends</span>
-
-                                                                                <span
-                                                                                    class="count color-primary">{{ Auth::user()->getFriends()->count() }}</span>
+                                                                        <li id="friends-personal-li" class="bp-personal-tab">
+                                                                            <a href="{{ route('peoples.list_requests') }}" id="user-friends" title="Friends">
+                                                                                <span class="nav-link-text">Friends</span>
+                                                                                <span class="count color-primary">{{ Auth::user()->getFriends()->count() }}</span>
                                                                             </a>
                                                                         </li>
-
-                                                                        <li id="groups-personal-li"
-                                                                            class="bp-personal-tab">
-                                                                            <a href="./groups/" id="user-groups"
-                                                                                title="Groups">
-                                                                                <span
-                                                                                    class="nav-link-text">Groups</span>
-
+                                                                        <li id="groups-personal-li" class="bp-personal-tab">
+                                                                            <a href="./groups/" id="user-groups" title="Groups">
+                                                                                <span class="nav-link-text">Groups</span>
                                                                             </a>
                                                                         </li>
-
-                                                                        <li id="my-adverts-personal-li"
-                                                                            class="bp-personal-tab">
-                                                                            <a href="./my-adverts/"
-                                                                                id="user-my-adverts" title="Adverts">
-                                                                                <span
-                                                                                    class="nav-link-text">Adverts</span>
-
+                                                                        <li id="my-adverts-personal-li" class="bp-personal-tab">
+                                                                            <a href="./my-adverts/" id="user-my-adverts" title="Adverts">
+                                                                                <span class="nav-link-text">Adverts</span>
                                                                             </a>
                                                                         </li>
-
-                                                                        <li id="forums-personal-li"
-                                                                            class="bp-personal-tab">
-                                                                            <a href="./forums/" id="user-forums"
-                                                                                title="Forums">
-                                                                                <span
-                                                                                    class="nav-link-text">Forums</span>
-
+                                                                        <li id="forums-personal-li" class="bp-personal-tab">
+                                                                            <a href="./forums/" id="user-forums" title="Forums">
+                                                                                <span class="nav-link-text">Forums</span>
                                                                             </a>
                                                                         </li>
                                                                         <li class="flexMenu-viewMore">
-                                                                            <a href="#" data-toggle="dropdown"
-                                                                                aria-haspopup="true"
-                                                                                aria-expanded="false"><span
-                                                                                    class="nav-link-text">More<text></text></span><span
-                                                                                    class="count">6</span></a>
-                                                                            <ul
-                                                                                class="flexMenu-popup dropdown-menu dropdown-menu-right">
-                                                                                <li id="shop-personal-li"
-                                                                                    class="bp-personal-tab">
-                                                                                    <a href="./shop/" id="user-shop"
-                                                                                        title="Shop">
-                                                                                        <span
-                                                                                            class="nav-link-text">Shop</span>
-
+                                                                            <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                                <span class="nav-link-text">More<text></text></span>
+                                                                                <span class="count">6</span>
+                                                                            </a>
+                                                                            <ul class="flexMenu-popup dropdown-menu dropdown-menu-right">
+                                                                                <li id="shop-personal-li" class="bp-personal-tab">
+                                                                                    <a href="./shop/" id="user-shop" title="Shop">
+                                                                                        <span class="nav-link-text">Shop</span>
                                                                                     </a>
                                                                                 </li>
-                                                                                <li id="media-personal-li"
-                                                                                    class="bp-personal-tab">
-                                                                                    <a href="./media/" id="user-media"
-                                                                                        title="Media">
-                                                                                        <span
-                                                                                            class="nav-link-text">Media</span>
-
-                                                                                        <span
-                                                                                            class="count color-primary">4</span>
+                                                                                <li id="media-personal-li" class="bp-personal-tab">
+                                                                                    <a href="./media/" id="user-media" title="Media">
+                                                                                        <span class="nav-link-text">Media</span>
+                                                                                        <span class="count color-primary">4</span>
                                                                                     </a>
                                                                                 </li>
-                                                                                <li id="invitations-personal-li"
-                                                                                    class="bp-personal-tab">
-                                                                                    <a href="./invitations/"
-                                                                                        id="user-invitations"
-                                                                                        title="Invitations">
-                                                                                        <span
-                                                                                            class="nav-link-text">Invitations</span>
-
+                                                                                <li id="invitations-personal-li" class="bp-personal-tab">
+                                                                                    <a href="./invitations/" id="user-invitations" title="Invitations">
+                                                                                        <span class="nav-link-text">Invitations</span>
                                                                                     </a>
                                                                                 </li>
-                                                                                <li id="notifications-personal-li"
-                                                                                    class="bp-personal-tab">
-                                                                                    <a href="./notifications/"
-                                                                                        id="user-notifications"
-                                                                                        title="Notifications">
-                                                                                        <span
-                                                                                            class="nav-link-text">Notifications</span>
-
+                                                                                <li id="notifications-personal-li" class="bp-personal-tab">
+                                                                                    <a href="./notifications/" id="user-notifications" title="Notifications">
+                                                                                        <span class="nav-link-text">Notifications</span>
                                                                                     </a>
                                                                                 </li>
-                                                                                <li id="messages-personal-li"
-                                                                                    class="bp-personal-tab">
-                                                                                    <a href="./messages/"
-                                                                                        id="user-messages"
-                                                                                        title="Messages">
-                                                                                        <span
-                                                                                            class="nav-link-text">Messages</span>
-
+                                                                                <li id="messages-personal-li" class="bp-personal-tab">
+                                                                                    <a href="./messages/" id="user-messages" title="Messages">
+                                                                                        <span class="nav-link-text">Messages</span>
                                                                                     </a>
                                                                                 </li>
-                                                                                <li id="settings-personal-li"
-                                                                                    class="bp-personal-tab">
-                                                                                    <a href="./settings/"
-                                                                                        id="user-settings"
-                                                                                        title="Settings">
-                                                                                        <span
-                                                                                            class="nav-link-text">Settings</span>
-
+                                                                                <li id="settings-personal-li" class="bp-personal-tab">
+                                                                                    <a href="./settings/" id="user-settings" title="Settings">
+                                                                                        <span class="nav-link-text">Settings</span>
                                                                                     </a>
                                                                                 </li>
                                                                             </ul>
@@ -452,20 +374,17 @@
                                                     </nav>
 
                                                     <div id="item-body" class="item-body">
-
                                                         <div class="row">
-
                                                             <div class="col-lg-3 profile-col-aside left">
-                                                                <aside
-                                                                    class="widget-area profile-widget-area displayed-profile-info">
+                                                                <aside class="widget-area profile-widget-area displayed-profile-info">
                                                                     <div class="widget">
                                                                         <ul class="connections">
-                                                                            <li><span
-                                                                                    class="count color-primary">{{ Auth::user()->getFriends()->count() }}</span>
+                                                                            <li>
+                                                                                <span class="count color-primary">{{ Auth::user()->getFriends()->count() }}</span>
                                                                                 <p>Friends</p>
                                                                             </li>
-                                                                            <li><span
-                                                                                    class="count color-primary">0</span>
+                                                                            <li>
+                                                                                <span class="count color-primary">0</span>
                                                                                 <p>Groups</p>
                                                                             </li>
                                                                         </ul>
@@ -473,19 +392,13 @@
 
                                                                     <div class="widget">
                                                                         <h5 class="widget-title">My photos</h5>
-                                                                        <ul class="member-photo-list"
-                                                                            style="padding:0;margin:0;">
+                                                                        <ul class="member-photo-list" style="padding:0;margin:0;">
                                                                             @php
                                                                                 $latestImages = Auth::user()
                                                                                     ->getPosts()
                                                                                     ->with([
-                                                                                        'postMedia' => function (
-                                                                                            $query,
-                                                                                        ) {
-                                                                                            $query->where(
-                                                                                                'media_type',
-                                                                                                MEDIA_TYPE_IMAGE,
-                                                                                            );
+                                                                                        'postMedia' => function ($query) {
+                                                                                            $query->where('media_type', MEDIA_TYPE_IMAGE);
                                                                                         },
                                                                                     ])
                                                                                     ->orderByDesc('created_at')
@@ -496,34 +409,22 @@
                                                                                     })
                                                                                     ->sortByDesc('created_at')
                                                                                     ->take(5);
-                                                                                $imagesChunked = $latestImages->chunk(
-                                                                                    3,
-                                                                                );
+                                                                                $imagesChunked = $latestImages->chunk(3);
                                                                             @endphp
-                                                                            <div
-                                                                                style="display: flex; flex-direction: column; gap: 8px;">
+                                                                            <div style="display: flex; flex-direction: column; gap: 8px;">
                                                                                 @foreach ($imagesChunked as $row)
-                                                                                    <div
-                                                                                        style="display: flex; gap: 8px;">
+                                                                                    <div style="display: flex; gap: 8px;">
                                                                                         @foreach ($row as $media)
                                                                                             @php $count = 0; @endphp
-                                                                                            <div
-                                                                                                style="width: 60px; height: 60px; overflow: hidden; border-radius: 6px; border: 1px solid #ddd;">
-                                                                                                <a href="{{ asset($media->file_path) }}"
-                                                                                                    target="_blank"
-                                                                                                    style="display: block; width: 100%; height: 100%;">
-                                                                                                    <img src="{{ asset($media->file_path) }}"
-                                                                                                        alt="User photo"
-                                                                                                        style="width: 100%; height: 100%; object-fit: cover;">
+                                                                                            <div style="width: 60px; height: 60px; overflow: hidden; border-radius: 6px; border: 1px solid #ddd;">
+                                                                                                <a href="{{ asset($media->file_path) }}" target="_blank" style="display: block; width: 100%; height: 100%;">
+                                                                                                    <img src="{{ asset($media->file_path) }}" alt="User photo" style="width: 100%; height: 100%; object-fit: cover;">
                                                                                                 </a>
                                                                                             </div>
                                                                                             @php $count++; @endphp
                                                                                             @if ($loop->parent->last && $loop->last && $count == 5)
-                                                                                                <div
-                                                                                                    style="margin-left: 8px; display: flex; align-items: center;">
-                                                                                                    <a href="{{ route('posts.show_photos') }}"
-                                                                                                        title="View All"
-                                                                                                        style="font-size: 13px; padding: 0; background: none; border: none; color: #007bff; text-decoration: underline; cursor: pointer;">
+                                                                                                <div style="margin-left: 8px; display: flex; align-items: center;">
+                                                                                                    <a href="{{ route('posts.show_photos') }}" title="View All" style="font-size: 13px; padding: 0; background: none; border: none; color: #007bff; text-decoration: underline; cursor: pointer;">
                                                                                                         View All
                                                                                                     </a>
                                                                                                 </div>
@@ -531,12 +432,8 @@
                                                                                         @endforeach
                                                                                     </div>
                                                                                 @endforeach
-                                                                                <div
-                                                                                    style="margin-top: 6px; display: flex; align-items: center;">
-                                                                                    <a href="{{ route('posts.show_photos') }}"
-                                                                                        title="View All"
-                                                                                        class="float-right text-warning"
-                                                                                        target="_blank">
+                                                                                <div style="margin-top: 6px; display: flex; align-items: center;">
+                                                                                    <a href="{{ route('posts.show_photos') }}" title="View All" class="float-right text-warning" target="_blank">
                                                                                         View All ...
                                                                                     </a>
                                                                                 </div>
@@ -551,44 +448,28 @@
                                                             </div>
 
                                                             <div class="col-lg-3 profile-col-aside right">
-                                                                <aside id="member_profile_sidebar"
-                                                                    class="widget-area profile-widget-area member-profile-sidebar">
-                                                                    <div id="kmk_widget_latest_activity-1"
-                                                                        class="widget kmk-activity-widget buddypress">
+                                                                <aside id="member_profile_sidebar" class="widget-area profile-widget-area member-profile-sidebar">
+                                                                    <div id="kmk_widget_latest_activity-1" class="widget kmk-activity-widget buddypress">
                                                                         <h5 class="widget-title">Recent activity</h5>
                                                                         <ul class="widget-activity-list">
-                                                                            <li class="activity activity_comment activity-item"
-                                                                                id="activity-52">
-                                                                                <p><a href="./">Sandlas</a>
-                                                                                    posted a new activity comment</p>
-                                                                                <span class="activity mute">22 hours,
-                                                                                    49
-                                                                                    minutes ago</span>
+                                                                            <li class="activity activity_comment activity-item" id="activity-52">
+                                                                                <p><a href="./">Sandlas</a> posted a new activity comment</p>
+                                                                                <span class="activity mute">22 hours, 49 minutes ago</span>
                                                                             </li>
-                                                                            <li class="activity activity_comment activity-item"
-                                                                                id="activity-51">
-                                                                                <p><a href="./">Sandlas</a>
-                                                                                    posted a new activity comment</p>
-                                                                                <span class="activity mute">1 day, 4
-                                                                                    hours ago</span>
+                                                                            <li class="activity activity_comment activity-item" id="activity-51">
+                                                                                <p><a href="./">Sandlas</a> posted a new activity comment</p>
+                                                                                <span class="activity mute">1 day, 4 hours ago</span>
                                                                             </li>
-                                                                            <li class="members new_avatar activity-item mini"
-                                                                                id="activity-46">
-                                                                                <p><a href="./">Sandlas</a>
-                                                                                    changed their profile picture</p>
-                                                                                <span class="activity mute">2 weeks, 1
-                                                                                    day ago</span>
+                                                                            <li class="members new_avatar activity-item mini" id="activity-46">
+                                                                                <p><a href="./">Sandlas</a> changed their profile picture</p>
+                                                                                <span class="activity mute">2 weeks, 1 day ago</span>
                                                                             </li>
                                                                         </ul>
-
                                                                     </div>
                                                                 </aside>
                                                             </div>
-
                                                         </div>
-
                                                     </div>
-
                                                 </div>
                                             </div>
                                         </div>
@@ -602,23 +483,28 @@
         </div>
     </div>
 
+    <!-- Chat System -->
     <div id="buddy-chat-app" class="dash d-none d-md-block">
         <div id="buddy-chat-buddies" class="collapsed">
             <div class="buddy-chat-buddies__container">
                 <div class="header-container">
-                    <div class="header-title"><span class="dashicons dashicons-format-chat"></span>
+                    <div class="header-title">
+                        <span class="dashicons dashicons-format-chat"></span>
                         <div class="window-title">
                             <h5>Messenger</h5>
                         </div>
                     </div>
-                    <div class="dropd-group dropd-dr"><a class="dropd-control mute"><span
-                                class="dashicons dashicons-admin-generic"></span></a>
-                        <div class="dropd-menu"><a class="dropd-item">Mute</a></div>
+                    <div class="dropd-group dropd-dr">
+                        <a class="dropd-control mute">
+                            <span class="dashicons dashicons-admin-generic"></span>
+                        </a>
+                        <div class="dropd-menu">
+                            <a class="dropd-item">Mute</a>
+                        </div>
                     </div>
                 </div>
                 <div class="vb vb-invisible" style="position: relative; overflow: hidden;">
-                    <div class="buddy-chat-buddies__content vb-content"
-                        style="display: block; overflow: hidden scroll; height: 100%; width: calc(100% + 20px);">
+                    <div class="buddy-chat-buddies__content vb-content" style="display: block; overflow: hidden scroll; height: 100%; width: calc(100% + 20px);">
                         <ul class="buddy-chat-nav-tabs">
                             <li class="item"><a class="item-link active">Friends</a></li>
                             <li class="item"><a class="item-link">Groups</a></li>
@@ -630,16 +516,12 @@
                                         <div class="vue-recycle-scroller__item-view">
                                             @foreach ($all_friends as $value)
                                                 @php
-                                                    $friend =
-                                                        $value->sender_id == Auth::user()->user_id
-                                                            ? $value->getReceiver
-                                                            : $value->getSender;
+                                                    $friend = $value->sender_id == Auth::user()->user_id ? $value->getReceiver : $value->getSender;
                                                 @endphp
 
                                                 <div class="bpc-item mb-3" data-user="{{ $friend->username }}">
                                                     <div class="avatar-container">
-                                                        <img src="{{ asset($friend->profile_picture) }}"
-                                                            alt="{{ $friend->username }}" class="avatar">
+                                                        <img src="{{ asset($friend->profile_picture) }}" alt="{{ $friend->username }}" class="avatar">
                                                         <span class="status online"></span>
                                                     </div>
 
@@ -675,21 +557,17 @@
 
         <div id="buddy-chat-windows">
             <ul class="bpc-chat-windows-list">
-
                 @foreach ($all_friends as $value)
                     @php
                         $friend = $value->sender_id == Auth::user()->user_id ? $value->getReceiver : $value->getSender;
-
                         $windowId = 'chat-window-' . preg_replace('/[^A-Za-z0-9\-]/', '-', $friend->username);
                     @endphp
 
                     <li class="chat-window" id="{{ $windowId }}" style="display: none;">
                         <div class="chat-window__container">
-
                             <div class="chat-window__title">
                                 <div class="avatar-container">
-                                    <img src="{{ asset($friend->profile_picture) }}" alt="{{ $friend->username }}"
-                                        class="avatar">
+                                    <img src="{{ asset($friend->profile_picture) }}" alt="{{ $friend->username }}" class="avatar">
                                     <span class="status {{ $friend->online ?? 'offline' }}"></span>
                                 </div>
 
@@ -717,26 +595,23 @@
                                 </div>
                             </div>
 
-                            <div>
-                                <div class="chat-window__inputarea" data-friend="{{ $friend->user_id }}">
-                                    <div class="chat-window__input">
-                                        <div class="chat-window__input--placeholder">Write your message</div>
-                                        <div contenteditable="true" class="chat-window__input--field message-input"
-                                            data-friend="{{ $friend->user_id }}">
-                                        </div>
-                                    </div>
-
-                                    <div class="chat-window__input--emoji">
-                                        <button type="button" class="emojiBtn">😊</button>
-                                    </div>
-
+                            <div class="chat-window__inputarea" data-friend="{{ $friend->user_id }}">
+                                <div class="chat-window__input">
+                                    <div class="chat-window__input--placeholder">Write your message</div>
+                                    <div contenteditable="true" class="chat-window__input--field message-input" data-friend="{{ $friend->user_id }}"></div>
                                 </div>
-                            </div>
 
+                                <div class="chat-window__input--emoji">
+                                    <button type="button" class="emojiBtn">😊</button>
+                                </div>
+
+                                <a href="#" class="chat-window__btn--enter">
+                                    <span class="dashicons dashicons-arrow-right-alt2"></span>
+                                </a>
+                            </div>
                         </div>
                     </li>
                 @endforeach
-
             </ul>
         </div>
     </div>
@@ -747,6 +622,7 @@
         </a>
     </div>
 
+    <!-- JavaScript Libraries -->
     <script src="/assets/js/jquery.min.js"></script>
     <script src="/assets/js/bootstrap.min.js"></script>
     <script src="/assets/js/popper.min.js"></script>
@@ -757,72 +633,67 @@
     <script src="/assets/js/masonry.min.js"></script>
     <script src="/assets/js/jquery.fitvids.min.js"></script>
     <script src="/assets/js/emoji-button-3.0.3.min.js"></script>
-
     <script src="/assets/js/kmk.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
 
-</body>
-
-<script>
-    $(document).ready(function() {
-
-        $('#openModalBtn').on('click', function() {
-            $.fancybox.open();
-        });
-
-        $('#postCloser').on('click', function() {
-            $.fancybox.close();
-        });
-
-
-
-
-        // Initialize Fancybox
-        $('[data-fancybox]').fancybox({
-            loop: true,
-            buttons: ["zoom", "share", "close"],
-            smallBtn: true,
-            closeBtn: true,
-        });
-
-        // Emoji Picker
-        const emojiBtn2 = document.getElementById('emojiBtn2');
-        const inputField2 = document.getElementById('comment_content');
-
-        if (emojiBtn2 && inputField2) {
-            const picker2 = new EmojiButton({
-                position: 'top-start',
-                theme: 'light',
+    <!-- Main JavaScript -->
+    <script>
+        jQuery(document).ready(function($) {
+            // Initialize Fancybox
+            $('[data-fancybox]').fancybox({
+                loop: true,
+                buttons: ["zoom", "share", "close"],
+                smallBtn: true,
+                closeBtn: true,
             });
 
-            picker2.on('emoji', emoji => {
-                inputField2.value += emoji;
-                inputField2.focus();
+            $('#openModalBtn').on('click', function() {
+                $.fancybox.open();
             });
 
-            emojiBtn2.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                picker2.togglePicker(emojiBtn2);
+            $('#postCloser').on('click', function() {
+                $.fancybox.close();
             });
-        }
 
-        jQuery('.rtmedia-like, .rt_media_comment_submit').on('click', function(e) {
-            e.preventDefault();
+            // Emoji Picker for comments
+            const emojiBtn2 = document.getElementById('emojiBtn2');
+            const inputField2 = document.getElementById('comment_content');
 
-            if (jQuery(this).hasClass('rtmedia-like')) {
-                $(this).toggleClass('liked');
-                if (jQuery(this).hasClass('liked')) {
-                    jQuery(this).find('span').text('Unlike');
-                } else {
-                    jQuery(this).find('span').text('Like');
-                }
+            if (emojiBtn2 && inputField2) {
+                const picker2 = new EmojiButton({
+                    position: 'top-start',
+                    theme: 'light',
+                });
+
+                picker2.on('emoji', emoji => {
+                    inputField2.value += emoji;
+                    inputField2.focus();
+                });
+
+                emojiBtn2.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    picker2.togglePicker(emojiBtn2);
+                });
             }
 
-            if (jQuery(this).attr('id') === 'rt_media_comment_submit') {
-                var commentText = $('#comment_content').val();
-                if (commentText.trim() !== "") {
-                    var newComment = `
+            // Like and comment functionality
+            $('.rtmedia-like, .rt_media_comment_submit').on('click', function(e) {
+                e.preventDefault();
+
+                if ($(this).hasClass('rtmedia-like')) {
+                    $(this).toggleClass('liked');
+                    if ($(this).hasClass('liked')) {
+                        $(this).find('span').text('Unlike');
+                    } else {
+                        $(this).find('span').text('Like');
+                    }
+                }
+
+                if ($(this).attr('id') === 'rt_media_comment_submit') {
+                    var commentText = $('#comment_content').val();
+                    if (commentText.trim() !== "") {
+                        var newComment = `
                             <li class="rtmedia-comment">
                                 <div class="rtmedia-comment-user-pic">
                                     <a href="#" title="Current User">
@@ -838,154 +709,257 @@
                                         </div>
                                     </div>
                                 </div>
-                            </li> `;
-                    jQuery('#rtmedia_comment_ul').append(newComment);
-                    jQuery('#comment_content').val(''); // Clear input field
-                }
-            }
-        });
-
-        // Handle delete comment
-        jQuery(document).on('click', '.rtmedia-delete-comment', function(e) {
-            e.preventDefault();
-            jQuery(this).closest('.rtmedia-comment').remove();
-        });
-    });
-</script>
-
-
-<script>
-    const chatBuddies = document.getElementById('buddy-chat-buddies');
-    const collapserButton = document.getElementById('buddy-chat-buddies__collapser');
-    const chatWindowCloseButtons = document.querySelectorAll('.chat_window__close-btn');
-    const chatBuddiesItems = document.querySelectorAll('.bpc-item');
-    const emojiBtn = document.getElementById('emojiBtn');
-    const inputField = document.querySelector('.chat-window__input--field');
-    const placeholder = document.querySelector('.chat-window__input--placeholder');
-    const sendButton = document.querySelector('.chat-window__btn--enter');
-    const chatList = document.querySelector('.bpc-chat-list');
-
-    // Toggle sidebar
-    collapserButton.addEventListener('click', () => {
-        chatBuddies.classList.toggle('collapsed');
-    });
-
-    // Close chat
-    chatWindowCloseButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const chatWindow = button.closest('.chat-window');
-            chatWindow.style.display = 'none';
-        });
-    });
-
-    chatBuddiesItems.forEach(item => {
-        item.addEventListener('click', () => {
-            const userName = item.querySelector('.chat-buddy').textContent.trim();
-            const chatWindow = document.getElementById(`chat-window-${userName.replace(" ", "-")}`);
-            if (chatWindow) chatWindow.style.display = 'block';
-        });
-    });
-
-    // Input placeholder logic
-    if (inputField) {
-        inputField.addEventListener('input', function() {
-            placeholder.style.display = this.textContent.trim() ? 'none' : 'block';
-        });
-    }
-
-    // Send message
-    function sendMessage() {
-        const message = inputField.textContent.trim();
-        if (!message) return;
-
-        const newMsg = document.createElement('li');
-        newMsg.classList.add('message--self');
-        newMsg.innerHTML = `
-            <time>${new Date().toLocaleString()}</time>
-            <div class="message-block">
-                <div class="messages">
-                    <div class="message">${message}</div>
-                </div>
-            </div> `;
-
-        chatList.appendChild(newMsg);
-        inputField.textContent = '';
-        placeholder.style.display = 'block';
-
-        // ✅ Scroll to latest message
-        chatList.scrollTop = chatList.scrollHeight;
-    }
-
-    // Send on button click
-    if (sendButton) {
-        sendButton.addEventListener('click', e => {
-            e.preventDefault();
-            sendMessage();
-        });
-    }
-
-    // Send on Enter key
-    if (inputField) {
-        inputField.addEventListener('keydown', e => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendMessage();
-            }
-        });
-    }
-
-    // === Emoji Picker ===
-    const picker = new EmojiButton({
-        position: 'top-start',
-        theme: 'light'
-    });
-
-    picker.on('emoji', emoji => {
-        inputField.textContent += emoji;
-        inputField.focus();
-        placeholder.style.display = 'none';
-    });
-
-    emojiBtn.addEventListener('click', () => picker.togglePicker(emojiBtn));
-
-    //mobile toggle chat
-    jQuery('#toggle-chat').on('click', function() {
-
-        // Check screen width for mobile (under 768px)
-        if (jQuery(window).width() < 768) {
-            jQuery('#buddy-chat-app').toggleClass('d-none');
-        } else {
-            console.log('Not mobile view — no toggle.');
-        }
-    });
-</script>
-<!-- chat -->
-
-
-
-
-<!-- Inline JS -->
-<script>
-    const lazyloadRunObserver = () => {
-        const lazyloadBackgrounds = document.querySelectorAll('.e-con.e-parent:not(.e-lazyloaded)');
-        const observer = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('e-lazyloaded');
-                    observer.unobserve(entry.target);
+                            </li>`;
+                        $('#rtmedia_comment_ul').append(newComment);
+                        $('#comment_content').val('');
+                    }
                 }
             });
-        }, {
-            rootMargin: '200px 0px 200px 0px'
+
+            // Handle delete comment
+            $(document).on('click', '.rtmedia-delete-comment', function(e) {
+                e.preventDefault();
+                $(this).closest('.rtmedia-comment').remove();
+            });
+
+            // Chat System Initialization
+            initializeChatSystem();
         });
-        lazyloadBackgrounds.forEach(el => observer.observe(el));
-    };
-    ['DOMContentLoaded', 'kmk/lazyload/observe']
-    .forEach(e => document.addEventListener(e, lazyloadRunObserver));
 
-    jQuery(".alert").delay(2500).fadeOut();
-</script>
+        // Chat System Functions
+        function initializeChatSystem() {
+            const chatBuddies = document.getElementById('buddy-chat-buddies');
+            const collapserButton = document.getElementById('buddy-chat-buddies__collapser');
+            const emojiPickers = new Map();
+            let activeInputField = null;
 
-@stack('script')
+            // Collapser functionality
+            if (collapserButton) {
+                collapserButton.addEventListener('click', () => {
+                    chatBuddies.classList.toggle('collapsed');
+                });
+            }
 
+            // Chat buddy click handlers
+            document.querySelectorAll('.bpc-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const userName = item.getAttribute('data-user');
+                    openChatWindow(userName);
+                });
+            });
+
+            // Close button handlers
+            document.querySelectorAll('.chat_window__close-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const chatWindow = button.closest('.chat-window');
+                    chatWindow.style.display = 'none';
+                });
+            });
+
+            // Initialize emoji pickers for each chat window
+            document.querySelectorAll('.chat-window').forEach(chatWindow => {
+                const emojiBtn = chatWindow.querySelector('.emojiBtn');
+                const inputField = chatWindow.querySelector('.chat-window__input--field');
+
+                if (emojiBtn && inputField) {
+                    const picker = new EmojiButton({
+                        position: 'top-start',
+                        theme: 'light',
+                        autoFocusSearch: false
+                    });
+
+                    picker.on('emoji', emoji => {
+                        if (inputField === activeInputField) {
+                            insertEmojiAtCursor(inputField, emoji);
+                            updatePlaceholderVisibility(inputField);
+                            inputField.focus();
+                        }
+                    });
+
+                    emojiBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        activeInputField = inputField;
+                        picker.togglePicker(emojiBtn);
+                    });
+
+                    emojiPickers.set(inputField, picker);
+                }
+            });
+
+            // Input field event handlers
+            document.querySelectorAll('.chat-window__input--field').forEach(inputField => {
+                inputField.addEventListener('focus', function() {
+                    activeInputField = this;
+                    updatePlaceholderVisibility(this);
+                    setTimeout(() => {
+                        placeCaretAtEnd(this);
+                    }, 0);
+                });
+
+                inputField.addEventListener('input', function() {
+                    updatePlaceholderVisibility(this);
+                });
+
+                inputField.addEventListener('blur', function() {
+                    if (activeInputField === this) {
+                        activeInputField = null;
+                    }
+                });
+
+                inputField.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        sendMessage(this);
+                    }
+                });
+
+                inputField.addEventListener('click', function() {
+                    setTimeout(() => {
+                        placeCaretAtEnd(this);
+                    }, 0);
+                });
+            });
+
+            // Send button handlers
+            document.querySelectorAll('.chat-window__btn--enter').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const inputArea = this.closest('.chat-window__inputarea');
+                    const inputField = inputArea.querySelector('.chat-window__input--field');
+                    if (inputField) {
+                        sendMessage(inputField);
+                    }
+                });
+            });
+
+            // Mobile chat toggle
+            const toggleChat = document.getElementById('toggle-chat');
+            if (toggleChat) {
+                toggleChat.addEventListener('click', function() {
+                    if (window.innerWidth < 768) {
+                        document.getElementById('buddy-chat-app').classList.toggle('d-none');
+                    }
+                });
+            }
+        }
+
+        function openChatWindow(username) {
+    const chatWindow = document.getElementById(`chat-window-${username.replace(/[^A-Za-z0-9\-]/g, '-')}`);
+
+    if (chatWindow) {
+        // Hide all chat windows first
+        document.querySelectorAll('.chat-window').forEach(window => {
+            window.style.display = 'none';
+        });
+
+        // Show the selected chat window
+        chatWindow.style.display = 'block';
+
+        // Focus on the input field
+        const inputField = chatWindow.querySelector('.chat-window__input--field');
+        if (inputField) {
+            setTimeout(() => {
+                inputField.focus();
+                placeCaretAtEnd(inputField);
+            }, 100);
+        }
+    }
+}
+
+        function updatePlaceholderVisibility(inputField) {
+            const placeholder = inputField.parentNode.querySelector('.chat-window__input--placeholder');
+            if (placeholder) {
+                placeholder.style.display = inputField.textContent.trim() ? 'none' : 'block';
+            }
+        }
+
+        function placeCaretAtEnd(element) {
+            element.focus();
+            if (typeof window.getSelection !== "undefined" && typeof document.createRange !== "undefined") {
+                const range = document.createRange();
+                range.selectNodeContents(element);
+                range.collapse(false);
+                const selection = window.getSelection();
+                selection.removeAllRanges();
+                selection.addRange(range);
+            }
+        }
+
+        function insertEmojiAtCursor(element, emoji) {
+            const selection = window.getSelection();
+            if (selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+                range.deleteContents();
+                const textNode = document.createTextNode(emoji);
+                range.insertNode(textNode);
+                range.setStartAfter(textNode);
+                range.setEndAfter(textNode);
+                selection.removeAllRanges();
+                selection.addRange(range);
+            } else {
+                element.textContent += emoji;
+            }
+
+            const event = new Event('input', { bubbles: true });
+            element.dispatchEvent(event);
+        }
+
+        function sendMessage(inputField) {
+            const message = inputField.textContent.trim();
+            if (!message) return;
+
+            const friendId = inputField.getAttribute('data-friend');
+            const messagesList = document.getElementById(`messages-${friendId}`);
+
+            if (messagesList) {
+                const newMsg = document.createElement('li');
+                newMsg.classList.add('message--self');
+                newMsg.innerHTML = `
+                    <time>${new Date().toLocaleString()}</time>
+                    <div class="message-block">
+                        <div class="messages">
+                            <div class="message">${message}</div>
+                        </div>
+                    </div>`;
+
+                messagesList.appendChild(newMsg);
+
+                inputField.textContent = '';
+                updatePlaceholderVisibility(inputField);
+
+                messagesList.scrollTop = messagesList.scrollHeight;
+
+                inputField.focus();
+            }
+
+            // AJAX call to send message to backend would go here
+            console.log(`Sending message to friend ${friendId}: ${message}`);
+        }
+
+        // Lazy load observer
+        const lazyloadRunObserver = () => {
+            const lazyloadBackgrounds = document.querySelectorAll('.e-con.e-parent:not(.e-lazyloaded)');
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('e-lazyloaded');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                rootMargin: '200px 0px 200px 0px'
+            });
+            lazyloadBackgrounds.forEach(el => observer.observe(el));
+        };
+
+        ['DOMContentLoaded', 'kmk/lazyload/observe'].forEach(e => document.addEventListener(e, lazyloadRunObserver));
+
+        // Auto-hide alerts
+        jQuery(".alert").delay(2500).fadeOut();
+    </script>
+
+    @stack('script')
+</body>
 </html>

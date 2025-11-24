@@ -74,7 +74,9 @@ Route::middleware(['web'])->group(function () {
 
             Route::get("/load-friends", [SiteController::class, 'list_friends'])->name('peoples.list_friends');
             Route::get("/load-requests", [SiteController::class, 'list_requests'])->name("peoples.list_requests");
+            Route::get("/load-messages", [SiteController::class, 'load_messages'])->name('chat.load-messages');
 
+            Route::post("/send-message", [SiteController::class, 'send_message'])->name('chat.send-message');
             Route::post("/manage_request_response", [SiteController::class, 'manage_request_response'])->name('peoples.manage_request_response');
             Route::post("/manage-friend-request", [SiteController::class, 'manage_friend_request'])->name('peoples.manage_friend_request');
             Route::post("/request-response", [SiteController::class, 'request_response'])->name("users.request_response");

@@ -118,7 +118,7 @@
                             </li>
                             <li id="menu-item-94"
                                 class="bp-menu bp-logout-nav menu-item menu-item-type-custom menu-item-object-custom menu-item-94">
-                                <a href="#">Log
+                                <a href="{{ route('users.logout') }}">Log
                                     Out</a>
                             </li>
                         </ul>

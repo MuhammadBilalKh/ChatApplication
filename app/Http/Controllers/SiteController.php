@@ -9,6 +9,7 @@ use App\Models\FeaturedAdvert;
 use App\Models\FeaturedPackage;
 use App\Models\FriendShip;
 use App\Models\JobPosting;
+use App\Models\Message;
 use App\Models\Post;
 use App\Models\PostMedia;
 use App\Models\User;
@@ -232,7 +233,7 @@ class SiteController extends Controller
 
     public function list_requests()
     {
-        $request = FriendShip::with("getSender")->where([
+        $request = FriendShip::with('getSender')->where([
             'receiver_id' => Auth::user()->user_id,
             'status' => FRIEND_REQUEST_STATUS_PENDING,
         ])->get();
@@ -247,26 +248,26 @@ class SiteController extends Controller
         $requestType = $request->response;
         $receiverId = Auth::user()->user_id;
         $memberID = $request->memberID;
-        $acceptanceType = "";
+        $acceptanceType = '';
 
         if ($requestType == '1') {
-            $acceptanceType = "Accepted";
+            $acceptanceType = 'Accepted';
             FriendShip::where([
                 'receiver_id' => $receiverId,
                 'sender_id' => $memberID,
-                'accepted_at' => now(),
             ])->update([
                 'status' => FRIEND_REQUEST_STATUS_ACCEPTED,
+                'accepted_at' => now(),
             ]);
         } elseif ($requestType == '0') {
-            $acceptanceType = "Rejected";
+            $acceptanceType = 'Rejected';
             FriendShip::where([
                 'receiver_id' => $receiverId,
                 'sender_id' => $memberID,
             ])->delete();
         }
 
-        return redirect()->back()->with("success", "Friend Request ".ucwords($acceptanceType). " Successfully.");
+        return redirect()->back()->with('success', 'Friend Request '.ucwords($acceptanceType).' Successfully.');
     }
 
     public function manage_categories(Request $request)
@@ -540,6 +541,74 @@ class SiteController extends Controller
 
         return response()->json([
             'status' => REQUEST_PROCESSED,
+        ]);
+    }
+
+    public function load_messages(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $userId = Auth::user()->user_id;
+        $otherUserId = $request->input('user_id');
+
+        $messages = Message::query()
+            ->where(function ($query) use ($userId, $otherUserId) {
+                $query->where('sender_id', $userId)
+                    ->where('receiver_id', $otherUserId);
+            })->orWhere(function ($query) use ($userId, $otherUserId) {
+                $query->where('sender_id', $otherUserId)
+                    ->where('receiver_id', $userId);
+            })
+            ->orderByDesc('created_at')
+            ->limit(10)
+            ->get()
+            ->reverse()
+            ->values();
+
+        return response()->json([
+            'messages' => $messages,
+        ]);
+    }
+
+    public function send_message(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $request->validate([
+            'receiver' => 'required|integer|exists:users,user_id',
+            'message' => 'required|string|max:1000',
+        ], [
+            'receiver.required' => 'Receiver is required.',
+            'receiver.exists' => 'Receiver must be a valid user.',
+            'message.required' => 'Message cannot be empty.',
+            'message.max' => 'Message is too long.',
+        ]);
+
+        $senderId = Auth::user()->user_id;
+        $receiverId = $request->input('receiver');
+        $body = $request->input('message');
+
+        // dd($senderId, $receiverId, $body);
+        try {
+            $message = Message::create([
+                'sender_id' => $senderId,
+                'receiver_id' => $receiverId,
+                'message' => $body,
+                'message_type' => "text",
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to send message.',
+                'errMessage' => $e->getMessage(),
+            ], 500);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => [
+                'id' => $message->id,
+                'sender_id' => $message->sender_id,
+                'receiver_id' => $message->receiver_id,
+                'body' => $message->body,
+                'created_at' => $message->created_at->toDateTimeString(),
+            ]
         ]);
     }
 }
