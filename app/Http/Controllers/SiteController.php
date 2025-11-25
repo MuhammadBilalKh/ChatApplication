@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MessageSent;
 use App\Models\Advert;
 use App\Models\AdvertMedia;
 use App\Models\Category;
@@ -561,10 +562,20 @@ class SiteController extends Controller
             ->limit(10)
             ->get()
             ->reverse()
-            ->values();
+            ->values()
+            ->map(function ($message) {
+                return [
+                    'message_id' => $message->id,
+                    'sender_id' => $message->sender_id,
+                    'receiver_id' => $message->receiver_id,
+                    'message' => $message->message,
+                    'created_at' => $message->created_at,
+                ];
+            });
 
         return response()->json([
             'messages' => $messages,
+            'status' => 'success',
         ]);
     }
 
@@ -584,7 +595,6 @@ class SiteController extends Controller
         $receiverId = $request->input('receiver');
         $body = $request->input('message');
 
-        // dd($senderId, $receiverId, $body);
         try {
             $message = Message::create([
                 'sender_id' => $senderId,
@@ -600,13 +610,12 @@ class SiteController extends Controller
             ], 500);
         }
 
+        event(new MessageSent($message));
+
         return response()->json([
             'status' => 'success',
             'message' => [
-                'id' => $message->id,
-                'sender_id' => $message->sender_id,
-                'receiver_id' => $message->receiver_id,
-                'body' => $message->body,
+                'message' => $message->message,
                 'created_at' => $message->created_at->toDateTimeString(),
             ]
         ]);

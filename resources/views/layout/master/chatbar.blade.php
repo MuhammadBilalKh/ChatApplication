@@ -1,35 +1,6 @@
 @push('css')
     <style>
-        /* Highest stacking context for chat wrapper */
-        .wrapper {
-            z-index: 999999;
-        }
-
-        .emoji-picker {
-            width: 300px !important;
-        }
-
-        /* ===== Scrollbar styling ===== */
-        .chat-window__message-list.vb.vb-invisible::-webkit-scrollbar {
-            width: 12px;
-        }
-
-        .chat-window__message-list.vb.vb-invisible::-webkit-scrollbar-track {
-            background: #fff;
-        }
-
-        .chat-window__message-list.vb.vb-invisible::-webkit-scrollbar-thumb {
-            background-color: #f5bd02;
-            border-radius: 6px;
-            border: 3px solid #fff;
-        }
-
-        .chat-window__message-list.vb.vb-invisible {
-            scrollbar-width: thin;
-            scrollbar-color: #f5bd02 #fff;
-        }
-
-        /* ===== Input area ===== */
+        /* Updated chat bubble and window styles as per revised spec */
         .chat-window__inputarea {
             display: flex;
             align-items: flex-end;
@@ -41,7 +12,6 @@
             box-sizing: border-box;
             border-top: 1px solid #ddd;
         }
-
         .chat-window__input {
             flex: 1;
             display: flex;
@@ -52,7 +22,6 @@
             min-height: 40px;
             background: #fff;
         }
-
         .chat-window__input--placeholder {
             position: absolute;
             top: 50%;
@@ -63,7 +32,6 @@
             font-size: 14px;
             user-select: none;
         }
-
         .chat-window__input--field {
             min-height: 35px;
             padding: 8px 12px;
@@ -72,19 +40,17 @@
             width: 100%;
             font-size: 14px;
             line-height: 20px;
+            background: transparent;
         }
-
         .chat-window__input--field:focus+.chat-window__input--placeholder,
         .chat-window__input--field:not(:empty)+.chat-window__input--placeholder {
             display: none;
         }
-
         .chat-window__input--emoji {
             display: flex;
             align-items: flex-end;
             margin-left: 8px;
         }
-
         .chat-window__input--emoji button {
             background: transparent;
             border: none;
@@ -94,98 +60,9 @@
             padding: 0;
             box-shadow: none;
         }
-
         .chat-window__input--emoji button:hover {
             transform: scale(1.2);
         }
-
-        .chat-window__btn--enter {
-            margin-left: 5px;
-            text-decoration: none;
-            color: #007aff;
-            font-size: 20px;
-        }
-
-        .chat-window__btn--enter:hover {
-            color: #005bb5;
-        }
-
-        .message img.emoji {
-            width: 22px;
-            height: 22px;
-            vertical-align: middle;
-        }
-
-        .chat-float {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            z-index: 99999;
-            display: none;
-        }
-
-        .chat-floatbody {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            background-color: #F5BD02;
-            color: #fff;
-            border-radius: 50%;
-            text-decoration: none;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            font-size: 20px;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
-
-        .chat-floatbody:hover {
-            background-color: #f0c22a;
-            transform: scale(1.1);
-        }
-
-        .chat-floatbody .dropd-control .dashicons {
-            height: 30px;
-            width: 30px;
-            position: absolute;
-            top: 11px;
-            left: 7px;
-        }
-
-        @media (max-width: 768px) {
-            .chat-float {
-                display: block;
-            }
-        }
-
-        /* loader style */
-        .chat-loader {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 50px;
-        }
-
-        .chat-loader>div {
-            border: 4px solid #f3f3f3;
-            border-radius: 50%;
-            border-top: 4px solid #f5bd02;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 12px auto;
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-        /* Add a send button for chat input */
         .chat-window__send-btn {
             margin-left: 8px;
             border: none;
@@ -204,40 +81,91 @@
         .chat-window__send-btn:hover {
             background: #e0ae00;
         }
-        /* Custom styles for sent/received messages */
-        .chat-message {
+        .chat-window__message-list.vb.vb-invisible::-webkit-scrollbar {
+            width: 12px;
+        }
+        .chat-window__message-list.vb.vb-invisible::-webkit-scrollbar-track {
+            background: #fff;
+        }
+        .chat-window__message-list.vb.vb-invisible::-webkit-scrollbar-thumb {
+            background-color: #f5bd02;
+            border-radius: 6px;
+            border: 3px solid #fff;
+        }
+        .chat-window__message-list.vb.vb-invisible {
+            scrollbar-width: thin;
+            scrollbar-color: #f5bd02 #fff;
+        }
+        .message--self {
             display: flex;
             flex-direction: column;
-            margin-bottom: 10px;
-            max-width: 65%;
-            background: #f9f9f9;
-            border-radius: 12px;
-            padding: 8px 14px;
-            word-break: break-word;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-        }
-        .chat-message.own-message {
-            background: #F5BD02;
-            color: #fff;
+            align-items: flex-end;
             margin-left: auto;
             margin-right: 0;
-            align-items: flex-end;
+            margin-bottom: 12px;
+            max-width: 65%;
+            background: #F5BD02;
+            color: #fff;
+            border-radius: 18px 18px 4px 18px;
+            padding: 0;
+            border: none;
         }
-        .chat-message.their-message {
-            background: #fff;
-            color: #333;
+        .message--other {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
             margin-right: auto;
             margin-left: 0;
-            align-items: flex-start;
+            margin-bottom: 12px;
+            max-width: 65%;
+            background: #fff;
+            color: #333;
+            border-radius: 18px 18px 18px 4px;
             border: 1px solid #e5e5e5;
+            padding: 0;
         }
-        .chat-message .author {
-            font-size: 12px;
-            font-weight: 700;
-            margin-bottom: 2px;
+        .message-block {
+            display: flex;
+            flex-direction: row;
+            margin-top: 2px;
+            width: 100%;
         }
-        .chat-message .body {
+        .messages {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+        .message--self .messages .message,
+        .message--other .messages .message {
+            background: none;
+            color: inherit;
             font-size: 15px;
+            padding: 8px 14px;
+            border-radius: 0;
+            word-break: break-word;
+        }
+        .chat-loader {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 50px;
+        }
+        .chat-loader>div {
+            border: 4px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 4px solid #f5bd02;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 12px auto;
+        }
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
         }
     </style>
 @endpush
@@ -314,10 +242,8 @@
         </div>
     </div>
 
-    <!-- Chat windows -->
     <div id="buddy-chat-windows">
         <ul class="bpc-chat-windows-list">
-
             @foreach ($all_friends as $value)
                 @php
                     $friend = $value->sender_id == Auth::user()->user_id ? $value->getReceiver : $value->getSender;
@@ -330,7 +256,7 @@
                             <div class="avatar-container">
                                 <img src="{{ asset($friend->profile_picture) }}" alt="{{ $friend->username }}"
                                     class="avatar">
-                                <span class="status {{ $friend->online ?? 'offline' }}"></span>
+                                <span class="status {{ $friend->is_online ? 'online' : 'offline' }}"></span>
                             </div>
                             <div class="flex-r">
                                 <div>
@@ -346,30 +272,28 @@
                                 <span class="dashicons dashicons-no-alt"></span>
                             </a>
                         </div>
-                        <!-- MESSAGE LIST -->
                         <div class="chat-window__message-list vb vb-invisible">
-                            <div class="vb-content">
+                            <div class="vb-content" style="overflow-y:scroll; max-height: 350px;">
                                 <div class="chat-loader" style="display: none;">
                                     <div></div>
                                 </div>
                                 <ul class="bpc-chat-list overflow-auto" id="messages-{{ $friend->user_id }}">
-                                    <!-- Messages will be loaded here dynamically with JS/AJAX -->
+                                    <!-- JS will load messages using .message--self (right, sent) or .message--other (left, received) -->
                                 </ul>
                             </div>
                         </div>
-                        <!-- INPUT AREA -->
                         <div>
                             <div class="chat-window__inputarea" data-friend="{{ $friend->user_id }}">
                                 <div class="chat-window__input">
                                     <div class="chat-window__input--placeholder">Write your message</div>
                                     <div contenteditable="true" class="chat-window__input--field message-input"
-                                        data-friend="{{ $friend->user_id }}">
-                                    </div>
+                                        data-friend="{{ $friend->user_id }}"></div>
                                 </div>
                                 <div class="chat-window__input--emoji">
                                     <button type="button" class="emojiBtn">😊</button>
                                 </div>
-                                <button class="chat-window__send-btn" data-friend="{{ $friend->user_id }}" data-receiver="{{ $friend->user_id }}" title="Send" type="button">
+                                <button class="chat-window__send-btn" data-friend="{{ $friend->user_id }}"
+                                    data-receiver="{{ $friend->user_id }}" title="Send" type="button">
                                     <span class="dashicons dashicons-arrow-right-alt"></span>
                                 </button>
                             </div>
@@ -377,7 +301,6 @@
                     </div>
                 </li>
             @endforeach
-
         </ul>
     </div>
 </div>
@@ -394,6 +317,7 @@
         let messageLoading = {};
         const loggedInUserId = '{{ Auth::user()->user_id }}';
 
+        // Show loader utility
         function showLoader($chatWindow) {
             $chatWindow.find('.chat-loader').show();
         }
@@ -401,25 +325,27 @@
             $chatWindow.find('.chat-loader').hide();
         }
 
-        function loadMessages(userId, append = false, beforeMessageId = null) {
+        // Load initial and scrollable messages (+scroll to bottom/top logic)
+        function loadMessages(userId, {
+            append = false,
+            beforeMessageId = null,
+            scrollTo = 'bottom'
+        } = {}) {
             const $chatWindow = $('#chat-window-' + userId.replace(/[^A-Za-z0-9\-]/g, '-'));
             const $messageList = $('#messages-' + userId);
             if (!messageOffsets[userId]) messageOffsets[userId] = 0;
             if (!messageLoading[userId]) messageLoading[userId] = false;
-
             if (messageLoading[userId]) return;
 
             messageLoading[userId] = true;
             showLoader($chatWindow);
-
-            let offset = messageOffsets[userId];
 
             $.ajax({
                 url: '{{ route('chat.load-messages') }}',
                 method: 'GET',
                 data: {
                     user_id: userId,
-                    offset: offset,
+                    offset: messageOffsets[userId],
                     limit: 10,
                     before_message_id: beforeMessageId || ''
                 },
@@ -428,24 +354,27 @@
                     if (Array.isArray(response.messages)) {
                         let html = '';
                         response.messages.forEach(function(msg) {
-                            // Determine ownership and generate correct CSS class
-                            let senderId =
-                                typeof msg.sender_id !== 'undefined'
-                                    ? String(msg.sender_id)
-                                    : '';
+                            let senderId = typeof msg.sender_id !== 'undefined' ? String(msg.sender_id) : '';
                             let isOwn = (senderId === loggedInUserId);
-                            html += renderSingleMessage(msg, isOwn);
+                            html += renderChatMessageItem(msg, isOwn);
                         });
-
+                        var $currentScrollTarget = $messageList.closest('.vb-content');
+                        var previousScrollHeight = $currentScrollTarget[0].scrollHeight;
                         if (append) {
                             $messageList.append(html);
                         } else {
                             $messageList.prepend(html);
-                            if ($messageList[0]) {
-                                $messageList.parent()[0].scrollTop = $messageList[0].scrollHeight / 2;
-                            }
                         }
                         messageOffsets[userId] += response.messages.length;
+                        // Maintain scroll position if loading older messages
+                        if (beforeMessageId !== null && !append) {
+                            var newScrollHeight = $currentScrollTarget[0].scrollHeight;
+                            $currentScrollTarget[0].scrollTop = newScrollHeight - previousScrollHeight;
+                        } else if (scrollTo === 'bottom') {
+                            $currentScrollTarget[0].scrollTop = $currentScrollTarget[0].scrollHeight;
+                        } else if (scrollTo === 'top') {
+                            $currentScrollTarget[0].scrollTop = 0;
+                        }
                     }
                     if (!response.messages || response.messages.length < 10) {
                         $messageList.data('end', true);
@@ -459,19 +388,34 @@
             });
         }
 
-        // Helper to render message on right for current user, left otherwise
-        function renderSingleMessage(msg, isOwn = true) {
-            // Use msg.message (string) if present, fall back to msg.body for backwards compatibility
-            let messageText = typeof msg.message !== 'undefined' ? msg.message : (typeof msg.body !== 'undefined' ? msg.body : '');
-            let senderName = typeof msg.sender_name !== 'undefined' ? msg.sender_name : '';
-            let cssClass = isOwn ? 'own-message' : 'their-message';
-            return `<li class="chat-message ${cssClass}">
-                    <div class="author">${senderName ? senderName + ':' : ''}</div>
-                    <div class="body">${messageText}</div>
-                </li>`;
+        function renderChatMessageItem(msg, isOwn = true) {
+            let messageText = '';
+            if (typeof msg.message !== 'undefined' && msg.message !== null && msg.message !== '') {
+                messageText = msg.message;
+            }
+            let timestamp = (typeof msg.created_at !== 'undefined' && msg.created_at) ? msg.created_at : '';
+            let dateString = timestamp ? `<time>${escapeHtml(timestamp)}</time>` : '';
+            let cls = isOwn ? 'message--self' : 'message--other';
+            return `<li class="${cls}"${typeof msg.id !== 'undefined' ? ` data-messageid="${msg.id}"`:''}>
+        ${dateString}
+        <div class="message-block">
+            <div class="messages">
+                <div class="message">${escapeHtml(messageText)}</div>
+            </div>
+        </div>
+    </li>`;
         }
 
-        // Buddy list click handler
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
+        }
+
         $(document).on('click', '.chat-buddy-item', function() {
             let userId = $(this).attr('data-userid');
             $('.chat-window').hide();
@@ -480,16 +424,21 @@
             $('#messages-' + userId).html('').removeData('end');
             messageOffsets[userId] = 0;
             showLoader($cw);
-            loadMessages(userId);
+            loadMessages(userId, {
+                scrollTo: 'bottom'
+            });
+            setTimeout(function() {
+                $cw.find('.message-input').focus();
+                let $c = $cw.find('.vb-content');
+                if ($c.length) $c[0].scrollTop = $c[0].scrollHeight;
+            }, 200);
         });
 
-        // Close chat window button
         $(document).on('click', '.chat_window__close-btn', function(e) {
             e.preventDefault();
             $(this).closest('.chat-window').hide();
         });
 
-        // Infinite scroll: load more messages when scroll top
         $(document).on('scroll', '.chat-window__message-list .vb-content', function() {
             let $el = $(this);
             let $ul = $el.find('.bpc-chat-list');
@@ -497,25 +446,26 @@
             if (!userId) return;
             if (messageLoading[userId]) return;
             if ($ul.data('end')) return;
-            if ($el.scrollTop() <= 60) {
+            if ($el[0].scrollTop <= 10) {
                 let firstMessageId = $ul.children().first().data('messageid') || null;
-                loadMessages(userId, false, firstMessageId);
+                loadMessages(userId, {
+                    append: false,
+                    beforeMessageId: firstMessageId,
+                    scrollTo: 'top'
+                });
             }
         });
 
-        // === SEND MESSAGE FUNCTIONALITY ===
-
-        // Handler for send button
-        $(document).on('click', '.chat-window__send-btn', function () {
+        // Send message AJAX and trigger MessageSent event (handled server-side, this triggers it by POST)
+        $(document).on('click', '.chat-window__send-btn', function() {
             let receiverId = $(this).data('receiver');
-            let userId = receiverId; // For this context
+            let userId = receiverId;
             let $input = $('.message-input[data-friend="' + receiverId + '"]');
             let $msgList = $('#messages-' + receiverId);
             let message = $input.text().trim();
 
             if (!message || message.length === 0) return;
 
-            // Disable send button during request
             let $btn = $(this);
             $btn.prop('disabled', true);
 
@@ -523,33 +473,58 @@
                 url: '{{ route('chat.send-message') }}',
                 method: 'POST',
                 data: {
-                    receiver: receiverId, // Backend expects "receiver"
+                    receiver: receiverId,
                     message: message,
                     _token: '{{ csrf_token() }}'
                 },
-                success: function (response) {
-                    if (response.status === 'success' && response.message) {
-                        let msgObj;
-                        // Controller may return the message as a string or object
-                        if (typeof response.message === 'string') {
-                            msgObj = {
-                                message: response.message,
-                                sender_name: '{{ Auth::user()->username }}',
-                                sender_id: loggedInUserId
-                            };
-                        } else {
-                            // Add sender_id fallback from response if not present
-                            msgObj = response.message;
-                            if (typeof msgObj.sender_id === 'undefined') {
-                                msgObj.sender_id = loggedInUserId;
-                            }
-                            if (typeof msgObj.sender_name === 'undefined') {
-                                msgObj.sender_name = '{{ Auth::user()->username }}';
-                            }
+                success: function(response) {
+                    // The server should now trigger the MessageSent event upon successful save
+                    if (
+                        response.status === 'success' &&
+                        response.message &&
+                        typeof response.message === 'object' &&
+                        (
+                            typeof response.message.message !== 'undefined' &&
+                            response.message.message !== null &&
+                            response.message.message !== ''
+                        )
+                    ) {
+                        let msgObj = response.message;
+                        if (typeof msgObj.sender_id === 'undefined') {
+                            msgObj.sender_id = loggedInUserId;
                         }
-
-                        $msgList.append(renderSingleMessage(msgObj, true));
-                        // Always scroll to show new message
+                        if (typeof msgObj.created_at === 'undefined') {
+                            msgObj.created_at = (new Date()).toLocaleString();
+                        }
+                        // Append as right side message (message--self)
+                        $msgList.append(renderChatMessageItem(msgObj, true));
+                        // Scroll to bottom after sending
+                        let chatContent = $msgList.closest('.vb-content')[0];
+                        if (chatContent) chatContent.scrollTop = chatContent.scrollHeight;
+                        $input.text('');
+                        // No need to broadcast message on client, real-time MessageSent event will be received via Echo
+                    } else if (
+                        response.status === 'success' &&
+                        response.message &&
+                        typeof response.message === 'object' &&
+                        (
+                            typeof response.message.message === 'undefined' ||
+                            response.message.message === null ||
+                            response.message.message === ''
+                        )
+                    ) {
+                        // Special case: status is success but .message is missing or empty
+                        alert('Message was sent, but it is empty and will not be shown.');
+                        $input.text('');
+                    } else if (response.status === 'success' && typeof response.message === 'string' &&
+                        response.message !== '') {
+                        // Legacy support: backend returned message as simple string
+                        let msgObj = {
+                            message: response.message,
+                            sender_id: loggedInUserId,
+                            created_at: (new Date()).toLocaleString()
+                        };
+                        $msgList.append(renderChatMessageItem(msgObj, true));
                         let chatContent = $msgList.closest('.vb-content')[0];
                         if (chatContent) chatContent.scrollTop = chatContent.scrollHeight;
                         $input.text('');
@@ -561,7 +536,7 @@
                         alert('Message could not be sent.');
                     }
                 },
-                error: function (xhr) {
+                error: function(xhr) {
                     if (xhr.responseJSON && xhr.responseJSON.errors) {
                         let firstError = Object.values(xhr.responseJSON.errors)[0];
                         if (Array.isArray(firstError)) firstError = firstError[0];
@@ -570,19 +545,52 @@
                         alert('An error occurred. Please try again.');
                     }
                 },
-                complete: function () {
+                complete: function() {
                     $btn.prop('disabled', false);
                 }
             });
         });
 
-        // Send message on ctrl+enter or simple enter (when focused)
-        $(document).on('keydown', '.message-input', function (e) {
+        // Send on Enter (no shift) in input
+        $(document).on('keydown', '.message-input', function(e) {
             let userId = $(this).data('friend');
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
                 $('.chat-window__send-btn[data-friend="' + userId + '"]').click();
             }
         });
+
+        // Listen for the real-time MessageSent event broadcast from the server after send-message POST
+        if (typeof Echo !== 'undefined') {
+            Echo.channel('chat')
+                .listen('MessageSent', (event) => {
+                    let messageObj = event.message || {};
+                    let chatUserId = '';
+
+                    if (String(messageObj.sender_id) === String(loggedInUserId)) {
+                        // Sent by this user; show in receiver's chat window as self
+                        chatUserId = messageObj.receiver_id;
+                    } else {
+                        // Received from other user; show in their chat window as an "other" message
+                        chatUserId = messageObj.sender_id;
+                    }
+
+                    // Try to find the correct chat message list
+                    let msgListSelector = '#messages-' + chatUserId;
+                    let $msgList = $(msgListSelector);
+                    if ($msgList.length) {
+                        // Prevent duplicate message display by ID
+                        if (
+                            !$msgList.children('[data-messageid="' + (messageObj.id || '') + '"]').length
+                            && typeof renderChatMessageItem === 'function'
+                        ) {
+                            let isOwn = (String(messageObj.sender_id) === String(loggedInUserId));
+                            $msgList.append(renderChatMessageItem(messageObj, isOwn));
+                            let chatContent = $msgList.closest('.vb-content')[0];
+                            if (chatContent) chatContent.scrollTop = chatContent.scrollHeight;
+                        }
+                    }
+                });
+        }
     </script>
 @endpush
