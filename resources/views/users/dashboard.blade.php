@@ -745,10 +745,10 @@
                     if (resp.status == {{ REQUEST_PROCESSED }}) {
                         if (act == "send") {
                             showTempMessage("Friend Request Sended", "success");
-                            jQuery("#"+e.id).removeClass("remove").addClass("requested")
+                            jQuery("#" + e.id).removeClass("remove").addClass("requested")
                         } else if (act == "remove") {
                             showTempMessage("Friend Request Removed", "success");
-                            jQuery("#"+e.id).removeClass("requested").addClass("remove")
+                            jQuery("#" + e.id).removeClass("requested").addClass("remove")
                         }
                     }
                 },

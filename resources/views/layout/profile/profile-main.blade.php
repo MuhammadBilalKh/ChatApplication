@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en-US">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" />
+    <meta name="viewport"
+        content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" />
 
     <title>@yield('title')</title>
 
@@ -26,9 +28,11 @@
     <link rel="stylesheet" href="/assets/css/dynamic-styles.css" media="all" />
 
     <!-- Google Fonts -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700,300italic,400italic,600italic,700italic|Quicksand:700&ver=1.4.5" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700,300italic,400italic,600italic,700italic|Quicksand:700&ver=1.4.5" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900&display=swap" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab:100,300,400,500,700,900&display=swap" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Roboto+Slab:100,300,400,500,700,900&display=swap" />
 
     <!-- KMK -->
     <link rel="stylesheet" href="/assets/css/frontend.min.css?ver=3.32.4" />
@@ -37,89 +41,61 @@
     <link rel="stylesheet" href="/assets/css/mainCss.css" media="all" />
 
     <style>
-        /* Highest stacking context for chat wrapper */
-        .wrapper {
-            z-index: 999999;
-        }
-
-        .emoji-picker {
-            width: 300px !important;
-        }
-
-        /* ===== Scrollbar styling ===== */
-        .chat-window__message-list.vb.vb-invisible::-webkit-scrollbar {
-            width: 12px;
-        }
-
-        .chat-window__message-list.vb.vb-invisible::-webkit-scrollbar-track {
-            background: #fff;
-        }
-
-        .chat-window__message-list.vb.vb-invisible::-webkit-scrollbar-thumb {
-            background-color: #f5bd02;
-            border-radius: 6px;
-            border: 3px solid #fff;
-        }
-
-        .chat-window__message-list.vb.vb-invisible {
-            scrollbar-width: thin;
-            scrollbar-color: #f5bd02 #fff;
-        }
-
-        /* ===== Input area ===== */
+        /* Chatbar-like styles */
         .chat-window__inputarea {
             display: flex;
             align-items: flex-end;
             background: #fff;
-            border: 1px solid #ddd;
-            border-radius: 25px;
-            padding: 5px 10px;
-            width: 100%;
+            border-radius: 23px;
+            border: 1px solid #ebebeb;
+            padding: 4px 10px;
+            min-height: 46px;
             box-sizing: border-box;
-            border-top: 1px solid #ddd;
-            min-height: 50px;
+            width: 100%;
         }
 
-        /* ===== Message input field ===== */
         .chat-window__input {
-            flex: 1;
+            flex: 1 1 0%;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             position: relative;
-            border-radius: 6px;
-            min-height: 40px;
             background: #fff;
         }
 
         .chat-window__input--placeholder {
             position: absolute;
+            left: 14px;
             top: 50%;
-            left: 12px;
             transform: translateY(-50%);
-            color: #aaa;
+            color: #b2b2b2;
             pointer-events: none;
-            font-size: 14px;
-            user-select: none;
+            font-size: 15px;
             z-index: 1;
+            user-select: none;
         }
 
         .chat-window__input--field {
-            min-height: 35px;
-            padding: 8px 12px;
-            border: none;
+            min-height: 26px;
+            max-height: 120px;
+            padding: 8px 14px 8px 14px;
+            border: 0;
             outline: none;
+            background: transparent;
             width: 100%;
-            font-size: 14px;
-            line-height: 20px;
+            font-size: 16px;
+            border-radius: 7px;
+            resize: none;
             position: relative;
             z-index: 2;
             overflow-y: auto;
-            max-height: 120px;
+            box-sizing: border-box;
         }
 
-        /* Hide placeholder when there's content */
-        .chat-window__input--field:not(:empty) + .chat-window__input--placeholder {
+        .chat-window__input--field:focus {
+            background: #f8f8fa;
+        }
+
+        .chat-window__input--field:not(:empty)+.chat-window__input--placeholder {
             display: none;
         }
 
@@ -127,117 +103,109 @@
             content: none;
         }
 
-        /* Ensure proper cursor alignment */
-        .chat-window__input--field:focus {
-            outline: none;
-        }
-
-        /* ===== Emoji button ===== */
         .chat-window__input--emoji {
             display: flex;
             align-items: center;
-            margin-left: 8px;
+            margin-left: 7px;
         }
 
         .chat-window__input--emoji button {
             background: transparent;
             border: none;
-            font-size: 19px;
+            font-size: 22px;
             cursor: pointer;
-            transition: transform 0.2s ease;
             padding: 0;
-            box-shadow: none;
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 30px;
-            width: 30px;
+            height: 33px;
+            width: 33px;
+            transition: background 0.18s, transform 0.18s;
         }
 
         .chat-window__input--emoji button:hover {
-            transform: scale(1.2);
+            background: #f3f3f3;
+            transform: scale(1.11);
+            border-radius: 50%;
         }
 
-        /* ===== Send button ===== */
         .chat-window__btn--enter {
-            margin-left: 5px;
-            text-decoration: none;
-            color: #007aff;
-            font-size: 20px;
+            margin-left: 3px;
+            color: #2877fa;
+            font-size: 22px;
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 30px;
-            width: 30px;
+            height: 32px;
+            width: 32px;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: background 0.16s, color 0.16s;
         }
 
         .chat-window__btn--enter:hover {
-            color: #005bb5;
+            color: #174ee7;
+            background: #f2f6fa;
         }
 
-        /* ===== Emoji images in messages ===== */
-        .message img.emoji {
-            width: 22px;
-            height: 22px;
-            vertical-align: middle;
+        .chat-window__message-list.vb.vb-invisible::-webkit-scrollbar {
+            width: 7px;
+            background: #f8f8fa;
         }
 
-        /* Base styles for the floating button */
+        .chat-window__message-list.vb.vb-invisible::-webkit-scrollbar-thumb {
+            background-color: #ebebeb;
+            border-radius: 6px;
+        }
+
+        .chat-window__message-list.vb.vb-invisible {
+            scrollbar-width: thin;
+            scrollbar-color: #ebebeb #f8f8fa;
+        }
+
         .chat-float {
             position: fixed;
-            bottom: 20px;
-            left: 20px;
+            bottom: 24px;
+            left: 18px;
             z-index: 99999;
             display: none;
         }
 
-        /* Circle shape and styling */
         .chat-floatbody {
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 40px;
-            height: 40px;
-            background-color: #F5BD02;
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(92deg, #fec029 0%, #fda52b 100%);
             color: #fff;
             border-radius: 50%;
-            text-decoration: none;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            font-size: 20px;
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 15px 0 #dcb94c77;
+            font-size: 26px;
+            transition: background 0.18s, transform 0.18s;
         }
 
         .chat-floatbody:hover {
-            background-color: #f0c22a;
-            transform: scale(1.1);
+            background: linear-gradient(88deg, #ffd24d 0%, #fec029 85%);
+            transform: scale(1.07);
         }
 
-        .chat-floatbody .dropd-control .dashicons {
-            height: 30px;
-            width: 30px;
-            position: absolute;
-            top: 11px;
-            left: 7px;
-        }
-
-        /* Show only on mobile */
         @media (max-width: 768px) {
             .chat-float {
                 display: block;
             }
         }
 
-        /* Profile header styles */
         #header-cover-image {
             height: 300px;
             background-image: url('{{ asset('/storage/' . Auth::user()->cover_image) }}');
         }
     </style>
-
     @stack('css')
 </head>
 
-<body class="directory activity kmkpress bp-nouveau blog  page-template-default page page-id-35 logged-in wp-theme-kmk theme-kmk  kmk kmk-user buddychat-is-active   title-bar-active kmk-social-layout panel-expanded has-page-sidebar">
+<body
+    class="directory activity kmkpress bp-nouveau blog  page-template-default page page-id-35 logged-in wp-theme-kmk theme-kmk  kmk kmk-user buddychat-is-active   title-bar-active kmk-social-layout panel-expanded has-page-sidebar">
 
     @include('layout.master.sidepanel')
 
@@ -266,10 +234,13 @@
                                         </div>
                                     </div>
 
-                                    <article id="post-0" class="bp_members type-bp_members post-0 page type-page status-publish hentry kmk-post">
+                                    <article id="post-0"
+                                        class="bp_members type-bp_members post-0 page type-page status-publish hentry kmk-post">
                                         <div class="entry-content clearfix">
                                             <div id="buddypress" class="buddypress-wrap kmk bp-dir-hori-nav alignwide">
-                                                <div id="item-header" role="complementary" data-bp-item-id="2" data-bp-item-component="members" class="users-header single-headers">
+                                                <div id="item-header" role="complementary" data-bp-item-id="2"
+                                                    data-bp-item-component="members"
+                                                    class="users-header single-headers">
                                                     <div id="cover-image-container">
                                                         <div id="header-cover-image"></div>
                                                         <div id="item-header-cover-image">
@@ -278,17 +249,23 @@
                                                                     <div id="item-header-avatar">
                                                                         <div class="item-avatar">
                                                                             <a href="/members-2/">
-                                                                                <img src="{{ asset(Auth::user()->profile_picture) }}" class="avatar user-2-avatar avatar-200 photo" width="200" height="200" alt="Profile picture of {{ Auth::user()->username }}">
+                                                                                <img src="{{ asset(Auth::user()->profile_picture) }}"
+                                                                                    class="avatar user-2-avatar avatar-200 photo"
+                                                                                    width="200" height="200"
+                                                                                    alt="Profile picture of {{ Auth::user()->username }}">
                                                                             </a>
                                                                         </div>
-                                                                        <h3 class="profile-name">{{ Auth::user()->username }}</h3>
+                                                                        <h3 class="profile-name">
+                                                                            {{ Auth::user()->username }}</h3>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-lg-9">
                                                                     <div id="item-header-content">
-                                                                        <h2 class="user-nicename text-white">@ {{ Auth::user()->username }}</h2>
+                                                                        <h2 class="user-nicename text-white">@
+                                                                            {{ Auth::user()->username }}</h2>
                                                                         <div class="item-meta">
-                                                                            <span class="activity d-none">Active 44 seconds ago</span>
+                                                                            <span class="activity d-none">Active 44
+                                                                                seconds ago</span>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -297,72 +274,115 @@
                                                     </div>
                                                 </div>
                                                 <div class="bp-wrap">
-                                                    <nav class="main-navs no-ajax bp-navs single-screen-navs horizontal users-nav" id="object-nav" role="navigation" aria-label="Member menu">
+                                                    <nav class="main-navs no-ajax bp-navs single-screen-navs horizontal users-nav"
+                                                        id="object-nav" role="navigation" aria-label="Member menu">
                                                         <div class="row">
                                                             <div class="col-lg-6  mx-auto">
                                                                 <div class="nav-container">
                                                                     <ul class="profile-nav p-0">
-                                                                        <li id="xprofile-personal-li" class="bp-personal-tab selected current">
-                                                                            <a href="." id="user-xprofile" title="Profile">
-                                                                                <span class="nav-link-text ">Profile</span>
+                                                                        <li id="xprofile-personal-li"
+                                                                            class="bp-personal-tab selected current">
+                                                                            <a href="{{ route('users.profile') }}" id="user-xprofile"
+                                                                                title="Profile">
+                                                                                <span
+                                                                                    class="nav-link-text ">Profile</span>
                                                                             </a>
                                                                         </li>
-                                                                        <li id="friends-personal-li" class="bp-personal-tab">
-                                                                            <a href="{{ route('peoples.list_requests') }}" id="user-friends" title="Friends">
-                                                                                <span class="nav-link-text">Friends</span>
-                                                                                <span class="count color-primary">{{ Auth::user()->getFriends()->count() }}</span>
+                                                                        <li id="friends-personal-li"
+                                                                            class="bp-personal-tab">
+                                                                            <a href="{{ route('peoples.list_requests') }}"
+                                                                                id="user-friends" title="Friends">
+                                                                                <span
+                                                                                    class="nav-link-text">Friends</span>
+                                                                                <span
+                                                                                    class="count color-primary">{{ Auth::user()->getFriends()->count() }}</span>
                                                                             </a>
                                                                         </li>
-                                                                        <li id="groups-personal-li" class="bp-personal-tab">
-                                                                            <a href="./groups/" id="user-groups" title="Groups">
-                                                                                <span class="nav-link-text">Groups</span>
+                                                                        <li id="groups-personal-li"
+                                                                            class="bp-personal-tab">
+                                                                            <a href="{{ route('groups.index') }}" id="user-groups"
+                                                                                title="Groups">
+                                                                                <span
+                                                                                    class="nav-link-text">Groups</span>
                                                                             </a>
                                                                         </li>
-                                                                        <li id="my-adverts-personal-li" class="bp-personal-tab">
-                                                                            <a href="./my-adverts/" id="user-my-adverts" title="Adverts">
-                                                                                <span class="nav-link-text">Adverts</span>
+                                                                        <li id="my-adverts-personal-li"
+                                                                            class="bp-personal-tab">
+                                                                            <a href="./my-adverts/"
+                                                                                id="user-my-adverts" title="Adverts">
+                                                                                <span
+                                                                                    class="nav-link-text">Adverts</span>
                                                                             </a>
                                                                         </li>
-                                                                        <li id="forums-personal-li" class="bp-personal-tab">
-                                                                            <a href="./forums/" id="user-forums" title="Forums">
-                                                                                <span class="nav-link-text">Forums</span>
+                                                                        <li id="forums-personal-li"
+                                                                            class="bp-personal-tab">
+                                                                            <a href="./forums/" id="user-forums"
+                                                                                title="Forums">
+                                                                                <span
+                                                                                    class="nav-link-text">Forums</span>
                                                                             </a>
                                                                         </li>
                                                                         <li class="flexMenu-viewMore">
-                                                                            <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                                <span class="nav-link-text">More<text></text></span>
+                                                                            <a href="#" data-toggle="dropdown"
+                                                                                aria-haspopup="true"
+                                                                                aria-expanded="false">
+                                                                                <span class="nav-link-text">More</span>
                                                                                 <span class="count">6</span>
                                                                             </a>
-                                                                            <ul class="flexMenu-popup dropdown-menu dropdown-menu-right">
-                                                                                <li id="shop-personal-li" class="bp-personal-tab">
-                                                                                    <a href="./shop/" id="user-shop" title="Shop">
-                                                                                        <span class="nav-link-text">Shop</span>
+                                                                            <ul
+                                                                                class="flexMenu-popup dropdown-menu dropdown-menu-right">
+                                                                                <li id="shop-personal-li"
+                                                                                    class="bp-personal-tab">
+                                                                                    <a href="./shop/" id="user-shop"
+                                                                                        title="Shop">
+                                                                                        <span
+                                                                                            class="nav-link-text">Shop</span>
                                                                                     </a>
                                                                                 </li>
-                                                                                <li id="media-personal-li" class="bp-personal-tab">
-                                                                                    <a href="./media/" id="user-media" title="Media">
-                                                                                        <span class="nav-link-text">Media</span>
-                                                                                        <span class="count color-primary">4</span>
+                                                                                <li id="media-personal-li"
+                                                                                    class="bp-personal-tab">
+                                                                                    <a href="./media/" id="user-media"
+                                                                                        title="Media">
+                                                                                        <span
+                                                                                            class="nav-link-text">Media</span>
+                                                                                        <span
+                                                                                            class="count color-primary">4</span>
                                                                                     </a>
                                                                                 </li>
-                                                                                <li id="invitations-personal-li" class="bp-personal-tab">
-                                                                                    <a href="./invitations/" id="user-invitations" title="Invitations">
-                                                                                        <span class="nav-link-text">Invitations</span>
+                                                                                <li id="invitations-personal-li"
+                                                                                    class="bp-personal-tab">
+                                                                                    <a href="./invitations/"
+                                                                                        id="user-invitations"
+                                                                                        title="Invitations">
+                                                                                        <span
+                                                                                            class="nav-link-text">Invitations</span>
                                                                                     </a>
                                                                                 </li>
-                                                                                <li id="notifications-personal-li" class="bp-personal-tab">
-                                                                                    <a href="./notifications/" id="user-notifications" title="Notifications">
-                                                                                        <span class="nav-link-text">Notifications</span>
+                                                                                <li id="notifications-personal-li"
+                                                                                    class="bp-personal-tab">
+                                                                                    <a href="./notifications/"
+                                                                                        id="user-notifications"
+                                                                                        title="Notifications">
+                                                                                        <span
+                                                                                            class="nav-link-text">Notifications</span>
                                                                                     </a>
                                                                                 </li>
-                                                                                <li id="messages-personal-li" class="bp-personal-tab">
-                                                                                    <a href="./messages/" id="user-messages" title="Messages">
-                                                                                        <span class="nav-link-text">Messages</span>
+                                                                                <li id="messages-personal-li"
+                                                                                    class="bp-personal-tab">
+                                                                                    <a href="./messages/"
+                                                                                        id="user-messages"
+                                                                                        title="Messages">
+                                                                                        <span
+                                                                                            class="nav-link-text">Messages</span>
                                                                                     </a>
                                                                                 </li>
-                                                                                <li id="settings-personal-li" class="bp-personal-tab">
-                                                                                    <a href="./settings/" id="user-settings" title="Settings">
-                                                                                        <span class="nav-link-text">Settings</span>
+                                                                                <li id="settings-personal-li"
+                                                                                    class="bp-personal-tab">
+                                                                                    <a href="./settings/"
+                                                                                        id="user-settings"
+                                                                                        title="Settings">
+                                                                                        <span
+                                                                                            class="nav-link-text">Settings</span>
                                                                                     </a>
                                                                                 </li>
                                                                             </ul>
@@ -376,29 +396,37 @@
                                                     <div id="item-body" class="item-body">
                                                         <div class="row">
                                                             <div class="col-lg-3 profile-col-aside left">
-                                                                <aside class="widget-area profile-widget-area displayed-profile-info">
+                                                                <aside
+                                                                    class="widget-area profile-widget-area displayed-profile-info">
                                                                     <div class="widget">
                                                                         <ul class="connections">
                                                                             <li>
-                                                                                <span class="count color-primary">{{ Auth::user()->getFriends()->count() }}</span>
+                                                                                <span
+                                                                                    class="count color-primary">{{ Auth::user()->getFriends()->count() }}</span>
                                                                                 <p>Friends</p>
                                                                             </li>
                                                                             <li>
-                                                                                <span class="count color-primary">0</span>
+                                                                                <span
+                                                                                    class="count color-primary">0</span>
                                                                                 <p>Groups</p>
                                                                             </li>
                                                                         </ul>
                                                                     </div>
-
                                                                     <div class="widget">
                                                                         <h5 class="widget-title">My photos</h5>
-                                                                        <ul class="member-photo-list" style="padding:0;margin:0;">
+                                                                        <ul class="member-photo-list"
+                                                                            style="padding:0;margin:0;">
                                                                             @php
                                                                                 $latestImages = Auth::user()
                                                                                     ->getPosts()
                                                                                     ->with([
-                                                                                        'postMedia' => function ($query) {
-                                                                                            $query->where('media_type', MEDIA_TYPE_IMAGE);
+                                                                                        'postMedia' => function (
+                                                                                            $query,
+                                                                                        ) {
+                                                                                            $query->where(
+                                                                                                'media_type',
+                                                                                                MEDIA_TYPE_IMAGE,
+                                                                                            );
                                                                                         },
                                                                                     ])
                                                                                     ->orderByDesc('created_at')
@@ -409,22 +437,34 @@
                                                                                     })
                                                                                     ->sortByDesc('created_at')
                                                                                     ->take(5);
-                                                                                $imagesChunked = $latestImages->chunk(3);
+                                                                                $imagesChunked = $latestImages->chunk(
+                                                                                    3,
+                                                                                );
                                                                             @endphp
-                                                                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                                                            <div
+                                                                                style="display: flex; flex-direction: column; gap: 8px;">
                                                                                 @foreach ($imagesChunked as $row)
-                                                                                    <div style="display: flex; gap: 8px;">
+                                                                                    <div
+                                                                                        style="display: flex; gap: 8px;">
                                                                                         @foreach ($row as $media)
                                                                                             @php $count = 0; @endphp
-                                                                                            <div style="width: 60px; height: 60px; overflow: hidden; border-radius: 6px; border: 1px solid #ddd;">
-                                                                                                <a href="{{ asset($media->file_path) }}" target="_blank" style="display: block; width: 100%; height: 100%;">
-                                                                                                    <img src="{{ asset($media->file_path) }}" alt="User photo" style="width: 100%; height: 100%; object-fit: cover;">
+                                                                                            <div
+                                                                                                style="width: 60px; height: 60px; overflow: hidden; border-radius: 6px; border: 1px solid #ddd;">
+                                                                                                <a href="{{ asset($media->file_path) }}"
+                                                                                                    target="_blank"
+                                                                                                    style="display: block; width: 100%; height: 100%;">
+                                                                                                    <img src="{{ asset($media->file_path) }}"
+                                                                                                        alt="User photo"
+                                                                                                        style="width: 100%; height: 100%; object-fit: cover;">
                                                                                                 </a>
                                                                                             </div>
                                                                                             @php $count++; @endphp
                                                                                             @if ($loop->parent->last && $loop->last && $count == 5)
-                                                                                                <div style="margin-left: 8px; display: flex; align-items: center;">
-                                                                                                    <a href="{{ route('posts.show_photos') }}" title="View All" style="font-size: 13px; padding: 0; background: none; border: none; color: #007bff; text-decoration: underline; cursor: pointer;">
+                                                                                                <div
+                                                                                                    style="margin-left: 8px; display: flex; align-items: center;">
+                                                                                                    <a href="{{ route('posts.show_photos') }}"
+                                                                                                        title="View All"
+                                                                                                        style="font-size: 13px; padding: 0; background: none; border: none; color: #007bff; text-decoration: underline; cursor: pointer;">
                                                                                                         View All
                                                                                                     </a>
                                                                                                 </div>
@@ -432,8 +472,12 @@
                                                                                         @endforeach
                                                                                     </div>
                                                                                 @endforeach
-                                                                                <div style="margin-top: 6px; display: flex; align-items: center;">
-                                                                                    <a href="{{ route('posts.show_photos') }}" title="View All" class="float-right text-warning" target="_blank">
+                                                                                <div
+                                                                                    style="margin-top: 6px; display: flex; align-items: center;">
+                                                                                    <a href="{{ route('posts.show_photos') }}"
+                                                                                        title="View All"
+                                                                                        class="float-right text-warning"
+                                                                                        target="_blank">
                                                                                         View All ...
                                                                                     </a>
                                                                                 </div>
@@ -442,27 +486,36 @@
                                                                     </div>
                                                                 </aside>
                                                             </div>
-
                                                             <div class="col-lg-6 profile-col-main">
                                                                 @yield('profile-content')
                                                             </div>
-
                                                             <div class="col-lg-3 profile-col-aside right">
-                                                                <aside id="member_profile_sidebar" class="widget-area profile-widget-area member-profile-sidebar">
-                                                                    <div id="kmk_widget_latest_activity-1" class="widget kmk-activity-widget buddypress">
+                                                                <aside id="member_profile_sidebar"
+                                                                    class="widget-area profile-widget-area member-profile-sidebar">
+                                                                    <div id="kmk_widget_latest_activity-1"
+                                                                        class="widget kmk-activity-widget buddypress">
                                                                         <h5 class="widget-title">Recent activity</h5>
                                                                         <ul class="widget-activity-list">
-                                                                            <li class="activity activity_comment activity-item" id="activity-52">
-                                                                                <p><a href="./">Sandlas</a> posted a new activity comment</p>
-                                                                                <span class="activity mute">22 hours, 49 minutes ago</span>
+                                                                            <li class="activity activity_comment activity-item"
+                                                                                id="activity-52">
+                                                                                <p><a href="./">Sandlas</a> posted
+                                                                                    a new activity comment</p>
+                                                                                <span class="activity mute">22 hours,
+                                                                                    49 minutes ago</span>
                                                                             </li>
-                                                                            <li class="activity activity_comment activity-item" id="activity-51">
-                                                                                <p><a href="./">Sandlas</a> posted a new activity comment</p>
-                                                                                <span class="activity mute">1 day, 4 hours ago</span>
+                                                                            <li class="activity activity_comment activity-item"
+                                                                                id="activity-51">
+                                                                                <p><a href="./">Sandlas</a> posted
+                                                                                    a new activity comment</p>
+                                                                                <span class="activity mute">1 day, 4
+                                                                                    hours ago</span>
                                                                             </li>
-                                                                            <li class="members new_avatar activity-item mini" id="activity-46">
-                                                                                <p><a href="./">Sandlas</a> changed their profile picture</p>
-                                                                                <span class="activity mute">2 weeks, 1 day ago</span>
+                                                                            <li class="members new_avatar activity-item mini"
+                                                                                id="activity-46">
+                                                                                <p><a href="./">Sandlas</a>
+                                                                                    changed their profile picture</p>
+                                                                                <span class="activity mute">2 weeks, 1
+                                                                                    day ago</span>
                                                                             </li>
                                                                         </ul>
                                                                     </div>
@@ -483,7 +536,6 @@
         </div>
     </div>
 
-    <!-- Chat System -->
     <div id="buddy-chat-app" class="dash d-none d-md-block">
         <div id="buddy-chat-buddies" class="collapsed">
             <div class="buddy-chat-buddies__container">
@@ -495,16 +547,13 @@
                         </div>
                     </div>
                     <div class="dropd-group dropd-dr">
-                        <a class="dropd-control mute">
-                            <span class="dashicons dashicons-admin-generic"></span>
-                        </a>
-                        <div class="dropd-menu">
-                            <a class="dropd-item">Mute</a>
-                        </div>
+                        <a class="dropd-control mute"><span class="dashicons dashicons-admin-generic"></span></a>
+                        <div class="dropd-menu"><a class="dropd-item">Mute</a></div>
                     </div>
                 </div>
                 <div class="vb vb-invisible" style="position: relative; overflow: hidden;">
-                    <div class="buddy-chat-buddies__content vb-content" style="display: block; overflow: hidden scroll; height: 100%; width: calc(100% + 20px);">
+                    <div class="buddy-chat-buddies__content vb-content"
+                        style="display: block; overflow: hidden scroll; height: 100%; width: calc(100% + 20px);">
                         <ul class="buddy-chat-nav-tabs">
                             <li class="item"><a class="item-link active">Friends</a></li>
                             <li class="item"><a class="item-link">Groups</a></li>
@@ -516,15 +565,19 @@
                                         <div class="vue-recycle-scroller__item-view">
                                             @foreach ($all_friends as $value)
                                                 @php
-                                                    $friend = $value->sender_id == Auth::user()->user_id ? $value->getReceiver : $value->getSender;
+                                                    $friend =
+                                                        $value->sender_id == Auth::user()->user_id
+                                                            ? $value->getReceiver
+                                                            : $value->getSender;
                                                 @endphp
-
-                                                <div class="bpc-item mb-3" data-user="{{ $friend->username }}">
+                                                <div class="bpc-item mb-3 chat-buddy-item"
+                                                    data-user="{{ $friend->username }}"
+                                                    data-userid="{{ $friend->user_id }}">
                                                     <div class="avatar-container">
-                                                        <img src="{{ asset($friend->profile_picture) }}" alt="{{ $friend->username }}" class="avatar">
+                                                        <img src="{{ asset($friend->profile_picture) }}"
+                                                            alt="{{ $friend->username }}" class="avatar">
                                                         <span class="status online"></span>
                                                     </div>
-
                                                     <div class="bpc-item-body">
                                                         <div class="flex-r">
                                                             <div class="buddy">
@@ -562,52 +615,54 @@
                         $friend = $value->sender_id == Auth::user()->user_id ? $value->getReceiver : $value->getSender;
                         $windowId = 'chat-window-' . preg_replace('/[^A-Za-z0-9\-]/', '-', $friend->username);
                     @endphp
-
-                    <li class="chat-window" id="{{ $windowId }}" style="display: none;">
+                    <li class="chat-window" id="{{ $windowId }}" style="display: none;"
+                        data-userid="{{ $friend->user_id }}">
                         <div class="chat-window__container">
                             <div class="chat-window__title">
                                 <div class="avatar-container">
-                                    <img src="{{ asset($friend->profile_picture) }}" alt="{{ $friend->username }}" class="avatar">
-                                    <span class="status {{ $friend->online ?? 'offline' }}"></span>
+                                    <img src="{{ asset($friend->profile_picture) }}" alt="{{ $friend->username }}"
+                                        class="avatar">
+                                    <span class="status {{ $friend->is_online ? 'online' : 'offline' }}"></span>
                                 </div>
-
                                 <div class="flex-r">
                                     <div>
                                         <div class="chat-buddy anchor ellipsis">
                                             {{ $friend->username }}
                                         </div>
                                         <div class="mute">
-                                            {{ $friend->online ? 'Online' : 'Offline' }}
+                                            {{ $friend->is_online ? 'Online' : 'Offline' }}
                                         </div>
                                     </div>
                                 </div>
-
                                 <a href="#" class="chat_window__close-btn">
                                     <span class="dashicons dashicons-no-alt"></span>
                                 </a>
                             </div>
-
                             <div class="chat-window__message-list vb vb-invisible">
-                                <div class="vb-content">
+                                <div class="vb-content" style="overflow-y:scroll; max-height: 350px;">
+                                    <div class="chat-loader" style="display: none;">
+                                        <div></div>
+                                    </div>
                                     <ul class="bpc-chat-list overflow-auto" id="messages-{{ $friend->user_id }}">
-                                        <!-- Messages will be loaded here dynamically with JS/AJAX -->
+                                        <!-- JS will load messages using .message--self (right, sent) or .message--other (left, received) -->
                                     </ul>
                                 </div>
                             </div>
-
-                            <div class="chat-window__inputarea" data-friend="{{ $friend->user_id }}">
-                                <div class="chat-window__input">
-                                    <div class="chat-window__input--placeholder">Write your message</div>
-                                    <div contenteditable="true" class="chat-window__input--field message-input" data-friend="{{ $friend->user_id }}"></div>
+                            <div>
+                                <div class="chat-window__inputarea" data-friend="{{ $friend->user_id }}">
+                                    <div class="chat-window__input">
+                                        <div class="chat-window__input--placeholder">Write your message</div>
+                                        <div contenteditable="true" class="chat-window__input--field message-input"
+                                            data-friend="{{ $friend->user_id }}"></div>
+                                    </div>
+                                    <div class="chat-window__input--emoji">
+                                        <button type="button" class="emojiBtn">😊</button>
+                                    </div>
+                                    <button class="chat-window__send-btn" data-friend="{{ $friend->user_id }}"
+                                        data-receiver="{{ $friend->user_id }}" title="Send" type="button">
+                                        <span class="dashicons dashicons-arrow-right-alt"></span>
+                                    </button>
                                 </div>
-
-                                <div class="chat-window__input--emoji">
-                                    <button type="button" class="emojiBtn">😊</button>
-                                </div>
-
-                                <a href="#" class="chat-window__btn--enter">
-                                    <span class="dashicons dashicons-arrow-right-alt2"></span>
-                                </a>
                             </div>
                         </div>
                     </li>
@@ -621,345 +676,305 @@
             <span class="dashicons dashicons-format-chat text-white"></span>
         </a>
     </div>
-
-    <!-- JavaScript Libraries -->
-    <script src="/assets/js/jquery.min.js"></script>
-    <script src="/assets/js/bootstrap.min.js"></script>
-    <script src="/assets/js/popper.min.js"></script>
-    <script src="/assets/js/mscrollbar.min.js"></script>
-    <script src="/assets/js/wow.min.js"></script>
-    <script src="/assets/js/hiraku.min.js"></script>
-    <script src="/assets/js/flexmenu.min.js"></script>
-    <script src="/assets/js/masonry.min.js"></script>
-    <script src="/assets/js/jquery.fitvids.min.js"></script>
-    <script src="/assets/js/emoji-button-3.0.3.min.js"></script>
-    <script src="/assets/js/kmk.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
-
-    <!-- Main JavaScript -->
-    <script>
-        jQuery(document).ready(function($) {
-            // Initialize Fancybox
-            $('[data-fancybox]').fancybox({
-                loop: true,
-                buttons: ["zoom", "share", "close"],
-                smallBtn: true,
-                closeBtn: true,
-            });
-
-            $('#openModalBtn').on('click', function() {
-                $.fancybox.open();
-            });
-
-            $('#postCloser').on('click', function() {
-                $.fancybox.close();
-            });
-
-            // Emoji Picker for comments
-            const emojiBtn2 = document.getElementById('emojiBtn2');
-            const inputField2 = document.getElementById('comment_content');
-
-            if (emojiBtn2 && inputField2) {
-                const picker2 = new EmojiButton({
-                    position: 'top-start',
-                    theme: 'light',
-                });
-
-                picker2.on('emoji', emoji => {
-                    inputField2.value += emoji;
-                    inputField2.focus();
-                });
-
-                emojiBtn2.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    picker2.togglePicker(emojiBtn2);
-                });
-            }
-
-            // Like and comment functionality
-            $('.rtmedia-like, .rt_media_comment_submit').on('click', function(e) {
-                e.preventDefault();
-
-                if ($(this).hasClass('rtmedia-like')) {
-                    $(this).toggleClass('liked');
-                    if ($(this).hasClass('liked')) {
-                        $(this).find('span').text('Unlike');
-                    } else {
-                        $(this).find('span').text('Like');
-                    }
-                }
-
-                if ($(this).attr('id') === 'rt_media_comment_submit') {
-                    var commentText = $('#comment_content').val();
-                    if (commentText.trim() !== "") {
-                        var newComment = `
-                            <li class="rtmedia-comment">
-                                <div class="rtmedia-comment-user-pic">
-                                    <a href="#" title="Current User">
-                                        <img loading="lazy" src="https://placehold.co/90x90?text=You" class="avatar" width="90" height="90" alt="Profile Photo">
-                                    </a>
-                                </div>
-                                <div class="rtm-comment-wrap">
-                                    <div class="rtmedia-comment-details">
-                                        <span class="rtmedia-comment-author"><a href="#" title="Current User">You</a></span>
-                                        <span class="rtmedia-comment-date">Just now</span>
-                                        <div class="rtmedia-comment-content">
-                                            <p>${commentText}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>`;
-                        $('#rtmedia_comment_ul').append(newComment);
-                        $('#comment_content').val('');
-                    }
-                }
-            });
-
-            // Handle delete comment
-            $(document).on('click', '.rtmedia-delete-comment', function(e) {
-                e.preventDefault();
-                $(this).closest('.rtmedia-comment').remove();
-            });
-
-            // Chat System Initialization
-            initializeChatSystem();
-        });
-
-        // Chat System Functions
-        function initializeChatSystem() {
-            const chatBuddies = document.getElementById('buddy-chat-buddies');
-            const collapserButton = document.getElementById('buddy-chat-buddies__collapser');
-            const emojiPickers = new Map();
-            let activeInputField = null;
-
-            // Collapser functionality
-            if (collapserButton) {
-                collapserButton.addEventListener('click', () => {
-                    chatBuddies.classList.toggle('collapsed');
-                });
-            }
-
-            // Chat buddy click handlers
-            document.querySelectorAll('.bpc-item').forEach(item => {
-                item.addEventListener('click', () => {
-                    const userName = item.getAttribute('data-user');
-                    openChatWindow(userName);
-                });
-            });
-
-            // Close button handlers
-            document.querySelectorAll('.chat_window__close-btn').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const chatWindow = button.closest('.chat-window');
-                    chatWindow.style.display = 'none';
-                });
-            });
-
-            // Initialize emoji pickers for each chat window
-            document.querySelectorAll('.chat-window').forEach(chatWindow => {
-                const emojiBtn = chatWindow.querySelector('.emojiBtn');
-                const inputField = chatWindow.querySelector('.chat-window__input--field');
-
-                if (emojiBtn && inputField) {
-                    const picker = new EmojiButton({
-                        position: 'top-start',
-                        theme: 'light',
-                        autoFocusSearch: false
-                    });
-
-                    picker.on('emoji', emoji => {
-                        if (inputField === activeInputField) {
-                            insertEmojiAtCursor(inputField, emoji);
-                            updatePlaceholderVisibility(inputField);
-                            inputField.focus();
-                        }
-                    });
-
-                    emojiBtn.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        activeInputField = inputField;
-                        picker.togglePicker(emojiBtn);
-                    });
-
-                    emojiPickers.set(inputField, picker);
-                }
-            });
-
-            // Input field event handlers
-            document.querySelectorAll('.chat-window__input--field').forEach(inputField => {
-                inputField.addEventListener('focus', function() {
-                    activeInputField = this;
-                    updatePlaceholderVisibility(this);
-                    setTimeout(() => {
-                        placeCaretAtEnd(this);
-                    }, 0);
-                });
-
-                inputField.addEventListener('input', function() {
-                    updatePlaceholderVisibility(this);
-                });
-
-                inputField.addEventListener('blur', function() {
-                    if (activeInputField === this) {
-                        activeInputField = null;
-                    }
-                });
-
-                inputField.addEventListener('keydown', function(e) {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault();
-                        sendMessage(this);
-                    }
-                });
-
-                inputField.addEventListener('click', function() {
-                    setTimeout(() => {
-                        placeCaretAtEnd(this);
-                    }, 0);
-                });
-            });
-
-            // Send button handlers
-            document.querySelectorAll('.chat-window__btn--enter').forEach(button => {
-                button.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const inputArea = this.closest('.chat-window__inputarea');
-                    const inputField = inputArea.querySelector('.chat-window__input--field');
-                    if (inputField) {
-                        sendMessage(inputField);
-                    }
-                });
-            });
-
-            // Mobile chat toggle
-            const toggleChat = document.getElementById('toggle-chat');
-            if (toggleChat) {
-                toggleChat.addEventListener('click', function() {
-                    if (window.innerWidth < 768) {
-                        document.getElementById('buddy-chat-app').classList.toggle('d-none');
-                    }
-                });
-            }
-        }
-
-        function openChatWindow(username) {
-    const chatWindow = document.getElementById(`chat-window-${username.replace(/[^A-Za-z0-9\-]/g, '-')}`);
-
-    if (chatWindow) {
-        // Hide all chat windows first
-        document.querySelectorAll('.chat-window').forEach(window => {
-            window.style.display = 'none';
-        });
-
-        // Show the selected chat window
-        chatWindow.style.display = 'block';
-
-        // Focus on the input field
-        const inputField = chatWindow.querySelector('.chat-window__input--field');
-        if (inputField) {
-            setTimeout(() => {
-                inputField.focus();
-                placeCaretAtEnd(inputField);
-            }, 100);
-        }
-    }
-}
-
-        function updatePlaceholderVisibility(inputField) {
-            const placeholder = inputField.parentNode.querySelector('.chat-window__input--placeholder');
-            if (placeholder) {
-                placeholder.style.display = inputField.textContent.trim() ? 'none' : 'block';
-            }
-        }
-
-        function placeCaretAtEnd(element) {
-            element.focus();
-            if (typeof window.getSelection !== "undefined" && typeof document.createRange !== "undefined") {
-                const range = document.createRange();
-                range.selectNodeContents(element);
-                range.collapse(false);
-                const selection = window.getSelection();
-                selection.removeAllRanges();
-                selection.addRange(range);
-            }
-        }
-
-        function insertEmojiAtCursor(element, emoji) {
-            const selection = window.getSelection();
-            if (selection.rangeCount > 0) {
-                const range = selection.getRangeAt(0);
-                range.deleteContents();
-                const textNode = document.createTextNode(emoji);
-                range.insertNode(textNode);
-                range.setStartAfter(textNode);
-                range.setEndAfter(textNode);
-                selection.removeAllRanges();
-                selection.addRange(range);
-            } else {
-                element.textContent += emoji;
-            }
-
-            const event = new Event('input', { bubbles: true });
-            element.dispatchEvent(event);
-        }
-
-        function sendMessage(inputField) {
-            const message = inputField.textContent.trim();
-            if (!message) return;
-
-            const friendId = inputField.getAttribute('data-friend');
-            const messagesList = document.getElementById(`messages-${friendId}`);
-
-            if (messagesList) {
-                const newMsg = document.createElement('li');
-                newMsg.classList.add('message--self');
-                newMsg.innerHTML = `
-                    <time>${new Date().toLocaleString()}</time>
-                    <div class="message-block">
-                        <div class="messages">
-                            <div class="message">${message}</div>
-                        </div>
-                    </div>`;
-
-                messagesList.appendChild(newMsg);
-
-                inputField.textContent = '';
-                updatePlaceholderVisibility(inputField);
-
-                messagesList.scrollTop = messagesList.scrollHeight;
-
-                inputField.focus();
-            }
-
-            // AJAX call to send message to backend would go here
-            console.log(`Sending message to friend ${friendId}: ${message}`);
-        }
-
-        // Lazy load observer
-        const lazyloadRunObserver = () => {
-            const lazyloadBackgrounds = document.querySelectorAll('.e-con.e-parent:not(.e-lazyloaded)');
-            const observer = new IntersectionObserver(entries => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('e-lazyloaded');
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, {
-                rootMargin: '200px 0px 200px 0px'
-            });
-            lazyloadBackgrounds.forEach(el => observer.observe(el));
-        };
-
-        ['DOMContentLoaded', 'kmk/lazyload/observe'].forEach(e => document.addEventListener(e, lazyloadRunObserver));
-
-        // Auto-hide alerts
-        jQuery(".alert").delay(2500).fadeOut();
-    </script>
-
-    @stack('script')
 </body>
+
+<script src="/assets/js/jquery.min.js"></script>
+<script src="/assets/js/bootstrap.min.js"></script>
+<script src="/assets/js/popper.min.js"></script>
+<script src="/assets/js/mscrollbar.min.js"></script>
+<script src="/assets/js/wow.min.js"></script>
+<script src="/assets/js/hiraku.min.js"></script>
+<script src="/assets/js/flexmenu.min.js"></script>
+<script src="/assets/js/masonry.min.js"></script>
+<script src="/assets/js/jquery.fitvids.min.js"></script>
+<script src="/assets/js/emoji-button-3.0.3.min.js"></script>
+<script src="/assets/js/kmk.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<script>
+    let messageOffsets = {};
+    let messageLoading = {};
+    const loggedInUserId = '{{ Auth::user()->user_id }}';
+
+    // Show loader utility
+    function showLoader($chatWindow) {
+        $chatWindow.find('.chat-loader').show();
+    }
+
+    function hideLoader($chatWindow) {
+        $chatWindow.find('.chat-loader').hide();
+    }
+
+    // Load initial and scrollable messages (+scroll to bottom/top logic)
+    function loadMessages(userId, {
+        append = false,
+        beforeMessageId = null,
+        scrollTo = 'bottom'
+    } = {}) {
+        const $chatWindow = $('#chat-window-' + userId.replace(/[^A-Za-z0-9\-]/g, '-'));
+        const $messageList = $('#messages-' + userId);
+        if (!messageOffsets[userId]) messageOffsets[userId] = 0;
+        if (!messageLoading[userId]) messageLoading[userId] = false;
+        if (messageLoading[userId]) return;
+
+        messageLoading[userId] = true;
+        showLoader($chatWindow);
+
+        $.ajax({
+            url: '{{ route('chat.load-messages') }}',
+            method: 'GET',
+            data: {
+                user_id: userId,
+                offset: messageOffsets[userId],
+                limit: 10,
+                before_message_id: beforeMessageId || ''
+            },
+            success: function(response) {
+                hideLoader($chatWindow);
+                if (Array.isArray(response.messages)) {
+                    let html = '';
+                    response.messages.forEach(function(msg) {
+                        let senderId = typeof msg.sender_id !== 'undefined' ? String(msg
+                            .sender_id) : '';
+                        let isOwn = (senderId === loggedInUserId);
+                        html += renderChatMessageItem(msg, isOwn);
+                    });
+                    var $currentScrollTarget = $messageList.closest('.vb-content');
+                    var previousScrollHeight = $currentScrollTarget[0].scrollHeight;
+                    if (append) {
+                        $messageList.append(html);
+                    } else {
+                        $messageList.prepend(html);
+                    }
+                    messageOffsets[userId] += response.messages.length;
+                    // Maintain scroll position if loading older messages
+                    if (beforeMessageId !== null && !append) {
+                        var newScrollHeight = $currentScrollTarget[0].scrollHeight;
+                        $currentScrollTarget[0].scrollTop = newScrollHeight - previousScrollHeight;
+                    } else if (scrollTo === 'bottom') {
+                        $currentScrollTarget[0].scrollTop = $currentScrollTarget[0].scrollHeight;
+                    } else if (scrollTo === 'top') {
+                        $currentScrollTarget[0].scrollTop = 0;
+                    }
+                }
+                if (!response.messages || response.messages.length < 10) {
+                    $messageList.data('end', true);
+                }
+                messageLoading[userId] = false;
+            },
+            error: function() {
+                hideLoader($chatWindow);
+                messageLoading[userId] = false;
+            }
+        });
+    }
+
+    function renderChatMessageItem(msg, isOwn = true) {
+        let messageText = '';
+        if (typeof msg.message !== 'undefined' && msg.message !== null && msg.message !== '') {
+            messageText = msg.message;
+        }
+        let timestamp = (typeof msg.created_at !== 'undefined' && msg.created_at) ? msg.created_at : '';
+        let dateString = timestamp ? `<time>${escapeHtml(timestamp)}</time>` : '';
+        let cls = isOwn ? 'message--self' : 'message--other';
+        return `<li class="${cls}"${typeof msg.id !== 'undefined' ? ` data-messageid="${msg.id}"`:''}>
+        ${dateString}
+        <div class="message-block">
+            <div class="messages">
+                <div class="message">${escapeHtml(messageText)}</div>
+            </div>
+        </div>
+    </li>`;
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return String(str)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#39;");
+    }
+
+    $(document).on('click', '.chat-buddy-item', function() {
+        let userId = $(this).attr('data-userid');
+        $('.chat-window').hide();
+        let $cw = $('.chat-window[data-userid="' + userId + '"]');
+        $cw.show();
+        $('#messages-' + userId).html('').removeData('end');
+        messageOffsets[userId] = 0;
+        showLoader($cw);
+        loadMessages(userId, {
+            scrollTo: 'bottom'
+        });
+        setTimeout(function() {
+            $cw.find('.message-input').focus();
+            let $c = $cw.find('.vb-content');
+            if ($c.length) $c[0].scrollTop = $c[0].scrollHeight;
+        }, 200);
+    });
+
+    $(document).on('click', '.chat_window__close-btn', function(e) {
+        e.preventDefault();
+        $(this).closest('.chat-window').hide();
+    });
+
+    $(document).on('scroll', '.chat-window__message-list .vb-content', function() {
+        let $el = $(this);
+        let $ul = $el.find('.bpc-chat-list');
+        let userId = $ul.attr('id')?.replace('messages-', '');
+        if (!userId) return;
+        if (messageLoading[userId]) return;
+        if ($ul.data('end')) return;
+        if ($el[0].scrollTop <= 10) {
+            let firstMessageId = $ul.children().first().data('messageid') || null;
+            loadMessages(userId, {
+                append: false,
+                beforeMessageId: firstMessageId,
+                scrollTo: 'top'
+            });
+        }
+    });
+
+    // Send message AJAX and trigger MessageSent event (handled server-side, this triggers it by POST)
+    $(document).on('click', '.chat-window__send-btn', function() {
+        let receiverId = $(this).data('receiver');
+        let userId = receiverId;
+        let $input = $('.message-input[data-friend="' + receiverId + '"]');
+        let $msgList = $('#messages-' + receiverId);
+        let message = $input.text().trim();
+
+        if (!message || message.length === 0) return;
+
+        let $btn = $(this);
+        $btn.prop('disabled', true);
+
+        $.ajax({
+            url: '{{ route('chat.send-message') }}',
+            method: 'POST',
+            data: {
+                receiver: receiverId,
+                message: message,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                // The server should now trigger the MessageSent event upon successful save
+                if (
+                    response.status === 'success' &&
+                    response.message &&
+                    typeof response.message === 'object' &&
+                    (
+                        typeof response.message.message !== 'undefined' &&
+                        response.message.message !== null &&
+                        response.message.message !== ''
+                    )
+                ) {
+                    let msgObj = response.message;
+                    if (typeof msgObj.sender_id === 'undefined') {
+                        msgObj.sender_id = loggedInUserId;
+                    }
+                    if (typeof msgObj.created_at === 'undefined') {
+                        msgObj.created_at = (new Date()).toLocaleString();
+                    }
+                    // Append as right side message (message--self)
+                    $msgList.append(renderChatMessageItem(msgObj, true));
+                    // Scroll to bottom after sending
+                    let chatContent = $msgList.closest('.vb-content')[0];
+                    if (chatContent) chatContent.scrollTop = chatContent.scrollHeight;
+                    $input.text('');
+                    // No need to broadcast message on client, real-time MessageSent event will be received via Echo
+                } else if (
+                    response.status === 'success' &&
+                    response.message &&
+                    typeof response.message === 'object' &&
+                    (
+                        typeof response.message.message === 'undefined' ||
+                        response.message.message === null ||
+                        response.message.message === ''
+                    )
+                ) {
+                    // Special case: status is success but .message is missing or empty
+                    alert('Message was sent, but it is empty and will not be shown.');
+                    $input.text('');
+                } else if (response.status === 'success' && typeof response.message === 'string' &&
+                    response.message !== '') {
+                    // Legacy support: backend returned message as simple string
+                    let msgObj = {
+                        message: response.message,
+                        sender_id: loggedInUserId,
+                        created_at: (new Date()).toLocaleString()
+                    };
+                    $msgList.append(renderChatMessageItem(msgObj, true));
+                    let chatContent = $msgList.closest('.vb-content')[0];
+                    if (chatContent) chatContent.scrollTop = chatContent.scrollHeight;
+                    $input.text('');
+                } else if (response.errors) {
+                    let firstError = Object.values(response.errors)[0];
+                    if (Array.isArray(firstError)) firstError = firstError[0];
+                    alert(firstError || 'Message could not be sent.');
+                } else {
+                    alert('Message could not be sent.');
+                }
+            },
+            error: function(xhr) {
+                if (xhr.responseJSON && xhr.responseJSON.errors) {
+                    let firstError = Object.values(xhr.responseJSON.errors)[0];
+                    if (Array.isArray(firstError)) firstError = firstError[0];
+                    alert(firstError || 'An error occurred.');
+                } else {
+                    alert('An error occurred. Please try again.');
+                }
+            },
+            complete: function() {
+                $btn.prop('disabled', false);
+            }
+        });
+    });
+
+    // Send on Enter (no shift) in input
+    $(document).on('keydown', '.message-input', function(e) {
+        let userId = $(this).data('friend');
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            $('.chat-window__send-btn[data-friend="' + userId + '"]').click();
+        }
+    });
+
+    // Listen for the real-time MessageSent event broadcast from the server after send-message POST
+    if (typeof Echo !== 'undefined') {
+        Echo.channel('chat')
+            .listen('MessageSent', (event) => {
+                let messageObj = event.message || {};
+                let chatUserId = '';
+
+                if (String(messageObj.sender_id) === String(loggedInUserId)) {
+                    // Sent by this user; show in receiver's chat window as self
+                    chatUserId = messageObj.receiver_id;
+                } else {
+                    // Received from other user; show in their chat window as an "other" message
+                    chatUserId = messageObj.sender_id;
+                }
+
+                // Try to find the correct chat message list
+                let msgListSelector = '#messages-' + chatUserId;
+                let $msgList = $(msgListSelector);
+                if ($msgList.length) {
+                    // Prevent duplicate message display by ID
+                    if (
+                        !$msgList.children('[data-messageid="' + (messageObj.id || '') + '"]').length &&
+                        typeof renderChatMessageItem === 'function'
+                    ) {
+                        let isOwn = (String(messageObj.sender_id) === String(loggedInUserId));
+                        $msgList.append(renderChatMessageItem(messageObj, isOwn));
+                        let chatContent = $msgList.closest('.vb-content')[0];
+                        if (chatContent) chatContent.scrollTop = chatContent.scrollHeight;
+                    }
+                }
+            });
+    }
+</script>
+
+@stack('script')
+
 </html>

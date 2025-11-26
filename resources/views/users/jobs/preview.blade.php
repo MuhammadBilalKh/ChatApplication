@@ -36,28 +36,29 @@
                                 </div>
                                 <div class="item-desc">
                                     <span>
-                                        @php
-                                            switch ($data->job_type) {
-                                                case JOB_TYPE_FREELANCE:
-                                                    return "Freelance";
-                                                    break;
-                                                case JOB_TYPE_FULL_TIME:
-                                                    return "Full Time";
-                                                    break;
-                                                case JOB_TYPE_INTERNSHIP:
-                                                    return "Internship";
-                                                    break;
-                                                case JOB_TYPE_PART_TIME:
-                                                    return "Part Time";
-                                                    break;
-                                                case JOB_TYPE_TEMPORARY:
-                                                    return "Temporary";
-                                                    break;
-                                                default:
-                                                    return ""
-                                                    break;
-                                            }
-                                        @endphp
+                                        @switch($data->job_type)
+                                            @case(JOB_TYPE_FREELANCE)
+                                                Freelance
+                                            @break
+
+                                            @case(JOB_TYPE_FULL_TIME)
+                                                Full Time
+                                            @break
+
+                                            @case(JOB_TYPE_INTERNSHIP)
+                                                Internship
+                                            @break
+
+                                            @case(JOB_TYPE_PART_TIME)
+                                                Part Time
+                                            @break
+
+                                            @case(JOB_TYPE_TEMPORARY)
+                                                Temporary
+                                            @break
+
+                                            @default
+                                        @endswitch
                                     </span>
                                 </div>
                             </li>
@@ -70,8 +71,7 @@
                                     </span>
                                 </div>
                                 <div class="item-desc">
-                                    <a class="google_map_link"
-                                        href="{{ urlencode($data->location) }}"
+                                    <a class="google_map_link" href="{{ urlencode($data->location) }}"
                                         target="_blank">testing (Remote)</a>
                                 </div>
                             </li>
@@ -86,7 +86,8 @@
                                     alt="test company">
                             </div>
                             <div class="info">
-                                <h1 class="job_title h2">{{ $data->title }}</h1> <span class="color-primary">{{ $data->company_name }}</span>
+                                <h1 class="job_title h2">{{ $data->title }}</h1> <span
+                                    class="color-primary">{{ $data->company_name }}</span>
                                 <p class="tagline">{{ $data->tagline }}</p>
                             </div>
                             <div class="contacts">

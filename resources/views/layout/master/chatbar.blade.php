@@ -12,6 +12,7 @@
             box-sizing: border-box;
             border-top: 1px solid #ddd;
         }
+
         .chat-window__input {
             flex: 1;
             display: flex;
@@ -22,6 +23,7 @@
             min-height: 40px;
             background: #fff;
         }
+
         .chat-window__input--placeholder {
             position: absolute;
             top: 50%;
@@ -32,6 +34,7 @@
             font-size: 14px;
             user-select: none;
         }
+
         .chat-window__input--field {
             min-height: 35px;
             padding: 8px 12px;
@@ -42,15 +45,18 @@
             line-height: 20px;
             background: transparent;
         }
+
         .chat-window__input--field:focus+.chat-window__input--placeholder,
         .chat-window__input--field:not(:empty)+.chat-window__input--placeholder {
             display: none;
         }
+
         .chat-window__input--emoji {
             display: flex;
             align-items: flex-end;
             margin-left: 8px;
         }
+
         .chat-window__input--emoji button {
             background: transparent;
             border: none;
@@ -60,9 +66,11 @@
             padding: 0;
             box-shadow: none;
         }
+
         .chat-window__input--emoji button:hover {
             transform: scale(1.2);
         }
+
         .chat-window__send-btn {
             margin-left: 8px;
             border: none;
@@ -78,24 +86,30 @@
             cursor: pointer;
             transition: background 0.2s;
         }
+
         .chat-window__send-btn:hover {
             background: #e0ae00;
         }
+
         .chat-window__message-list.vb.vb-invisible::-webkit-scrollbar {
             width: 12px;
         }
+
         .chat-window__message-list.vb.vb-invisible::-webkit-scrollbar-track {
             background: #fff;
         }
+
         .chat-window__message-list.vb.vb-invisible::-webkit-scrollbar-thumb {
             background-color: #f5bd02;
             border-radius: 6px;
             border: 3px solid #fff;
         }
+
         .chat-window__message-list.vb.vb-invisible {
             scrollbar-width: thin;
             scrollbar-color: #f5bd02 #fff;
         }
+
         .message--self {
             display: flex;
             flex-direction: column;
@@ -110,6 +124,7 @@
             padding: 0;
             border: none;
         }
+
         .message--other {
             display: flex;
             flex-direction: column;
@@ -124,17 +139,20 @@
             border: 1px solid #e5e5e5;
             padding: 0;
         }
+
         .message-block {
             display: flex;
             flex-direction: row;
             margin-top: 2px;
             width: 100%;
         }
+
         .messages {
             display: flex;
             flex-direction: column;
             width: 100%;
         }
+
         .message--self .messages .message,
         .message--other .messages .message {
             background: none;
@@ -144,12 +162,14 @@
             border-radius: 0;
             word-break: break-word;
         }
+
         .chat-loader {
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 50px;
         }
+
         .chat-loader>div {
             border: 4px solid #f3f3f3;
             border-radius: 50%;
@@ -159,10 +179,12 @@
             animation: spin 1s linear infinite;
             margin: 12px auto;
         }
+
         @keyframes spin {
             0% {
                 transform: rotate(0deg);
             }
+
             100% {
                 transform: rotate(360deg);
             }
@@ -312,15 +334,44 @@
 </div>
 
 @push('script')
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+
     <script>
+        const socket = io("http://localhost:3002");
         let messageOffsets = {};
         let messageLoading = {};
         const loggedInUserId = '{{ Auth::user()->user_id }}';
+
+        socket.emit("join", loggedInUserId);
+
+        socket.on("receive-message", function(data) {
+            let userId = data.sender_id;
+
+            let msgList = $("#messages-" + userId);
+
+            // If chat window is not open → open it automatically (optional)
+            let win = $('.chat-window[data-userid="' + userId + '"]');
+            win.show();
+
+            msgList.append(`
+                <li class="message--other">
+                    <div class="message-block">
+                        <div class="messages">
+                            <div class="message">${data.message}</div>
+                        </div>
+                    </div>
+                </li> `);
+
+            // Scroll to bottom
+            let chatContent = msgList.closest('.vb-content')[0];
+            chatContent.scrollTop = chatContent.scrollHeight;
+        });
 
         // Show loader utility
         function showLoader($chatWindow) {
             $chatWindow.find('.chat-loader').show();
         }
+
         function hideLoader($chatWindow) {
             $chatWindow.find('.chat-loader').hide();
         }
@@ -354,7 +405,8 @@
                     if (Array.isArray(response.messages)) {
                         let html = '';
                         response.messages.forEach(function(msg) {
-                            let senderId = typeof msg.sender_id !== 'undefined' ? String(msg.sender_id) : '';
+                            let senderId = typeof msg.sender_id !== 'undefined' ? String(msg
+                                .sender_id) : '';
                             let isOwn = (senderId === loggedInUserId);
                             html += renderChatMessageItem(msg, isOwn);
                         });
@@ -397,23 +449,18 @@
             let dateString = timestamp ? `<time>${escapeHtml(timestamp)}</time>` : '';
             let cls = isOwn ? 'message--self' : 'message--other';
             return `<li class="${cls}"${typeof msg.id !== 'undefined' ? ` data-messageid="${msg.id}"`:''}>
-        ${dateString}
-        <div class="message-block">
-            <div class="messages">
-                <div class="message">${escapeHtml(messageText)}</div>
-            </div>
-        </div>
-    </li>`;
+                ${dateString}
+                <div class="message-block">
+                    <div class="messages">
+                        <div class="message">${escapeHtml(messageText)}</div>
+                    </div>
+                </div>
+            </li>`;
         }
 
         function escapeHtml(str) {
             if (!str) return '';
-            return String(str)
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#39;");
+            return str;
         }
 
         $(document).on('click', '.chat-buddy-item', function() {
@@ -439,7 +486,7 @@
             $(this).closest('.chat-window').hide();
         });
 
-        $(document).on('scroll', '.chat-window__message-list .vb-content', function() {
+        $('.chat-window__message-list .vb-content').on('scroll', function() {
             let $el = $(this);
             let $ul = $el.find('.bpc-chat-list');
             let userId = $ul.attr('id')?.replace('messages-', '');
@@ -456,7 +503,6 @@
             }
         });
 
-        // Send message AJAX and trigger MessageSent event (handled server-side, this triggers it by POST)
         $(document).on('click', '.chat-window__send-btn', function() {
             let receiverId = $(this).data('receiver');
             let userId = receiverId;
@@ -472,13 +518,15 @@
             $.ajax({
                 url: '{{ route('chat.send-message') }}',
                 method: 'POST',
+                headers:{
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                },
                 data: {
                     receiver: receiverId,
                     message: message,
                     _token: '{{ csrf_token() }}'
                 },
                 success: function(response) {
-                    // The server should now trigger the MessageSent event upon successful save
                     if (
                         response.status === 'success' &&
                         response.message &&
@@ -496,13 +544,16 @@
                         if (typeof msgObj.created_at === 'undefined') {
                             msgObj.created_at = (new Date()).toLocaleString();
                         }
-                        // Append as right side message (message--self)
                         $msgList.append(renderChatMessageItem(msgObj, true));
-                        // Scroll to bottom after sending
                         let chatContent = $msgList.closest('.vb-content')[0];
                         if (chatContent) chatContent.scrollTop = chatContent.scrollHeight;
+                        socket.emit("send-message", {
+                            sender_id: loggedInUserId,
+                            receiver_id: receiverId,
+                            message: message,
+                            created_at: new Date().toLocaleString()
+                        });
                         $input.text('');
-                        // No need to broadcast message on client, real-time MessageSent event will be received via Echo
                     } else if (
                         response.status === 'success' &&
                         response.message &&
@@ -562,8 +613,8 @@
 
         // Listen for the real-time MessageSent event broadcast from the server after send-message POST
         if (typeof Echo !== 'undefined') {
-            Echo.channel('chat')
-                .listen('MessageSent', (event) => {
+            Echo.channel('my-channel')
+                .listen('.my-event', (event) => {
                     let messageObj = event.message || {};
                     let chatUserId = '';
 
@@ -581,8 +632,8 @@
                     if ($msgList.length) {
                         // Prevent duplicate message display by ID
                         if (
-                            !$msgList.children('[data-messageid="' + (messageObj.id || '') + '"]').length
-                            && typeof renderChatMessageItem === 'function'
+                            !$msgList.children('[data-messageid="' + (messageObj.id || '') + '"]').length &&
+                            typeof renderChatMessageItem === 'function'
                         ) {
                             let isOwn = (String(messageObj.sender_id) === String(loggedInUserId));
                             $msgList.append(renderChatMessageItem(messageObj, isOwn));

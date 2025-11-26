@@ -70,11 +70,12 @@
                           <input type="hidden" name="advertisment_id" id="txtAdvertismentID" />
                           <input type="hidden" name="approval_status" id="txtApprovalStatus" />
                           <div class="row">
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <span>Are you sure you want to <label id="lblStatus"></label> this advertisment</span>
-                                </div>
-                            </div>
+                              <div class="col-sm-6">
+                                  <div class="form-group">
+                                      <span>Are you sure you want to <label id="lblStatus"></label> this
+                                          advertisment</span>
+                                  </div>
+                              </div>
                               <div class="col-sm-4">
                                   <input type="submit" value="Submit" class="btn btn-success" />
                               </div>

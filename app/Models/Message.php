@@ -11,11 +11,11 @@ class Message extends Model
     protected $primarykey = "message_id";
 
     protected $fillable = [
+        "message",
         "sender_id",
         "receiver_id",
         "message_type",
         "attachment_path",
-        "message",
     ];
 
     public function messageSentBy(){

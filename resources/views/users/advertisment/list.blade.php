@@ -10,7 +10,6 @@
                   </div>
               </div>
 
-
               <div class="adverts-options-left adverts-sorting-options adverts-js" style="display: block;">
                   <div class="option-wrapper">
                       <a href="/MIGVELv1/adverts/?display=grid" class="adverts-button-small adverts-switch-view light"
@@ -77,7 +76,7 @@
                               class="advert-img">
                               <span class="featured-advert">Featured</span>
                               <img decoding="async"
-                                  src="{{ asset('/storage/'.$value->getAdvertisment->getAdvertmedia[0]->media_path) }}"
+                                  src="{{ asset('/storage/' . $value->getAdvertisment->getAdvertmedia[0]->media_path) }}"
                                   alt="{{ $value->getAdvertisment->advertisment_title }}" class="advert-item-grow">
                           </a>
                           <div class="ad-info">

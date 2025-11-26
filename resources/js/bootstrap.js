@@ -1,11 +1,8 @@
 import Echo from "laravel-echo";
-import Pusher from "pusher-js";
-
-window.Pusher = Pusher;
 
 window.Echo = new Echo({
     broadcaster: "pusher",
-    key: import.meta.env.VITE_PUSHER_APP_KEY,
-    cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
+    key: "c13b814e8642a696550b",
+    cluster: "ap2",
     forceTLS: true,
 });

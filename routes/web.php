@@ -18,20 +18,20 @@ Route::middleware(['web'])->group(function () {
         Route::get('/', [UserController::class, 'show_dashboard'])->name('users.show_dashboard');
 
         Route::prefix('users')->group(function () {
-            Route::get("/categories", [SiteController::class, 'manage_categories'])->name('users.manage_categories');
+            Route::get('/categories', [SiteController::class, 'manage_categories'])->name('users.manage_categories');
 
-            Route::prefix("advertisments")->group(function(){
-                Route::get("/", [SiteController::class, 'manage_advertisments'])->name('users.advertisments');
-                Route::get("/list", [SiteController::class, 'show_advertisment_content'])->name('adverts.list');
-                Route::get("/category/edit", [SiteController::class, 'edit_category'])->name('categories.edit');
-                Route::get("/{id}", [SiteController::class, 'ViewAdvert'])->name('adverts.view');
+            Route::prefix('advertisments')->group(function () {
+                Route::get('/', [SiteController::class, 'manage_advertisments'])->name('users.advertisments');
+                Route::get('/list', [SiteController::class, 'show_advertisment_content'])->name('adverts.list');
+                Route::get('/category/edit', [SiteController::class, 'edit_category'])->name('categories.edit');
+                Route::get('/{id}', [SiteController::class, 'ViewAdvert'])->name('adverts.view');
 
-                Route::post("/manage-approval-status", [SiteController::class, 'manageFeaturedAdvertStatus'])->name('adverts.manageFeaturedAdvertStatus');
-                Route::post("/mark-for-featured", [SiteController::class, 'mark_advertisment_for_featured'])->name('adverts.mark_advertisment_for_featured');
-                Route::post("/save", [SiteController::class, 'save_advert'])->name("adverts.save_advert");
-                Route::post("/category/store", [SiteController::class, 'store_category'])->name('categories.store');
-                Route::post("/category/{id}/update", [SiteController::class, 'update_category'])->name('categories.update');
-                Route::post("/create", [SiteController::class, 'manage_advertisments'])->name('adverts.create');
+                Route::post('/manage-approval-status', [SiteController::class, 'manageFeaturedAdvertStatus'])->name('adverts.manageFeaturedAdvertStatus');
+                Route::post('/mark-for-featured', [SiteController::class, 'mark_advertisment_for_featured'])->name('adverts.mark_advertisment_for_featured');
+                Route::post('/save', [SiteController::class, 'save_advert'])->name('adverts.save_advert');
+                Route::post('/category/store', [SiteController::class, 'store_category'])->name('categories.store');
+                Route::post('/category/{id}/update', [SiteController::class, 'update_category'])->name('categories.update');
+                Route::post('/create', [SiteController::class, 'manage_advertisments'])->name('adverts.create');
             });
             Route::post('/update-profile', [UserController::class, 'update_profile'])->name('users.update_profile');
         });
@@ -58,28 +58,40 @@ Route::middleware(['web'])->group(function () {
             Route::post('/store', [PostController::class, 'upload_post'])->name('posts.store');
         });
 
+        Route::prefix('shops')->group(function () {
+            Route::get('/', [SiteController::class, 'manage_shops'])->name('shops.list');
 
-        Route::prefix("blogs")->group(function(){
-            Route::get("/", [PostController::class, 'manage_blogs'])->name("blogs.list");
-            Route::get("/{id}", [PostController::class, 'view_blog'])->name('blogs.view');
-            Route::get("/{id}/edit", [PostController::class, 'update_blog'])->name('blogs.update');
+        });
 
-            Route::post("/{id}/update", [PostController::class, "update_blog"])->name('blogs.save_update');
-            Route::post("/save", [PostController::class, 'save_blog'])->name('blog.save_blog');
+        Route::prefix("groups")->group(function(){
+            Route::get("/", [SiteController::class, 'manage_groups'])->name("groups.index");
+            Route::get("/create", [SiteController::class, 'create_group'])->name("groups.create");
+
+            Route::post("/store", [SiteController::class, 'create_group'])->name("groups.store");
+
+        });
+        Route::prefix('blogs')->group(function () {
+            Route::get('/', [PostController::class, 'manage_blogs'])->name('blogs.list');
+            Route::get('/{id}', [PostController::class, 'view_blog'])->name('blogs.view');
+            Route::get('/{id}/edit', [PostController::class, 'update_blog'])->name('blogs.update');
+
+            Route::post('/manage-blog-status', [PostController::class, 'manage_blog_status'])->name('blogs.manage_blog_status');
+            Route::post('/{id}/update', [PostController::class, 'update_blog'])->name('blogs.save_update');
+            Route::post('/save', [PostController::class, 'save_blog'])->name('blog.save_blog');
         });
 
         Route::prefix('peoples')->group(function () {
             Route::get('/list', [SiteController::class, 'list'])->name('peoples.list');
             Route::get('/games', [SiteController::class, 'games'])->name('peoples.games');
 
-            Route::get("/load-friends", [SiteController::class, 'list_friends'])->name('peoples.list_friends');
-            Route::get("/load-requests", [SiteController::class, 'list_requests'])->name("peoples.list_requests");
-            Route::get("/load-messages", [SiteController::class, 'load_messages'])->name('chat.load-messages');
+            Route::get('/load-friends', [SiteController::class, 'list_friends'])->name('peoples.list_friends');
+            Route::get('/load-requests', [SiteController::class, 'list_requests'])->name('peoples.list_requests');
+            Route::get('/load-messages', [SiteController::class, 'load_messages'])->name('chat.load-messages');
 
-            Route::post("/send-message", [SiteController::class, 'send_message'])->name('chat.send-message');
-            Route::post("/manage_request_response", [SiteController::class, 'manage_request_response'])->name('peoples.manage_request_response');
-            Route::post("/manage-friend-request", [SiteController::class, 'manage_friend_request'])->name('peoples.manage_friend_request');
-            Route::post("/request-response", [SiteController::class, 'request_response'])->name("users.request_response");
+            Route::post('/send-message', [SiteController::class, 'send_message'])->name('chat.send-message');
+            Route::post('/manage_request_response', [SiteController::class, 'manage_request_response'])->name('peoples.manage_request_response');
+            Route::post('/manage-friend-request', [SiteController::class, 'manage_friend_request'])->name('peoples.manage_friend_request');
+            Route::post('/request-response', [SiteController::class, 'request_response'])->name('users.request_response');
         });
 
         Route::prefix('jobs')->group(function () {
@@ -97,7 +109,7 @@ Route::middleware(['web'])->group(function () {
     });
 });
 
-Route::get("/suspicious-activity", function(){
+Route::get('/suspicious-activity', function () {
     return view('suspicious');
 })->name('suspicious');
 

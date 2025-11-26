@@ -71,6 +71,8 @@
         {!! $blogData->content !!}
     </div>
 
+    @include('users.blogs.blog_comments', ['blogData' => $blogData])
+
     <div id="comments" class="comments-area animate-item slideInUp">
 
         <div id="respond" class="comment-respond">
@@ -86,20 +88,6 @@
                             class="required">*</span></span></p>
                 <p class="comment-form-comment"><label for="comment">Comment <span class="required">*</span></label>
                     <textarea id="comment" name="comment" cols="45" rows="8" maxlength="65525" required></textarea>
-                </p>
-                <p class="comment-form-author"><label for="author">Name <span class="required">*</span></label> <input
-                        id="author" name="author" type="text" value="" size="30" maxlength="245"
-                        autocomplete="name" required /></p>
-                <p class="comment-form-email"><label for="email">Email <span class="required">*</span></label> <input
-                        id="email" name="email" type="email" value="" size="30" maxlength="100"
-                        aria-describedby="email-notes" autocomplete="email" required />
-                </p>
-                <p class="comment-form-url"><label for="url">Website</label> <input id="url" name="url"
-                        type="url" value="" size="30" maxlength="200" autocomplete="url" /></p>
-                <p class="comment-form-cookies-consent"><input id="wp-comment-cookies-consent"
-                        name="wp-comment-cookies-consent" type="checkbox" value="yes" />
-                    <label for="wp-comment-cookies-consent">Save my name, email, and
-                        website in this browser for the next time I comment.</label>
                 </p>
                 <p class="form-submit"><input name="submit" type="submit" id="submit" class="submit"
                         value="Post Comment" /> <input type='hidden' name='comment_post_ID' value='247'
@@ -140,10 +128,11 @@
             $blogData->user_id != Auth::user()->user_id &&
             $blogData->status == BLOG_STATUS_DRAFT)
         <div class="post-navigation animate-item slideInUp">
-            <form action="" method="{{ FORM_METHOD_POST }}">
+            <form action="{{ route('blogs.manage_blog_status') }}" method="{{ FORM_METHOD_POST }}">
                 @csrf
-                <button type="submit" name="{{ BLOG_STATUS_PUBLISHED }}" class="btn btn-success">Published</button>
-                <button type="submit" name="{{ BLOG_STATUS_REJECTED }}" class="btn btn-danger">Discard</button>
+                <input type="hidden" name="blog_id" value="{{ $blogData->user_blog_id }}">
+                <button type="submit" name="status" value="1" class="btn btn-success">Published</button>
+                <button type="submit" name="status" value="0" class="btn btn-danger">Discard</button>
             </form>
         </div>
     @endif

@@ -26,7 +26,8 @@
                     <a type="button" aria-current="page">Categories</a>
                 </li>
 
-                <li id="menu-item-122" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-119">
+                <li id="menu-item-122"
+                    class="menu-item menu-item-type-post_type menu-item-object-page page_item page-item-511 menu-item-120">
                     <a type="button">Pending Adverts</a>
                 </li>
             @endif
@@ -103,7 +104,7 @@
             });
 
             jQuery("#menu-item-122").on("click", function() {
-                loadTabContent(this, "pending-for-approval");
+                loadTabContent(this, "review-pending");
             });
         });
 
@@ -154,7 +155,7 @@
             jQuery("#txtAdvertismentID").val(e.id);
         }
 
-        function ManageApprovalStatus(e, approvalStatus){
+        function ManageApprovalStatus(e, approvalStatus) {
             jQuery("#txtAdvertismentID").val(e.id)
             jQuery("#lblStatus").html(approvalStatus);
             jQuery("#txtApprovalStatus").val(approvalStatus);

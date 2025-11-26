@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Blog;
 use App\Models\BlogCategory;
+use App\Models\BlogComment;
 use App\Models\BlogHasCategory;
 use App\Models\BlogMedia;
 use App\Models\Comment;
@@ -37,7 +38,6 @@ class PostController extends Controller
             'title' => $request->post_title,
             'visibility' => POST_VISIBILITY_PUBLIC,
             'post_type' => POSTING_TYPE_POST,
-            'title' => 'posted an update',
             'new_joining_post' => 0,
         ]);
 
@@ -65,7 +65,7 @@ class PostController extends Controller
 
                 PostMedia::create([
                     'post_id' => $post->post_id,
-                    'media_type' => $mediaType,
+                    'media_type' => $file->getMimeType(),
                     'file_size' => $fileSize,
                     'file_path' => $filePath,
                 ]);
@@ -493,33 +493,34 @@ class PostController extends Controller
 
         switch ($manageBlogType) {
             case 'list-blog':
-                $blogs = Blog::with('getBlog')->where(['status' => BLOG_STATUS_PUBLISHED])->orderByDesc('user_blog_id')->paginate(10);
+                $blogs = Blog::with('getBlog')->where(['status' => BLOG_STATUS_PUBLISHED])->orderByDesc('updated_at')->paginate(10);
 
                 return view('users.blogs.index', [
                     'blogs' => $blogs,
                 ]);
-                break;
 
             case 'create-blog':
                 return view('users.blogs.submit');
-                break;
             case 'mark-approval-blog':
                 $pendingBlogs = Blog::where(['status' => BLOG_STATUS_DRAFT, 'user_id' => Auth::user()->user_id])->orderByDesc('user_blog_id')->paginate(10);
 
                 return view('users.blogs.mark_for_approval', [
                     'pendingBlogs' => $pendingBlogs,
                 ]);
-                break;
             case 'manage-blog-approval':
                 $pendingBlogs = Blog::where(['status' => BLOG_STATUS_DRAFT])->orderByDesc('user_blog_id')->paginate(10);
 
                 return view('users.blogs.manage_blog_approval', [
                     'pendingBlogs' => $pendingBlogs,
                 ]);
-                break;
+            case 'review-pending':
+                $reviewPendingBlogs = Blog::where(['status' => BLOG_STATUS_DRAFT])->orderByDesc('user_blog_id')->paginate(10);
+
+                return view('users.blogs.review_pending', [
+                    'reviewPendingBlogs' => $reviewPendingBlogs,
+                ]);
             default:
                 return redirect()->route('blogs.list', ['type' => 'list-blog']);
-                break;
         }
     }
 
@@ -661,8 +662,8 @@ class PostController extends Controller
             $categories[] = ucfirst($value->CreatedCategory->first()->category_title);
         }
 
-        $previous = Blog::where('user_blog_id', '<', $id)->where("status", BLOG_STATUS_PUBLISHED )->orderBy('user_blog_id', 'desc')->first();
-        $next     = Blog::where('user_blog_id', '>', $id)->where("status", BLOG_STATUS_PUBLISHED )->orderBy('user_blog_id', 'asc')->first();
+        $previous = Blog::where('user_blog_id', '<', $id)->where('status', BLOG_STATUS_PUBLISHED)->orderBy('user_blog_id', 'desc')->first();
+        $next = Blog::where('user_blog_id', '>', $id)->where('status', BLOG_STATUS_PUBLISHED)->orderBy('user_blog_id', 'asc')->first();
 
         return view('users.blogs.view', [
             'blogData' => $blogData,
@@ -812,5 +813,34 @@ class PostController extends Controller
         }
 
         return view('users.blogs.edit_blog', compact('blogData'));
+    }
+
+    public function load_blog_comments(Request $request)
+    {
+        $postID = $request->user_blog_id;
+
+        $comments = BlogComment::with([
+            'commentPostedBy',
+            'commentParent',
+            'commentPost',
+            'replies.commentPostedBy',
+        ])->where('post_id', $postID)->paginate(10);
+
+        return response()->json([
+            'status' => REQUEST_PROCESSED,
+            'comments' => $comments,
+        ]);
+    }
+
+    public function manage_blog_status(Request $request)
+    {
+        $blog = Blog::findOrFail($request->blog_id);
+
+        $blog->update([
+            'status' => $request->status == 1 ? BLOG_STATUS_PUBLISHED : BLOG_STATUS_REJECTED,
+            'updated_at' => now(),
+        ]);
+
+        return redirect()->route('blogs.list', ['type' => 'list-blog'])->with('success', 'Blog Status Updated Successfully');
     }
 }

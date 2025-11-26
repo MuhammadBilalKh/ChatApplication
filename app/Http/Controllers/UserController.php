@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Post;
-use App\Models\User;
+use App\Http\Requests\UserRequest;
 use App\Models\Country;
 use App\Models\FriendShip;
-use Illuminate\Http\Request;
 use App\Models\Notification;
-use App\Http\Requests\UserRequest;
+use App\Models\Post;
+use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
@@ -29,7 +29,7 @@ class UserController extends Controller
 
     public function store_user(UserRequest $request)
     {
-        $user = new User();
+        $user = new User;
 
         $profilePicturePath = null;
 
@@ -84,6 +84,7 @@ class UserController extends Controller
 
         if ($authAttempt) {
             User::where(['user_id' => Auth::user()->user_id])->update(['is_online' => USER_STATUS_MARK_ONLINE]);
+
             return redirect()->route('users.show_dashboard')->with('success', 'Your Are Logged In');
         } else {
             return redirect()->back()->withErrors([
@@ -110,7 +111,8 @@ class UserController extends Controller
         ]);
     }
 
-    public function show_notifications(){
+    public function show_notifications()
+    {
         $notifications = Notification::where('user_id', Auth::user()->user_id)
             ->orderBy('created_at', 'desc')
             ->paginate(10);
@@ -163,26 +165,26 @@ class UserController extends Controller
         if ($request->hasFile('profile_image')) {
             $profileImage = $request->file('profile_image');
             if ($profileImage->isValid()) {
-                $uniqueFileName = uniqid('profile_', true) . '.' . $profileImage->getClientOriginalExtension();
+                $uniqueFileName = uniqid('profile_', true).'.'.$profileImage->getClientOriginalExtension();
                 $destinationPath = public_path('storage/profile_images');
                 if (! file_exists($destinationPath)) {
                     mkdir($destinationPath, 0755, true);
                 }
                 $profileImage->move($destinationPath, $uniqueFileName);
-                $user->profile_picture = 'profile_images/' . $uniqueFileName;
+                $user->profile_picture = 'profile_images/'.$uniqueFileName;
             }
         }
 
         if ($request->hasFile('cover_image')) {
             $profileImage = $request->file('cover_image');
             if ($profileImage->isValid()) {
-                $uniqueFileName = uniqid('cover_image_', true) . '.' . $profileImage->getClientOriginalExtension();
+                $uniqueFileName = uniqid('cover_image_', true).'.'.$profileImage->getClientOriginalExtension();
                 $destinationPath = public_path('storage/cover_image');
                 if (! file_exists($destinationPath)) {
                     mkdir($destinationPath, 0755, true);
                 }
                 $profileImage->move($destinationPath, $uniqueFileName);
-                $user->cover_image = 'cover_image/' . $uniqueFileName;
+                $user->cover_image = 'cover_image/'.$uniqueFileName;
             }
         }
 
@@ -215,12 +217,13 @@ class UserController extends Controller
 
         $user->save();
 
-        Post::createPostForInfoUpdated("profile was updated", Auth::user()->username.' Updates Its Profile Information');
+        Post::createPostForInfoUpdated('profile was updated', Auth::user()->username.' Updates Its Profile Information');
 
         return redirect()->back()->with('success', 'Profile Detail Updated Successfully.');
     }
 
-    public function manage_friend_requests(){
+    public function manage_friend_requests()
+    {
         return view('users.profile.friend_requests');
     }
 

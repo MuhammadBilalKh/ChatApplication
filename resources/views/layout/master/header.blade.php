@@ -80,11 +80,11 @@
                                 </li>
                                 <li id="menu-item-488"
                                     class="bp-menu bp-groups-nav menu-item menu-item-type-custom menu-item-object-custom menu-item-488">
-                                    <a href="./groups/">Groups</a>
+                                    <a href=".{{ route('groups.index') }}">Groups</a>
                                 </li>
                                 <li id="menu-item-611"
                                     class="menu-item menu-item-type-post_type menu-item-object-page menu-item-611">
-                                    <a href="./games/">Games</a>
+                                    <a href="{{ route('peoples.games') }}">Games</a>
                                 </li>
                                 <li id="menu-item-491"
                                     class="bp-menu bp-notifications-nav menu-item menu-item-type-custom menu-item-object-custom menu-item-491">

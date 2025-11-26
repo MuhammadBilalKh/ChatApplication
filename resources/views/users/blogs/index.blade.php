@@ -32,7 +32,7 @@
 
             @if (Auth::user()->user_type == USER_TYPE_ADMIN)
                 <li id="menu-item-122" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-119">
-                    <a type="button">Pending For Approval</a>
+                    <a href="{{ route('blogs.list', ['type' => 'review-pending']) }}">Pending For Approval</a>
                 </li>
             @endif
         </ul>

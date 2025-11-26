@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\MessageSent;
 use App\Models\Advert;
 use App\Models\AdvertMedia;
 use App\Models\Category;
 use App\Models\FeaturedAdvert;
 use App\Models\FeaturedPackage;
 use App\Models\FriendShip;
+use App\Models\Group;
 use App\Models\JobPosting;
 use App\Models\Message;
 use App\Models\Post;
@@ -16,6 +16,7 @@ use App\Models\PostMedia;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Str;
@@ -281,7 +282,7 @@ class SiteController extends Controller
         $activeTab = $request->get('tab', 'all');
 
         if ($activeTab === 'categories') {
-            $categories = \App\Models\Category::withCount('adverts')->get();
+            $categories = Category::withCount('adverts')->get();
 
             return view('users.advertisment.index', [
                 'categories' => $categories,
@@ -289,7 +290,7 @@ class SiteController extends Controller
             ]);
         }
 
-        $advertsQuery = \App\Models\Advert::query();
+        $advertsQuery = Advert::query();
 
         if ($request->filled('category')) {
             $advertsQuery->where('category_id', $request->input('category'));
@@ -310,7 +311,7 @@ class SiteController extends Controller
 
         $categories = [];
         if ($activeTab === 'categories') {
-            $categories = \App\Models\Category::withCount('adverts')->get();
+            $categories = Category::withCount('adverts')->get();
         }
 
         return view('users.advertisment.index', [
@@ -600,7 +601,7 @@ class SiteController extends Controller
                 'sender_id' => $senderId,
                 'receiver_id' => $receiverId,
                 'message' => $body,
-                'message_type' => "text",
+                'message_type' => 'text',
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -610,14 +611,36 @@ class SiteController extends Controller
             ], 500);
         }
 
-        event(new MessageSent($message));
+         try {
+        Http::post("http://localhost:3002/send", [
+            'sender_id'   => Auth::id(),
+            'receiver_id' => $receiverId,
+            'message'     => $request->message,
+            'created_at'  => now()->format('Y-m-d H:i:s')
+        ]);
+    } catch (\Exception $e) {}
 
         return response()->json([
             'status' => 'success',
-            'message' => [
-                'message' => $message->message,
-                'created_at' => $message->created_at->toDateTimeString(),
-            ]
+            'message' => $message,
         ]);
+    }
+
+    public function manage_shops()
+    {
+        return view('users.shops.index');
+    }
+
+    public function manage_groups(Request $request){
+        $groups = Group::with("groupCreatedBy")->where(["created_by" => Auth::user()->user_id])->paginate(10);
+        return view('users.profile.groups.index', compact("groups"));
+    }
+
+    public function create_group(Request $request){
+        if($request->isMethod(FORM_METHOD_POST)){
+
+        } else {
+            return view('users.profile.groups.create');
+        }
     }
 }
