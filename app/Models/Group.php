@@ -8,7 +8,7 @@ class Group extends Model
 {
     protected $primaryKey = "group_id";
 
-    protected $fillable = ["group_name", "group_description", "privacy", "profile_image", "cover_iamge", "created_by"];
+    protected $fillable = ["group_name", "group_description", "privacy", "profile_image", "cover_image", "created_by"];
 
     public function setGroupNameAttribute($val){
         return $this->attributes['group_name'] = ucwords($val);
@@ -19,6 +19,6 @@ class Group extends Model
     }
 
     public function groupCreatedBy(){
-        return $this->belongsTo(User::class, 'user_id', "created_by");
+        return $this->belongsTo(User::class, 'created_by', "user_id");
     }
 }

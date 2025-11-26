@@ -12,7 +12,8 @@
                 </a>
             </li>
 
-            <li id="groups-my-groups-personal-li" class="bp-personal-sub-tab current selected" data-bp-user-scope="my-groups">
+            <li id="groups-my-groups-personal-li" class="bp-personal-sub-tab current selected"
+                data-bp-user-scope="my-groups">
                 <a href="{{ route('groups.index') }}" id="groups-my-groups">
                     Memberships
                 </a>
@@ -30,20 +31,19 @@
 
     <div class="groups mygroups" data-bp-list="groups" style="">
 
-
         <ul id="groups-list" class="item-list groups-list bp-list grid two">
 
             @forelse ($groups as $group)
                 <li class="item-entryanimate-itemslideInUp even public is-admin is-member group-has-avatar"
                     data-bp-item-id="1" data-bp-item-component="groups">
                     <div class="list-wrap">
-
-                        <div class="item-cover" style="background-image: url('{{ asset($group->cover_image) }}')">
+                        <div class="item-cover"
+                            style="background-image: url('{{ asset('/storage/' . $group->cover_image) }}');">
                         </div>
 
                         <div class="item-avatar">
                             <a href="https://www.clientbetalink.xyz/MIGVELv1/groups/tech-group/"><img loading="lazy"
-                                    src="//www.gravatar.com/avatar/965b55ff11e572b3e78e98fb49c4a2a6?s=200&amp;r=g&amp;d=mm"
+                                    src="{{ asset('/storage/' . $group->profile_image) }}"
                                     class="avatar group-1-avatar avatar-200 photo" width="200" height="200"
                                     alt="Group logo of {{ $group->group_name }}"></a>
                         </div>

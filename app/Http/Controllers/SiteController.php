@@ -9,6 +9,7 @@ use App\Models\FeaturedAdvert;
 use App\Models\FeaturedPackage;
 use App\Models\FriendShip;
 use App\Models\Group;
+use App\Models\GroupMeta;
 use App\Models\JobPosting;
 use App\Models\Message;
 use App\Models\Post;
@@ -16,9 +17,9 @@ use App\Models\PostMedia;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
 class SiteController extends Controller
@@ -611,14 +612,15 @@ class SiteController extends Controller
             ], 500);
         }
 
-         try {
-        Http::post("http://localhost:3002/send", [
-            'sender_id'   => Auth::id(),
-            'receiver_id' => $receiverId,
-            'message'     => $request->message,
-            'created_at'  => now()->format('Y-m-d H:i:s')
-        ]);
-    } catch (\Exception $e) {}
+        try {
+            Http::post('http://localhost:3002/send', [
+                'sender_id' => Auth::id(),
+                'receiver_id' => $receiverId,
+                'message' => $request->message,
+                'created_at' => now()->format('Y-m-d H:i:s'),
+            ]);
+        } catch (\Exception $e) {
+        }
 
         return response()->json([
             'status' => 'success',
@@ -631,14 +633,48 @@ class SiteController extends Controller
         return view('users.shops.index');
     }
 
-    public function manage_groups(Request $request){
-        $groups = Group::with("groupCreatedBy")->where(["created_by" => Auth::user()->user_id])->paginate(10);
-        return view('users.profile.groups.index', compact("groups"));
+    public function manage_groups(Request $request)
+    {
+        $groups = Group::with('groupCreatedBy')->where(['created_by' => Auth::user()->user_id])->paginate(10);
+
+        return view('users.profile.groups.index', compact('groups'));
     }
 
-    public function create_group(Request $request){
-        if($request->isMethod(FORM_METHOD_POST)){
+    public function create_group(Request $request)
+    {
+        if ($request->isMethod(FORM_METHOD_POST)) {
+            $request->validate([
+                'group_name' => 'required',
+                'group_description' => 'required',
+                'group_status' => 'required',
+                'group_invite_status' => 'required',
+                'cover_image' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
+                'profile_image' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
+            ]);
 
+            $profileImagePath = $request->file('profile_image')->store('group_profile_image', 'public');
+            $coverImagePath = $request->file('cover_image')->store('group_cover_image', 'public');
+
+            $group = Group::create([
+                'group_name' => $request->group_name,
+                'group_description' => $request->group_description,
+                'created_by' => Auth::user()->user_id,
+                'privacy' => $request->group_status,
+                'profile_image' => $profileImagePath,
+                'cover_image' => $coverImagePath,
+            ]);
+
+            if ($group) {
+                GroupMeta::create([
+                    'group_id' => $group->group_id,
+                    'privacy_setting' => $request->group_status,
+                    'invitation_permission' => $request->group_invite_status == 'members' ? 'all' : 'admins',
+                    'album_permission' => 'admins',
+                    'friend_invitation' => 'admins',
+                ]);
+
+                return redirect()->back()->with('success', 'Group Created Successfully.');
+            }
         } else {
             return view('users.profile.groups.create');
         }

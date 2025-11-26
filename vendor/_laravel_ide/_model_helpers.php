@@ -5761,6 +5761,23 @@ namespace App\Models {
     /**
      * App\Models\GroupMeta
      *
+     * @property \Illuminate\Support\Carbon|null $updated_at
+     * @property \Illuminate\Support\Carbon|null $created_at
+     * @property mixed $friend_invitation
+     * @property mixed $album_permission
+     * @property mixed $privacy_setting
+     * @property mixed $invitation_permission
+     * @property mixed $group_id
+     * @property int $group_meta_id
+     * @property-read \App\Models\Group $getGroup
+     * @method static \Illuminate\Database\Eloquent\Builder<GroupMeta>|GroupMeta whereGroupMetaId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<GroupMeta>|GroupMeta whereGroupId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<GroupMeta>|GroupMeta whereInvitationPermission($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<GroupMeta>|GroupMeta wherePrivacySetting($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<GroupMeta>|GroupMeta whereAlbumPermission($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<GroupMeta>|GroupMeta whereFriendInvitation($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<GroupMeta>|GroupMeta whereCreatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<GroupMeta>|GroupMeta whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<GroupMeta>|GroupMeta newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<GroupMeta>|GroupMeta newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<GroupMeta>|GroupMeta query()
