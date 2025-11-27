@@ -18,7 +18,7 @@
                         </div>
                     </div>
                     <ul class="connections ml-4">
-                        <li><span class="count" id="totalFriendsCount">{{ $friends }}</span>
+                        <li><span class="count" id="totalFriendsCount">{{ $friends ?? ""}}</span>
                             <p class="mute">Friends</p>
                         </li>
                         <li><span class="count">0</span>

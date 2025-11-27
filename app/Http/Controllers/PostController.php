@@ -46,16 +46,6 @@ class PostController extends Controller
                 $extension = strtolower($file->getClientOriginalName());
                 $fileSize = $file->getSize();
 
-                if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
-                    $mediaType = 'image';
-                } elseif (in_array($extension, ['mp4', 'mov', 'avi', 'mkv'])) {
-                    $mediaType = 'video';
-                } elseif (in_array($extension, ['mp3', 'wav', 'ogg'])) {
-                    $mediaType = 'audio';
-                } else {
-                    $mediaType = 'file';
-                }
-
                 $uniqueName = Auth::user()->username.'-'.uniqid('post_').'_'.time().'.'.$extension;
 
                 $destination = public_path('uploads/posts');
@@ -671,7 +661,26 @@ class PostController extends Controller
             'categories' => $categories,
             'previousBlog' => $previous,
             'nextBlog' => $next,
+            'comments' => $this->load_blog_comments($blogData->user_blog_id),
+            'totalComments' => BlogComment::where(['user_blog_id' => $blogData->user_blog_id])->count(),
         ]);
+    }
+
+    public function post_comment(Request $request){
+        $request->validate([
+            'comment' => "required",
+            'blog_id' => "required|numeric|exists:blog_posts,user_blog_id"
+        ], [
+            'comment.required' => "Please Enter Comment",
+        ]);
+
+        BlogComment::create([
+            'user_blog_id' => $request->blog_id,
+            'comment_text' => $request->comment,
+            'commented_by' => Auth::user()->user_id,
+        ]);
+
+        return redirect()->back()->with('succcess', "Commented Posted Successfully.");
     }
 
     public function update_blog($id, Request $request)
@@ -815,21 +824,15 @@ class PostController extends Controller
         return view('users.blogs.edit_blog', compact('blogData'));
     }
 
-    public function load_blog_comments(Request $request)
+    public function load_blog_comments($user_blog_id)
     {
-        $postID = $request->user_blog_id;
-
         $comments = BlogComment::with([
             'commentPostedBy',
             'commentParent',
-            'commentPost',
-            'replies.commentPostedBy',
-        ])->where('post_id', $postID)->paginate(10);
+            'commentBlog',
+        ])->where('user_blog_id', $user_blog_id)->orderByDesc("created_at")->paginate(10);
 
-        return response()->json([
-            'status' => REQUEST_PROCESSED,
-            'comments' => $comments,
-        ]);
+        return $comments;
     }
 
     public function manage_blog_status(Request $request)

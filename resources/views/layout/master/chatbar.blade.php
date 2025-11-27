@@ -219,32 +219,35 @@
                             <div class="vue-recycle-scroller bpc-buddy-list friends ready direction-vertical">
                                 <div class="vue-recycle-scroller__item-wrapper">
                                     <div class="vue-recycle-scroller__item-view">
-                                        @foreach ($all_friends as $value)
-                                            @php
-                                                $friend =
-                                                    $value->sender_id == Auth::user()->user_id
-                                                        ? $value->getReceiver
-                                                        : $value->getSender;
-                                            @endphp
-                                            <div class="bpc-item mb-3 chat-buddy-item"
-                                                data-user="{{ $friend->username }}"
-                                                data-userid="{{ $friend->user_id }}">
-                                                <div class="avatar-container">
-                                                    <img src="{{ asset($friend->profile_picture) }}"
-                                                        alt="{{ $friend->username }}" class="avatar">
-                                                    <span class="status online"></span>
-                                                </div>
-                                                <div class="bpc-item-body">
-                                                    <div class="flex-r">
-                                                        <div class="buddy">
-                                                            <div class="chat-buddy anchor ellipsis">
-                                                                {{ $friend->username }}
+                                        @if (isset($all_friends))
+
+                                            @foreach ($all_friends as $value)
+                                                @php
+                                                    $friend =
+                                                        $value->sender_id == Auth::user()->user_id
+                                                            ? $value->getReceiver
+                                                            : $value->getSender;
+                                                @endphp
+                                                <div class="bpc-item mb-3 chat-buddy-item"
+                                                    data-user="{{ $friend->username }}"
+                                                    data-userid="{{ $friend->user_id }}">
+                                                    <div class="avatar-container">
+                                                        <img src="{{ asset($friend->profile_picture) }}"
+                                                            alt="{{ $friend->username }}" class="avatar">
+                                                        <span class="status online"></span>
+                                                    </div>
+                                                    <div class="bpc-item-body">
+                                                        <div class="flex-r">
+                                                            <div class="buddy">
+                                                                <div class="chat-buddy anchor ellipsis">
+                                                                    {{ $friend->username }}
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        @endforeach
+                                            @endforeach
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -266,63 +269,66 @@
 
     <div id="buddy-chat-windows">
         <ul class="bpc-chat-windows-list">
-            @foreach ($all_friends as $value)
-                @php
-                    $friend = $value->sender_id == Auth::user()->user_id ? $value->getReceiver : $value->getSender;
-                    $windowId = 'chat-window-' . preg_replace('/[^A-Za-z0-9\-]/', '-', $friend->username);
-                @endphp
-                <li class="chat-window" id="{{ $windowId }}" style="display: none;"
-                    data-userid="{{ $friend->user_id }}">
-                    <div class="chat-window__container">
-                        <div class="chat-window__title">
-                            <div class="avatar-container">
-                                <img src="{{ asset($friend->profile_picture) }}" alt="{{ $friend->username }}"
-                                    class="avatar">
-                                <span class="status {{ $friend->is_online ? 'online' : 'offline' }}"></span>
-                            </div>
-                            <div class="flex-r">
-                                <div>
-                                    <div class="chat-buddy anchor ellipsis">
-                                        {{ $friend->username }}
+            @if (isset($all_friends))
+
+                @foreach ($all_friends as $value)
+                    @php
+                        $friend = $value->sender_id == Auth::user()->user_id ? $value->getReceiver : $value->getSender;
+                        $windowId = 'chat-window-' . preg_replace('/[^A-Za-z0-9\-]/', '-', $friend->username);
+                    @endphp
+                    <li class="chat-window" id="{{ $windowId }}" style="display: none;"
+                        data-userid="{{ $friend->user_id }}">
+                        <div class="chat-window__container">
+                            <div class="chat-window__title">
+                                <div class="avatar-container">
+                                    <img src="{{ asset($friend->profile_picture) }}" alt="{{ $friend->username }}"
+                                        class="avatar">
+                                    <span class="status {{ $friend->is_online ? 'online' : 'offline' }}"></span>
+                                </div>
+                                <div class="flex-r">
+                                    <div>
+                                        <div class="chat-buddy anchor ellipsis">
+                                            {{ $friend->username }}
+                                        </div>
+                                        <div class="mute">
+                                            {{ $friend->is_online ? 'Online' : 'Offline' }}
+                                        </div>
                                     </div>
-                                    <div class="mute">
-                                        {{ $friend->is_online ? 'Online' : 'Offline' }}
+                                </div>
+                                <a href="#" class="chat_window__close-btn">
+                                    <span class="dashicons dashicons-no-alt"></span>
+                                </a>
+                            </div>
+                            <div class="chat-window__message-list vb vb-invisible">
+                                <div class="vb-content" style="overflow-y:scroll; max-height: 350px;">
+                                    <div class="chat-loader" style="display: none;">
+                                        <div></div>
                                     </div>
+                                    <ul class="bpc-chat-list overflow-auto" id="messages-{{ $friend->user_id }}">
+                                        <!-- JS will load messages using .message--self (right, sent) or .message--other (left, received) -->
+                                    </ul>
                                 </div>
                             </div>
-                            <a href="#" class="chat_window__close-btn">
-                                <span class="dashicons dashicons-no-alt"></span>
-                            </a>
-                        </div>
-                        <div class="chat-window__message-list vb vb-invisible">
-                            <div class="vb-content" style="overflow-y:scroll; max-height: 350px;">
-                                <div class="chat-loader" style="display: none;">
-                                    <div></div>
+                            <div>
+                                <div class="chat-window__inputarea" data-friend="{{ $friend->user_id }}">
+                                    <div class="chat-window__input">
+                                        <div class="chat-window__input--placeholder">Write your message</div>
+                                        <div contenteditable="true" class="chat-window__input--field message-input"
+                                            data-friend="{{ $friend->user_id }}"></div>
+                                    </div>
+                                    <div class="chat-window__input--emoji">
+                                        <button type="button" class="emojiBtn">😊</button>
+                                    </div>
+                                    <button class="chat-window__send-btn" data-friend="{{ $friend->user_id }}"
+                                        data-receiver="{{ $friend->user_id }}" title="Send" type="button">
+                                        <span class="dashicons dashicons-arrow-right-alt"></span>
+                                    </button>
                                 </div>
-                                <ul class="bpc-chat-list overflow-auto" id="messages-{{ $friend->user_id }}">
-                                    <!-- JS will load messages using .message--self (right, sent) or .message--other (left, received) -->
-                                </ul>
                             </div>
                         </div>
-                        <div>
-                            <div class="chat-window__inputarea" data-friend="{{ $friend->user_id }}">
-                                <div class="chat-window__input">
-                                    <div class="chat-window__input--placeholder">Write your message</div>
-                                    <div contenteditable="true" class="chat-window__input--field message-input"
-                                        data-friend="{{ $friend->user_id }}"></div>
-                                </div>
-                                <div class="chat-window__input--emoji">
-                                    <button type="button" class="emojiBtn">😊</button>
-                                </div>
-                                <button class="chat-window__send-btn" data-friend="{{ $friend->user_id }}"
-                                    data-receiver="{{ $friend->user_id }}" title="Send" type="button">
-                                    <span class="dashicons dashicons-arrow-right-alt"></span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-            @endforeach
+                    </li>
+                @endforeach
+            @endif
         </ul>
     </div>
 </div>
@@ -349,7 +355,6 @@
 
             let msgList = $("#messages-" + userId);
 
-            // If chat window is not open → open it automatically (optional)
             let win = $('.chat-window[data-userid="' + userId + '"]');
             win.show();
 
@@ -376,7 +381,6 @@
             $chatWindow.find('.chat-loader').hide();
         }
 
-        // Load initial and scrollable messages (+scroll to bottom/top logic)
         function loadMessages(userId, {
             append = false,
             beforeMessageId = null,
@@ -518,7 +522,7 @@
             $.ajax({
                 url: '{{ route('chat.send-message') }}',
                 method: 'POST',
-                headers:{
+                headers: {
                     "X-CSRF-TOKEN": "{{ csrf_token() }}",
                 },
                 data: {
@@ -567,17 +571,29 @@
                         // Special case: status is success but .message is missing or empty
                         alert('Message was sent, but it is empty and will not be shown.');
                         $input.text('');
-                    } else if (response.status === 'success' && typeof response.message === 'string' &&
-                        response.message !== '') {
-                        // Legacy support: backend returned message as simple string
-                        let msgObj = {
-                            message: response.message,
+                    } else if (
+                        response.status === 'success' &&
+                        typeof response.message === 'string' &&
+                        response.message.trim() !== ''
+                    ) {
+                        // Backend returned a simple string message (legacy)
+                        const msgObj = {
+                            message: response.message.trim(),
                             sender_id: loggedInUserId,
-                            created_at: (new Date()).toLocaleString()
+                            created_at: new Date().toISOString()
                         };
-                        $msgList.append(renderChatMessageItem(msgObj, true));
-                        let chatContent = $msgList.closest('.vb-content')[0];
-                        if (chatContent) chatContent.scrollTop = chatContent.scrollHeight;
+
+                        const html = renderChatMessageItem(msgObj, true);
+                        $msgList.append(html);
+
+                        // Scroll to bottom safely
+                        const chatContent = $msgList.closest('.vb-content')[0];
+                        if (chatContent) {
+                            requestAnimationFrame(() => {
+                                chatContent.scrollTop = chatContent.scrollHeight;
+                            });
+                        }
+
                         $input.text('');
                     } else if (response.errors) {
                         let firstError = Object.values(response.errors)[0];
@@ -610,38 +626,5 @@
                 $('.chat-window__send-btn[data-friend="' + userId + '"]').click();
             }
         });
-
-        // Listen for the real-time MessageSent event broadcast from the server after send-message POST
-        if (typeof Echo !== 'undefined') {
-            Echo.channel('my-channel')
-                .listen('.my-event', (event) => {
-                    let messageObj = event.message || {};
-                    let chatUserId = '';
-
-                    if (String(messageObj.sender_id) === String(loggedInUserId)) {
-                        // Sent by this user; show in receiver's chat window as self
-                        chatUserId = messageObj.receiver_id;
-                    } else {
-                        // Received from other user; show in their chat window as an "other" message
-                        chatUserId = messageObj.sender_id;
-                    }
-
-                    // Try to find the correct chat message list
-                    let msgListSelector = '#messages-' + chatUserId;
-                    let $msgList = $(msgListSelector);
-                    if ($msgList.length) {
-                        // Prevent duplicate message display by ID
-                        if (
-                            !$msgList.children('[data-messageid="' + (messageObj.id || '') + '"]').length &&
-                            typeof renderChatMessageItem === 'function'
-                        ) {
-                            let isOwn = (String(messageObj.sender_id) === String(loggedInUserId));
-                            $msgList.append(renderChatMessageItem(messageObj, isOwn));
-                            let chatContent = $msgList.closest('.vb-content')[0];
-                            if (chatContent) chatContent.scrollTop = chatContent.scrollHeight;
-                        }
-                    }
-                });
-        }
     </script>
 @endpush

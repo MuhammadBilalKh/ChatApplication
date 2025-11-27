@@ -19,11 +19,14 @@
         <div id="recent-posts-1" class="widget widget_recent_entries">
             <h5 class="widget-title">Recent Posts</h5>
             <ul id="recentPosts">
-                @forelse ($recent_blogs as $key => $value)
-                    <li>{{ $value->title }}</li>
-                @empty
-                    <li>No Published Blogs.</li>
-                @endforelse
+                @if (isset($recent_blogs))
+
+                    @forelse ($recent_blogs as $key => $value)
+                        <li>{{ $value->title }}</li>
+                    @empty
+                        <li>No Published Blogs.</li>
+                    @endforelse
+                @endif
             </ul>
         </div>
         <div id="recent-comments-1" class="widget widget_recent_comments">
@@ -59,15 +62,18 @@
         <div id="categories-1" class="widget widget_categories">
             <h5 class="widget-title">Categories</h5>
             <ul>
-                @forelse ($categories as $key => $value)
-                    <li class="cat-item cat-item-47"><a type="button"
-                            data-id="category-{{ $value->category_id }}">{{ $value->category_title }}</a>
+                @if (isset($categories))
 
-                    </li>
-                @empty
-                    <li class="cat-item cat-item-47"><a type="button">No Categories Found</a>
-                    </li>
-                @endforelse
+                    @forelse ($categories as $key => $value)
+                        <li class="cat-item cat-item-47"><a type="button"
+                                data-id="category-{{ $value->category_id }}">{{ $value->category_title }}</a>
+
+                        </li>
+                    @empty
+                        <li class="cat-item cat-item-47"><a type="button">No Categories Found</a>
+                        </li>
+                    @endforelse
+                @endif
             </ul>
 
         </div>

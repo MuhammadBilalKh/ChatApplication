@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\GroupController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\SiteController;
 use App\Http\Controllers\UserController;
@@ -63,18 +64,29 @@ Route::middleware(['web'])->group(function () {
 
         });
 
-        Route::prefix("groups")->group(function(){
-            Route::get("/", [SiteController::class, 'manage_groups'])->name("groups.index");
-            Route::get("/create", [SiteController::class, 'create_group'])->name("groups.create");
+        Route::prefix('groups')->group(function () {
 
-            Route::post("/store", [SiteController::class, 'create_group'])->name("groups.store");
+            Route::get('/manage', [GroupController::class, 'manage_groups'])->name('groups.index');
+            Route::get('/create', [GroupController::class, 'create_group'])->name('groups.create');
+            Route::get('/invitations', [GroupController::class, 'groups_invitation'])->name('groups.invitation');
+            Route::get('/layout', function () {
+                return view('users.profile.groups.layout');
+            });
+
+            Route::post('/store', [GroupController::class, 'create_group'])->name('groups.store');
+
+            Route::prefix('{group}')->group(function () {
+                Route::get('/dashboard', [GroupController::class, 'show_dashboard'])->name('groups.dashboard');
+            });
 
         });
+
         Route::prefix('blogs')->group(function () {
             Route::get('/', [PostController::class, 'manage_blogs'])->name('blogs.list');
             Route::get('/{id}', [PostController::class, 'view_blog'])->name('blogs.view');
             Route::get('/{id}/edit', [PostController::class, 'update_blog'])->name('blogs.update');
 
+            Route::post('/post-comment', [PostController::class, 'post_comment'])->name('blogs.post_comment');
             Route::post('/manage-blog-status', [PostController::class, 'manage_blog_status'])->name('blogs.manage_blog_status');
             Route::post('/{id}/update', [PostController::class, 'update_blog'])->name('blogs.save_update');
             Route::post('/save', [PostController::class, 'save_blog'])->name('blog.save_blog');
@@ -87,6 +99,7 @@ Route::middleware(['web'])->group(function () {
             Route::get('/load-friends', [SiteController::class, 'list_friends'])->name('peoples.list_friends');
             Route::get('/load-requests', [SiteController::class, 'list_requests'])->name('peoples.list_requests');
             Route::get('/load-messages', [SiteController::class, 'load_messages'])->name('chat.load-messages');
+            Route::get('/cancel-request', [SiteController::class, 'cancel_friend_request'])->name('peoples.cancel_friend_request');
 
             Route::post('/send-message', [SiteController::class, 'send_message'])->name('chat.send-message');
             Route::post('/manage_request_response', [SiteController::class, 'manage_request_response'])->name('peoples.manage_request_response');

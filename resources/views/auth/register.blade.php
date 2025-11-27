@@ -7,8 +7,6 @@
     <meta name="viewport"
         content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" />
 
-
-    <!-- CSS Files -->
     <link rel="stylesheet" href="/assets/css/index.css?ver=6.8.3" media="all" />
     <link rel="stylesheet" href="/assets/css/kkpress.min.css?ver=2.6.14" media="all" />
     <link rel="stylesheet" href="/assets/css/kmkcommerce-core.css?ver=1.0.8" />
@@ -17,7 +15,6 @@
     <link rel="stylesheet" href="/assets/css/main.css?ver=1760540595" media="all" />
     <link rel="stylesheet" href="/assets/css/job-listings.css?ver=598383a28ac5f9f156e4" media="all" />
     <link rel="stylesheet" href="/assets/css/brands.css?ver=10.3.0" media="all" />
-
 
     <link rel="stylesheet" href="/assets/css/bootstrap.min.css" media="all" />
     <link rel="stylesheet" href="/assets/css/dashicons.min.css?ver=6.8.3" media="all" />
@@ -67,7 +64,7 @@
 </head>
 
 <body
-    class="registration register  kmkpress bp-nouveau  post-template-default page page-id-0 page-parent wp-theme-kmk theme-kmk woocommerce-no-js kmk kmk-guest-user kmk-default kmk-kit-30 title-bar-active kmk-social-layout panel-collapsed no-sidebar no-js">
+    class="single-item groups group-test-group group-admin manage-members admin buddypress bp-nouveau blog wp-singular page-template-default page page-id-499 logged-in admin-bar wp-theme-beehive theme-beehive woocommerce-js beehive beehive-user buddychat-is-active elementor-default elementor-kit-30 title-bar-active beehive-social-layout panel-collapsed no-sidebar customize-support dialog-body dialog-buttons-body dialog-container dialog-buttons-container js js-hiraku-offcanvas-body">
 
     <div id="kmk-social-panel" class="kmk-social-panel">
         <div class="inner-panel ass-scrollbar">
@@ -168,7 +165,6 @@
 
     <div id="kmk-page" class="site">
 
-
         <header id="sochead" class="site-header social-header user-nav-active">
             <nav class="navbar kmk-navbar social fixed-top">
                 <div class="container">
@@ -206,15 +202,10 @@
         </header><!-- #sochead -->
 
         <div id="content" class="site-content">
-
-
-
             <div id="primary" class="content-area">
                 <div class="layout social-wide">
                     <div class="container">
                         <div class="row">
-
-
                             <div class="col-lg-12 col-main">
                                 <main id="main" class="main-content">
 
@@ -369,35 +360,21 @@
                                                                             aria-labelledby="field_1-1"
                                                                             aria-describedby="field_1-3">
 
-
-
-
                                                                         <p class="field-visibility-settings-notoggle field-visibility-settings-header"
                                                                             id="field-visibility-settings-toggle-1">
                                                                             This field may be seen by: <span
                                                                                 class="current-visibility-level">Everyone</span>
                                                                         </p>
 
-
                                                                     </fieldset>
                                                                 </div>
-
 
                                                                 <input type="hidden" name="signup_profile_field_ids"
                                                                     id="signup_profile_field_ids" value="1" />
 
-
-
                                                             </div><!-- #profile-details-section -->
 
-
-
-
-
                                                         </div><!-- //.layout-wrap -->
-
-
-
 
                                                         <div class="submit"><input type="submit"
                                                                 name="signup_submit" id="submit"
@@ -414,19 +391,13 @@
                                         </div><!-- .entry-contents -->
                                     </article><!-- #post-0 -->
 
-
-
-
                                 </main><!-- #main -->
                             </div><!-- .col-main -->
-
 
                         </div><!-- .row -->
                     </div><!-- .container -->
                 </div><!-- .layout -->
             </div><!-- #primary -->
-
-
 
         </div><!-- #content -->
 
@@ -475,7 +446,4 @@
     ['DOMContentLoaded', 'kmk/lazyload/observe']
     .forEach(e => document.addEventListener(e, lazyloadRunObserver));
 </script>
-
-
-
 </html>

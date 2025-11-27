@@ -12,7 +12,7 @@
                 </a>
             </li>
 
-            <li id="groups-my-groups-personal-li" class="bp-personal-sub-tab current selected"
+            <li id="groups-my-groups-personal-li" class="bp-personal-sub-tab"
                 data-bp-user-scope="my-groups">
                 <a href="{{ route('groups.index') }}" id="groups-my-groups">
                     Memberships
@@ -20,7 +20,7 @@
             </li>
 
             <li id="invites-personal-li" class="bp-personal-sub-tab" data-bp-user-scope="invites">
-                <a href="https://www.clientbetalink.xyz/MIGVELv1/members-2/wpdeveloper/groups/invites/" id="invites">
+                <a href="{{ route('groups.invitation') }}" id="invites">
                     Invitations
                 </a>
             </li>
@@ -72,7 +72,7 @@
 
                                 <ul class=" groups-meta action">
                                     <li class="generic-button"><a
-                                            href="https://www.clientbetalink.xyz/MIGVELv1/groups/tech-group/admin/">Manage
+                                            href="{{ $group->group_id }}">Manage
                                             Group</a></li>
                                 </ul>
                             </div>

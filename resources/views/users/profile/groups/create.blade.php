@@ -4,12 +4,30 @@
 
 @section('profile-content')
 
-    <nav class="bp-navs bp-subnavs no-ajax user-subnav" id="subnav" role="navigation">
+    <nav class="bp-navs bp-subnavs no-ajax user-subnav" id="subnav" role="navigation" aria-label="Groups menu">
         <ul id="member-secondary-nav" class="subnav bp-priority-subnav-nav-items">
-            <li class="bp-personal-sub-tab current selected"><a href="{{ route('groups.create') }}">Create Group</a></li>
-            <li class="bp-personal-sub-tab"><a href="{{ route('groups.index') }}">Memberships</a></li>
-            <li class="bp-personal-sub-tab"><a href="#">Invitations</a></li>
+
+            <li id="groups-my-groups-personal-li" class="bp-personal-sub-tab" data-bp-user-scope="my-groups">
+                <a href="{{ route('groups.create') }}" id="groups-my-groups">
+                    Create Group
+                </a>
+            </li>
+
+            <li id="groups-my-groups-personal-li" class="bp-personal-sub-tab current selected"
+                data-bp-user-scope="my-groups">
+                <a href="{{ route('groups.index') }}" id="groups-my-groups">
+                    Memberships
+                </a>
+            </li>
+
+            <li id="invites-personal-li" class="bp-personal-sub-tab" data-bp-user-scope="invites">
+                <a href="{{ route('groups.invitation') }}" id="invites">
+                    Invitations
+                </a>
+            </li>
+
         </ul>
+
     </nav>
 
     @if ($errors->any())
@@ -22,7 +40,7 @@
         </div>
     @endif
 
-    @if(session()->has('success'))
+    @if (session()->has('success'))
         <div class="alert alert-success">
             <span>{{ session()->get('success') }}</span>
         </div>
@@ -156,7 +174,8 @@
 
                         <p>Which members can invite others?</p>
 
-                        <label><input type="radio" name="group_invite_status" value="members" checked> All members</label>
+                        <label><input type="radio" name="group_invite_status" value="members" checked> All
+                            members</label>
                         <label><input type="radio" name="group_invite_status" value="admins"> Admins only</label>
                     </fieldset>
                 </div>

@@ -72,15 +72,15 @@
                                 </li>
                                 <li id="menu-item-486"
                                     class="bp-menu bp-profile-nav menu-item menu-item-type-custom menu-item-object-custom menu-item-486">
-                                    <a href="./profile/">Profile</a>
+                                    <a href="{{ route('users.profile') }}">Profile</a>
                                 </li>
                                 <li id="menu-item-487"
                                     class="bp-menu bp-friends-nav menu-item menu-item-type-custom menu-item-object-custom menu-item-487">
-                                    <a href="./friends/">Friends</a>
+                                    <a href="{{ route('peoples.list_friends') }}">Friends</a>
                                 </li>
                                 <li id="menu-item-488"
                                     class="bp-menu bp-groups-nav menu-item menu-item-type-custom menu-item-object-custom menu-item-488">
-                                    <a href=".{{ route('groups.index') }}">Groups</a>
+                                    <a href="{{ route('groups.index') }}">Groups</a>
                                 </li>
                                 <li id="menu-item-611"
                                     class="menu-item menu-item-type-post_type menu-item-object-page menu-item-611">

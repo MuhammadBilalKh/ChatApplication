@@ -1,3 +1,8 @@
+@extends('layout.profile.profile-main')
+
+@section('title', 'Frineds')
+
+@section('profile-content')
     <div class="members friends" id="content">
         <ul class="item-list members-friends-list bp-list members-list grid two">
             @forelse ($friends as $key => $value)
@@ -24,7 +29,7 @@
 
 
                                 <ul class="connections">
-                                    <li><span class="count">{{ $value->getReceiver->getFriends() }}</span>
+                                    <li><span class="count">{{ $value->getReceiver->getFriends()->count() }}</span>
                                         <p class="mute">Friends</p>
                                     </li>
                                     <li><span class="count">0</span>
@@ -63,3 +68,4 @@
             @endforelse
         </ul>
     </div>
+@endsection

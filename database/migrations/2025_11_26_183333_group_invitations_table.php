@@ -15,6 +15,7 @@ return new class extends Migration
             $table->unsignedBigInteger("group_invitation_id")->autoIncrement();
             $table->unsignedBigInteger("invited_to");
             $table->unsignedBigInteger("invited_by");
+            $table->unsignedBigInteger("group_id");
             $table->enum("status", ["pending", "accepted", "rejected"]);
             $table->timestamp("invited_at");
             $table->timestamps();

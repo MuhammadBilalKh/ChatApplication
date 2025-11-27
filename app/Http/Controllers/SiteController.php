@@ -9,6 +9,7 @@ use App\Models\FeaturedAdvert;
 use App\Models\FeaturedPackage;
 use App\Models\FriendShip;
 use App\Models\Group;
+use App\Models\GroupInvitation;
 use App\Models\GroupMeta;
 use App\Models\JobPosting;
 use App\Models\Message;
@@ -221,12 +222,15 @@ class SiteController extends Controller
 
     public function list_friends()
     {
-        $friends = FriendShip::with('getSender', 'getReceiver')
-            ->where(function ($query) {
-                $query->where('sender_id', Auth::user()->user_id)
-                    ->orWhere('receiver_id', Auth::user()->user_id);
-            })
+        $userId = Auth::user()->user_id;
+
+        $friends = FriendShip::with(['getSender', 'getReceiver'])
             ->where('status', FRIEND_REQUEST_STATUS_ACCEPTED)
+            ->where(function ($q) use ($userId) {
+                $q->where('sender_id', $userId)
+                    ->orWhere('receiver_id', $userId);
+            })
+            ->orderByDesc('accepted_at')
             ->get();
 
         return view('users.profile.friends', [
@@ -238,7 +242,7 @@ class SiteController extends Controller
     {
         $request = FriendShip::with('getSender')->where([
             'receiver_id' => Auth::user()->user_id,
-            'status' => FRIEND_REQUEST_STATUS_PENDING,
+            'status' => FRIEND_REQUEST_STATUS_ACCEPTED,
         ])->get();
 
         return view('users.profile.requests', [
@@ -631,52 +635,5 @@ class SiteController extends Controller
     public function manage_shops()
     {
         return view('users.shops.index');
-    }
-
-    public function manage_groups(Request $request)
-    {
-        $groups = Group::with('groupCreatedBy')->where(['created_by' => Auth::user()->user_id])->paginate(10);
-
-        return view('users.profile.groups.index', compact('groups'));
-    }
-
-    public function create_group(Request $request)
-    {
-        if ($request->isMethod(FORM_METHOD_POST)) {
-            $request->validate([
-                'group_name' => 'required',
-                'group_description' => 'required',
-                'group_status' => 'required',
-                'group_invite_status' => 'required',
-                'cover_image' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
-                'profile_image' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
-            ]);
-
-            $profileImagePath = $request->file('profile_image')->store('group_profile_image', 'public');
-            $coverImagePath = $request->file('cover_image')->store('group_cover_image', 'public');
-
-            $group = Group::create([
-                'group_name' => $request->group_name,
-                'group_description' => $request->group_description,
-                'created_by' => Auth::user()->user_id,
-                'privacy' => $request->group_status,
-                'profile_image' => $profileImagePath,
-                'cover_image' => $coverImagePath,
-            ]);
-
-            if ($group) {
-                GroupMeta::create([
-                    'group_id' => $group->group_id,
-                    'privacy_setting' => $request->group_status,
-                    'invitation_permission' => $request->group_invite_status == 'members' ? 'all' : 'admins',
-                    'album_permission' => 'admins',
-                    'friend_invitation' => 'admins',
-                ]);
-
-                return redirect()->back()->with('success', 'Group Created Successfully.');
-            }
-        } else {
-            return view('users.profile.groups.create');
-        }
     }
 }

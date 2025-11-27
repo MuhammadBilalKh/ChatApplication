@@ -12,12 +12,12 @@
     <nav class="bp-navs bp-subnavs no-ajax user-subnav" id="subnav" role="navigation" aria-label="Profile menu">
         <ul id="member-secondary-nav" class="subnav bp-priority-subnav-nav-items">
             <li class="bp-personal-sub-tab" data-bp-user-scope="public">
-                <a href="javascript:void(0);" id="friendships-tab-link">
+                <a href="{{ route('peoples.list_friends') }}" id="friendships-tab-link">
                     FriendShips
                 </a>
             </li>
             <li class="bp-personal-sub-tab" data-bp-user-scope="public">
-                <a href="javascript:void(0);" id="requests-tab-link">
+                <a href="{{ route('peoples.list_requests') }}" id="requests-tab-link">
                     Requests
                 </a>
             </li>
@@ -36,15 +36,15 @@
 
 @push('script')
     <script>
-        jQuery(document).ready(function () {
+        jQuery(document).ready(function() {
             // Show Friends tab by default
             showTab('friends');
 
-            jQuery('#friendships-tab-link').on('click', function () {
+            jQuery('#friendships-tab-link').on('click', function() {
                 showTab('friends');
                 loadFriends();
             });
-            jQuery('#requests-tab-link').on('click', function () {
+            jQuery('#requests-tab-link').on('click', function() {
                 showTab('requests');
                 loadRequests();
             });
@@ -68,11 +68,12 @@
                 jQuery.ajax({
                     url: "{{ route('peoples.list_friends') }}",
                     type: "GET",
-                    success: function (resp) {
+                    success: function(resp) {
                         $container.html(resp);
                     },
-                    error: function () {
-                        $container.html('<div class="alert alert-danger">Unable to load friends.</div>');
+                    error: function() {
+                        $container.html(
+                        '<div class="alert alert-danger">Unable to load friends.</div>');
                     }
                 });
             }
@@ -83,11 +84,12 @@
                 jQuery.ajax({
                     url: "{{ route('peoples.list_requests') }}",
                     type: "GET",
-                    success: function (resp) {
+                    success: function(resp) {
                         $container.html(resp);
                     },
-                    error: function () {
-                        $container.html('<div class="alert alert-danger">Unable to load requests.</div>');
+                    error: function() {
+                        $container.html(
+                            '<div class="alert alert-danger">Unable to load requests.</div>');
                     }
                 });
             }

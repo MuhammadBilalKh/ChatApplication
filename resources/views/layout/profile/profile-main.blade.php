@@ -8,7 +8,6 @@
 
     <title>@yield('title')</title>
 
-    <!-- CSS Stylesheets -->
     <link rel="stylesheet" href="/assets/css/index.css?ver=6.8.3" media="all" />
     <link rel="stylesheet" href="/assets/css/kkpress.min.css?ver=2.6.14" media="all" />
     <link rel="stylesheet" href="/assets/css/kmkcommerce-core.css?ver=1.0.8" />
@@ -308,7 +307,7 @@
                                                                         </li>
                                                                         <li id="my-adverts-personal-li"
                                                                             class="bp-personal-tab">
-                                                                            <a href="./my-adverts/"
+                                                                            <a href="{{ route('users.advertisments') }}"
                                                                                 id="user-my-adverts" title="Adverts">
                                                                                 <span
                                                                                     class="nav-link-text">Adverts</span>
