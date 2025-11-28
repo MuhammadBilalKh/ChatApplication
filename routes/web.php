@@ -77,6 +77,14 @@ Route::middleware(['web'])->group(function () {
 
             Route::prefix('{group}')->group(function () {
                 Route::get('/dashboard', [GroupController::class, 'show_dashboard'])->name('groups.dashboard');
+                Route::get("/load-posts", [GroupController::class, 'load_group_posts'])->name("group_posts.load");
+
+                Route::post("/create-post", [GroupController::class, 'upload_post'])->name("groups.create_post");
+                Route::post("/post-comment", [GroupController::class, 'add_comment'])->name("group_comments.store");
+                Route::post("/update-comment", [GroupController::class, 'update_comment'])->name("group_comments.update");
+                Route::post("/delete-comment", function(){
+                    return true;
+                })->name("group_comments.destroy");
             });
 
         });

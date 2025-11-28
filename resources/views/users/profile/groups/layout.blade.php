@@ -7,23 +7,32 @@
     <meta name="viewport"
         content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" />
 
-    <link rel="stylesheet" href="/assets/css/index.css?ver=6.8.3" media="all" />
+      <link rel="stylesheet" href="/assets/css/index.css?ver=6.8.3" media="all" />
     <link rel="stylesheet" href="/assets/css/kkpress.min.css?ver=2.6.14" media="all" />
-    <link rel="stylesheet" href="/assets/css/kmkcommerce-core.css?ver=1.0.8" />
+    <link rel="stylesheet" href="/assets/css/kmkcommerce-core.css?ver=1.0.8" media="all" />
     <link rel="stylesheet" href="/assets/css/mentions.min.css?ver=14.4.0" media="all" />
     <link rel="stylesheet" href="/assets/css/kmkpress.min.css?ver=14.4.0" media="screen" />
     <link rel="stylesheet" href="/assets/css/job-listings.css?ver=598383a28ac5f9f156e4" media="all" />
     <link rel="stylesheet" href="/assets/css/brands.css?ver=10.3.0" media="all" />
-    <link rel="stylesheet" href="/assets/css/bootstrap.min.css" media="all" />
+
+    <link rel="stylesheet" href="https://mythemestore.com/beehive-preview/wp-content/themes/beehive/assets/css/bootstrap.min.css?ver=1.6.1" />
     <link rel="stylesheet" href="/assets/css/dashicons.min.css?ver=6.8.3" media="all" />
     <link rel="stylesheet" href="/assets/css/ionicons.min.css" media="all" />
     <link rel="stylesheet" href="/assets/css/unicons.min.css" media="all" />
     <link rel="stylesheet" href="/assets/css/mscrollbar.min.css" media="all" />
     <link rel="stylesheet" href="/assets/css/animate.min.css" media="all" />
     <link rel="stylesheet" href="/assets/css/hiraku.min.css" media="all" />
+    <link rel="stylesheet" href="/assets/css/beehive.min.css" media="all" />
+
+    <link rel="stylesheet" href="/assets/css/woocommerce.min.css" media="all" />
+    <link rel="stylesheet" href="/assets/css/woocommerce-layout.min.css" media="all" />
     <link rel="stylesheet" href="/assets/css/rtmedia.min.css" media="all" />
+    <link rel="stylesheet" href="/assets/css/post-95.css" media="all" />
     <link rel="stylesheet" href="/assets/css/kmk.min.css" media="all" />
+    <link rel="stylesheet" href="/assets/css/testing.min.css" />
+
     <link rel="stylesheet" href="/assets/css/dynamic-styles.css" media="all" />
+    <link rel="stylesheet" href="/assets/css/job-manager.css" media="all" />
 
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700,300italic,400italic,600italic,700italic|Quicksand:700&ver=1.4.5" />
@@ -33,7 +42,9 @@
 
     <link rel="stylesheet" href="/assets/css/frontend.min.css?ver=3.32.4" />
     <link rel="stylesheet" href="/assets/css/post-95.css?ver=1761620622" />
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+
     <link rel="stylesheet" href="/assets/css/mainCss.css" media="all" />
 
     <style>
@@ -184,8 +195,8 @@
                                     <article id="post-0"
                                         class="bp_group type-bp_group post-0 page type-page status-publish hentry beehive-post">
                                         <div class="entry-content clearfix">
-                                            <div id="buddypress"
-                                                class="buddypress-wrap beehive bp-dir-hori-nav alignwide">
+                                            <div id="kmk"
+                                                class="kmk-wrap beehive bp-dir-hori-nav alignwide">
 
                                                 <div id="item-header" role="complementary" data-bp-item-id="1"
                                                     data-bp-item-component="groups"
@@ -256,7 +267,7 @@
                                                                                     <img loading="lazy"
                                                                                         decoding="async"
                                                                                         loading="lazy"
-                                                                                        src="https://www.clientbetalink.xyz/MIGVELv1/wp-content/uploads/avatars/1/1760543513-bpthumb.jpg"
+                                                                                        src="{{ asset('/storage/'.$groupData->groupCreatedBy->profile_picture) }}"
                                                                                         class="avatar user-1-avatar avatar-50 photo"
                                                                                         width="50" height="50"
                                                                                         alt="Profile picture of wpdeveloper" />
@@ -265,8 +276,6 @@
                                                                         </ul>
                                                                     </dd>
                                                                 </dl>
-
-
 
                                                             </div><!-- .item-actions -->
 
@@ -395,7 +404,7 @@
                                                                                                 loading="lazy"
                                                                                                 decoding="async"
                                                                                                 loading="lazy"
-                                                                                                src="https://www.clientbetalink.xyz/MIGVELv1/wp-content/uploads/avatars/1/1760543513-bpthumb.jpg"
+                                                                                                src="{{ asset("/storage/".$groupData->groupCreatedBy->profile_picture) }}"
                                                                                                 class="avatar user-1-avatar avatar-30 photo"
                                                                                                 width="30"
                                                                                                 height="30"
@@ -450,10 +459,7 @@
                 </div><!-- .layout -->
             </div><!-- #primary -->
 
-
-
         </div><!-- #content -->
-
 
     </div><!-- #kmk-page -->
 </body>
@@ -500,4 +506,5 @@
     .forEach(e => document.addEventListener(e, lazyloadRunObserver));
 </script>
 
+@stack('script')
 </html>

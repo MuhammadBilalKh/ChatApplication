@@ -6,10 +6,13 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
-        Schema::create('comments', function (Blueprint $table) {
-            $table->unsignedBigInteger("comment_id")->autoIncrement();
+        Schema::create('group_post_commnets', function (Blueprint $table) {
+            $table->unsignedBigInteger("group_post_comment_id")->autoIncrement();
             $table->longText("comment_text");
             $table->unsignedBigInteger("commented_by");
             $table->unsignedBigInteger("parent_comment_id")->nullable();
@@ -26,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('comments');
+        Schema::dropIfExists('group_post_commnets');
     }
 };

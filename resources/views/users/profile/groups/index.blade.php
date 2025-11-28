@@ -72,7 +72,7 @@
 
                                 <ul class=" groups-meta action">
                                     <li class="generic-button"><a
-                                            href="{{ $group->group_id }}">Manage
+                                            href="{{ route('groups.dashboard', ['group'  => $group->group_id]) }}">Manage
                                             Group</a></li>
                                 </ul>
                             </div>

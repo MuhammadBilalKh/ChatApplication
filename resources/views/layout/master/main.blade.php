@@ -112,7 +112,6 @@
 </script>
 
 <!-- chat -->
-
 @stack('script')
 
 <script>

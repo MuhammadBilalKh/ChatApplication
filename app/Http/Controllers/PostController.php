@@ -100,12 +100,7 @@ class PostController extends Controller
                             $q->with('commentPostedBy');
                         }]);
             },
-        ])
-            ->whereIn('user_id', $userIds)
-            ->where('post_type', POSTING_TYPE_POST)
-            ->orWhere('new_joining_post', NEW_JOINING_USER_POST)
-            ->orderByDesc('created_at')
-            ->paginate($limit);
+        ])->whereIn('user_id', $userIds)->where('post_type', POSTING_TYPE_POST)->orWhere('new_joining_post', NEW_JOINING_USER_POST)->orderByDesc('created_at')->paginate($limit);
 
         $postUserIds = $posts->pluck('user_id')->unique();
 

@@ -23,6 +23,7 @@ return new class extends Migration
             $table->unsignedBigInteger('likes_count')->default(0);
             $table->unsignedBigInteger('comments_count')->default(0);
             $table->unsignedBigInteger('shares_count')->default(0);
+            $table->unsignedBigInteger("group_id");
             $table->timestamps();
         });
     }
