@@ -38,12 +38,12 @@
                     data-bp-item-id="1" data-bp-item-component="groups">
                     <div class="list-wrap">
                         <div class="item-cover"
-                            style="background-image: url('{{ asset('/storage/' . $group->cover_image) }}');">
+                            style="background-image: url('{{ asset($group->cover_image) }}');">
                         </div>
 
                         <div class="item-avatar">
-                            <a href="https://www.clientbetalink.xyz/MIGVELv1/groups/tech-group/"><img loading="lazy"
-                                    src="{{ asset('/storage/' . $group->profile_image) }}"
+                            <a href="#"><img loading="lazy"
+                                    src="{{ asset($group->profile_image) }}"
                                     class="avatar group-1-avatar avatar-200 photo" width="200" height="200"
                                     alt="Group logo of {{ $group->group_name }}"></a>
                         </div>
@@ -59,7 +59,7 @@
                                 <ul class="inline-members">
 
                                     <li>
-                                        <a href="https://www.clientbetalink.xyz/MIGVELv1/members-2/wpdeveloper/"
+                                        <a href="#"
                                             title="wpdeveloper" target="_blank">
                                             <img loading="lazy" src="{{ asset($group->groupCreatedBy->profile_picture) }}"
                                                 class="avatar user-1-avatar avatar-35 photo" width="35" height="35"

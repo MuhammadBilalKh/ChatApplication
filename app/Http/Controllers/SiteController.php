@@ -631,9 +631,4 @@ class SiteController extends Controller
             'message' => $message,
         ]);
     }
-
-    public function manage_shops()
-    {
-        return view('users.shops.index');
-    }
 }

@@ -215,13 +215,6 @@
                 <div class="layout social">
                     <div class="container-fluid">
                         <div class="row">
-                            @if (session()->has('success'))
-                                <div class="col-lg-12 mt-1">
-                                    <div class="alert alert-success">
-                                        <span>{{ session()->get('success') }}</span>
-                                    </div>
-                                </div>
-                            @endif
 
                             <div class="col-lg-12 col-main">
                                 <main id="main" class="main-content">
@@ -377,7 +370,7 @@
                                                                                 </li>
                                                                                 <li id="settings-personal-li"
                                                                                     class="bp-personal-tab">
-                                                                                    <a href="./settings/"
+                                                                                    <a href="{{ route('users.general_settings') }}"
                                                                                         id="user-settings"
                                                                                         title="Settings">
                                                                                         <span
@@ -689,6 +682,61 @@
 <script src="/assets/js/emoji-button-3.0.3.min.js"></script>
 <script src="/assets/js/kmk.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const toggle = document.querySelector('.flexMenu-viewMore > a');
+            const menu = document.querySelector('.flexMenu-popup');
+
+            toggle.addEventListener('click', function (e) {
+                e.preventDefault();
+                menu.style.display = (menu.style.display === 'none' || menu.style.display === '')
+                    ? 'block'
+                    : 'none';
+            });
+
+            // Optional: close when clicking outside
+            document.addEventListener('click', function (e) {
+                if (!toggle.contains(e.target) && !menu.contains(e.target)) {
+                    menu.style.display = 'none';
+                }
+            });
+        });
+
+
+    </script>
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+  // When any comment button is clicked
+  document.querySelectorAll('.acomment-reply').forEach(button => {
+    button.addEventListener('click', function(e) {
+      e.preventDefault();
+
+      // Find the parent <li> (the post)
+      const activityItem = this.closest('.activity-item');
+      if (!activityItem) return;
+
+      // Find its form
+      const commentForm = activityItem.querySelector('.ac-form');
+      if (!commentForm) return;
+
+      // Toggle visibility
+      const isVisible = commentForm.style.display === 'block';
+      document.querySelectorAll('.ac-form').forEach(f => f.style.display = 'none'); // Hide all forms
+      commentForm.style.display = isVisible ? 'none' : 'block'; // Toggle only this one
+    });
+  });
+
+  // Cancel button hides its form
+  document.querySelectorAll('.ac-reply-cancel').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const form = this.closest('.ac-form');
+      if (form) form.style.display = 'none';
+    });
+  });
+});
+</script>
 
 <script>
     let messageOffsets = {};

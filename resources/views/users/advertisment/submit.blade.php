@@ -135,6 +135,7 @@
     </fieldset>
 </form>
 
+@push("script")
 <script>
     (function() {
         const fileInput = document.getElementById('fileInput');
@@ -319,3 +320,5 @@
         }
     }());
 </script>
+
+@endpush

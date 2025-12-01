@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\ShopController;
 use App\Http\Controllers\SiteController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\UserAuth;
@@ -37,7 +38,14 @@ Route::middleware(['web'])->group(function () {
             Route::post('/update-profile', [UserController::class, 'update_profile'])->name('users.update_profile');
         });
 
-        Route::get('/profile', [UserController::class, 'show_profile'])->name('users.profile');
+        Route::prefix("profile")->group(function(){
+            Route::get('/', [UserController::class, 'show_profile'])->name('users.profile');
+            Route::get("/settings/general", [UserController::class, 'general_settings'])->name("users.general_settings");
+            Route::get("/setting/profile-visibility", [UserController::class, 'profile_visibility_settings'])->name('users.profile_visibility_settings');
+
+            Route::post("/setting/update-profile-visibility", [UserController::class, 'profile_visibility_settings'])->name('users.update_profile_visibility_settings');
+            Route::post("/settings/general/update", [UserController::class, 'general_settings'])->name("users.update_general_settings");
+        });
 
         Route::post('/load-images-media', [SiteController::class, 'load_profile_pictures'])->name('site.load_profile_pictures');
         Route::prefix('post')->group(function () {
@@ -60,8 +68,11 @@ Route::middleware(['web'])->group(function () {
         });
 
         Route::prefix('shops')->group(function () {
-            Route::get('/', [SiteController::class, 'manage_shops'])->name('shops.list');
+            Route::get('/', [ShopController::class, 'manage_shops'])->name('shops.list');
+            Route::get("/upload", [ShopController::class, 'create_products'])->name("shops.create");
+            Route::get("/{id}", [ShopController::class, 'view_product'])->name('shops.show');
 
+            Route::post("/submit", [ShopController::class, 'create_products'])->name('shops.submit');
         });
 
         Route::prefix('groups')->group(function () {
@@ -78,6 +89,10 @@ Route::middleware(['web'])->group(function () {
             Route::prefix('{group}')->group(function () {
                 Route::get('/dashboard', [GroupController::class, 'show_dashboard'])->name('groups.dashboard');
                 Route::get("/load-posts", [GroupController::class, 'load_group_posts'])->name("group_posts.load");
+
+                Route::post('/manage-like-dislike', [GroupController::class, 'toggleLike'])->name('group_posts.toggle_like');
+                Route::post('/delete-post', [GroupController::class, 'delete_post'])->name('group_posts.delete');
+                Route::post('/mark-favorite', [GroupController::class, 'toggleMarkFavorite'])->name('group_posts.toggle_mark_favorite');
 
                 Route::post("/create-post", [GroupController::class, 'upload_post'])->name("groups.create_post");
                 Route::post("/post-comment", [GroupController::class, 'add_comment'])->name("group_comments.store");

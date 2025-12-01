@@ -514,7 +514,7 @@
 
                 if (window.confirm('Are you sure you want to delete this post?')) {
                     jQuery.ajax({
-                        url: "{{ route('posts.delete') }}",
+                        url: "{{ route('group_posts.delete', ['group' => $groupData->group_id]) }}",
                         method: "{{ FORM_METHOD_POST }}",
                         data: {
                             post_id: postID,
@@ -540,7 +540,7 @@
                 const postID = $likeBtn.data("id");
 
                 jQuery.ajax({
-                    url: "{{ route('posts.toggle_mark_favorite') }}",
+                    url: "{{ route('group_posts.toggle_mark_favorite', ['group' => $groupData->group_id]) }}",
                     method: "{{ FORM_METHOD_POST }}",
                     data: {
                         _token: "{{ csrf_token() }}",
@@ -570,7 +570,7 @@
                 const postID = $likeBtn.attr("id").replace("post-", "");
 
                 jQuery.ajax({
-                    url: "{{ route('posts.toggle_like') }}",
+                    url: "{{ route('group_posts.toggle_like', ['group' => $groupData->group_id]) }}",
                     method: "{{ FORM_METHOD_POST }}",
                     data: {
                         _token: "{{ csrf_token() }}",

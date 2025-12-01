@@ -1,8 +1,16 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
-    # Redirect everything to /public except requests to /public/storage
-    RewriteCond %{REQUEST_URI} !^/public/storage
-    RewriteCond %{REQUEST_URI} !^/public/
+    # --- Allow direct access to public/storage ---
+    RewriteCond %{REQUEST_URI} ^/public/storage [OR]
+    RewriteCond %{REQUEST_URI} ^public/storage
+    RewriteRule ^ - [L]
+
+    # --- Allow direct access to anything already under /public ---
+    RewriteCond %{REQUEST_URI} ^/public/ [OR]
+    RewriteCond %{REQUEST_URI} ^public/
+    RewriteRule ^ - [L]
+
+    # --- Redirect everything else into /public ---
     RewriteRule ^(.*)$ public/$1 [L]
 </IfModule>

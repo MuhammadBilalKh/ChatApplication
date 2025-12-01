@@ -42,16 +42,13 @@
             </div>
 
 
-            {{-- NORMAL POST (NOT MINI ACTIVITY) --}}
             @if (!$isSpecialMiniActivity)
                 <div class="activity-inner">
 
-                    {{-- Always show description if available --}}
                     @if ($post->description)
                         <p class="post-text">{{ $post->description }}</p>
                     @endif
 
-                    {{-- If this post has MEDIA show it --}}
                     @if ($post->postMedia && $post->postMedia->count())
                         @php
                             $firstMedia = $post->postMedia->first();
@@ -178,7 +175,7 @@
                     </a>
                 </div>
 
-                @if (Auth::user()->user_id == $post->postUploadedBy->user_id)
+                @if (Auth::user()->user_id == $post->postUploadedBy->user_id || Auth::user()->user_type == USER_TYPE_ADMIN)
                     <div class="generic-button">
                         <a type="button" data-id="post-{{ $post->post_id }}"
                             class="button delPost fav bp-secondary-action">

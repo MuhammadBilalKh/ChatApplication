@@ -9,7 +9,9 @@ use App\Models\GroupMember;
 use App\Models\GroupMeta;
 use App\Models\GroupPost;
 use App\Models\GroupPostComment;
+use App\Models\GroupPostLike;
 use App\Models\GroupPostMedia;
+use App\Models\MarkFavoriteGroupPost;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
@@ -258,5 +260,114 @@ class GroupController extends Controller
         }
 
         return back()->with('success', 'Comment updated successfully.');
+    }
+
+     public function toggleLike(Request $request)
+    {
+        $postID = (int) str_replace('post-', '', $request->post_id);
+        $existLike = GroupPostLike::where(['post_id' => $postID, 'user_id' => Auth::user()->user_id])->exists();
+
+        if ($existLike) {
+            GroupPostLike::where(['post_id' => $postID, 'user_id' => Auth::user()->user_id])->delete();
+        } else {
+            GroupPostLike::create([
+                'post_id' => $postID,
+                'user_id' => Auth::user()->user_id,
+            ]);
+        }
+
+        Notification::createNotification(
+            GroupPost::find($postID)->user_id,
+            Auth::user()->username.' liked your post.',
+            NOTIFICATION_TYPE_LIKE,
+            $postID,
+            GroupPost::class,
+            Auth::user()->username.' liked your post.'
+        );
+
+        return response()->json([
+            'status' => REQUEST_PROCESSED,
+            'likesCount' => GroupPostLike::where(['post_id' => $postID])->count(),
+        ]);
+    }
+
+    public function toggleMarkFavorite(Request $request)
+    {
+        $markType = '';
+        $postID = (int) str_replace('post-', '', $request->post_id);
+        $existLike = MarkFavoriteGroupPost::where(['post_id' => $postID, 'user_id' => Auth::user()->user_id])->exists();
+
+        if ($existLike) {
+            MarkFavoriteGroupPost::where(['post_id' => $postID, 'user_id' => Auth::user()->user_id])->delete();
+
+            $markType = 'delete';
+
+            return response()->json([
+                'status' => REQUEST_PROCESSED,
+                'markType' => $markType,
+            ]);
+        } else {
+            MarkFavoriteGroupPost::create([
+                'post_id' => $postID,
+                'user_id' => Auth::user()->user_id,
+            ]);
+
+            $markType = 'create';
+
+            Notification::createNotification(
+                GroupPost::find($postID)->user_id,
+                Auth::user()->username.' marked your post as favorite.',
+                NOTIFICATION_TYPE_FAVORITE,
+                $postID,
+                GroupPost::class,
+                Auth::user()->username.' marked your post as favorite.'
+            );
+
+            return response()->json([
+                'status' => REQUEST_PROCESSED,
+                'markType' => $markType,
+            ]);
+        }
+
+    }
+
+    public function delete_post(Request $request)
+    {
+        $postID = (int) str_replace('post-', '', $request->post_id);
+        $userID = Auth::user()->user_id;
+
+        if (! GroupPost::where(['user_id' => $userID, 'post_id' => $postID])->exists()) {
+            return response()->json([
+                'status' => REQUEST_GOT_ERROR,
+                'message' => 'You are not Allowed to Delete This Post',
+            ]);
+        } else {
+            GroupPost::where([
+                'user_id' => $userID,
+                'post_id' => $postID,
+            ])->delete();
+
+            GroupPostLike::where([
+                'post_id' => $postID,
+            ])->delete();
+
+            GroupPostMedia::where([
+                'post_id' => $postID,
+            ])->delete();
+
+            MarkFavoriteGroupPost::where([
+                'post_id' => $postID,
+            ])->delete();
+
+            GroupPostComment::where([
+                'post_id' => $postID,
+            ])->delete();
+
+            Notification::createNotification(Auth::user()->user_id, 'Your Post in Group Have Been Deleted By Admin', 'delete', $postID, GroupPost::class, '');
+
+            return response()->json([
+                'status' => REQUEST_PROCESSED,
+            ]);
+        }
     }
 }

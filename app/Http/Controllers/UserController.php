@@ -8,6 +8,7 @@ use App\Models\FriendShip;
 use App\Models\Notification;
 use App\Models\Post;
 use App\Models\User;
+use App\Models\UserMeta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -225,6 +226,61 @@ class UserController extends Controller
     public function manage_friend_requests()
     {
         return view('users.profile.friend_requests');
+    }
+
+    public function general_settings(Request $request)
+    {
+        if ($request->isMethod(FORM_METHOD_POST)) {
+            $request->validate([
+                'current_password' => 'required',
+                'pass1' => 'required|min:8',
+            ]);
+
+            $checkCurrentPassword = User::where([
+                'email' => $request->email,
+                'user_id' => Auth::user()->user_id,
+            ])->exists();
+
+            if (! $checkCurrentPassword) {
+                return redirect()->back()->with('errors', 'Current Password Or Email is Incorrect');
+            } else {
+                User::where([
+                    'email' => $request->email,
+                    'user_id' => Auth::user()->user_id,
+                ])->update([
+                    'password' => bcrypt($request->pass1),
+                ]);
+
+                return redirect()->back()->with('success', 'General Details Updated Successfully');
+            }
+
+        } else {
+            return view('users.profile.groups.settings.general');
+        }
+    }
+
+    public function profile_visibility_settings(Request $request)
+    {
+        if ($request->isMethod(FORM_METHOD_POST)) {
+            $updateUserMeta = UserMeta::updateOrCreate([
+                'user_id' => Auth::user()->user_id,
+            ], [
+                'date_of_birth' => $request->date_of_birth_visibility,
+                'sex' => $request->sex_visibility,
+                'city' => $request->city_visibility,
+                'country' => $request->country_visibility,
+            ]);
+
+            if($updateUserMeta){
+                return redirect()->back()->with("success", "User Meta Detail Updated Successfully.");
+            }
+        } else {
+            $userMetaData = UserMeta::where(['user_id' => Auth::user()->user_id])->first();
+
+            return view('users.profile.groups.settings.profile_visibility', [
+                'metaData' => $userMetaData,
+            ]);
+        }
     }
 
     public function logout()

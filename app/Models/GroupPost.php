@@ -26,12 +26,12 @@ class GroupPost extends Model
 
     public function getLikedBy()
     {
-        return $this->hasMany(GroupPostLike::class, 'post_id', 'post_id');
+        return $this->hasMany(GroupPostLike::class, 'post_id', 'group_post_id');
     }
 
     public function getMarkedFavorite()
     {
-        return $this->hasMany(Group::class, 'group_id', 'group_id');
+        return $this->hasMany(MarkFavoriteGroupPost::class, 'post_id', 'group_post_id');
     }
 
     public function postCreatedBy()
@@ -41,7 +41,7 @@ class GroupPost extends Model
 
     public function postMedia()
     {
-        return $this->hasMany(GroupPostMedia::class, 'group_post_media_id', 'group_id');
+        return $this->hasMany(GroupPostMedia::class, 'group_post_media_id', 'group_post_id');
     }
 
     public function replies()

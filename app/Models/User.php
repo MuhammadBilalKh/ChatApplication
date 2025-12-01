@@ -88,4 +88,8 @@ class User extends Authenticatable
     public function setNameAttribute($val){
         return $this->attributes['name'] = ucwords($val);
     }
+
+    public function getUserMeta(){
+        return $this->hasOne(UserMeta::class, 'user_id', "user_id");
+    }
 }

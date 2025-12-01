@@ -10,5 +10,5 @@ class GroupPostLike extends Model
 
     protected $table = "group_posts_likes";
 
-    protected $fillable = ["post_id", "city_id"];
+    protected $fillable = ["post_id", "user_id"];
 }

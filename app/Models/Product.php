@@ -8,9 +8,10 @@ class Product extends Model
 {
     protected $primaryKey = "product_id";
 
-     protected $fillable = [
-        'name', 'slug', 'description', 'price', 'sale_price',
-        'stock_quantity', 'in_stock', 'is_active', 'attributes', 'category_id'
+    protected $table = "products";
+
+    protected $fillable = [
+        'name', 'slug', 'description', 'price', 'uploaded_by', "is_featured",
     ];
 
     protected $casts = [
@@ -26,7 +27,7 @@ class Product extends Model
 
     public function images()
     {
-        return $this->hasMany(ProductImage::class);
+        return $this->hasMany(ProductMedia::class, 'product_id', "product_id");
     }
 
     public function getCurrentPriceAttribute()
@@ -37,5 +38,9 @@ class Product extends Model
     public function getHasDiscountAttribute()
     {
         return !is_null($this->sale_price) && $this->sale_price < $this->price;
+    }
+
+    public function setNameAttribute($val){
+        return $this->attributes['name'] = ucwords($val);
     }
 }
