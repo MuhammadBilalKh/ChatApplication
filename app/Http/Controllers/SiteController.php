@@ -556,6 +556,11 @@ class SiteController extends Controller
         $userId = Auth::user()->user_id;
         $otherUserId = $request->input('user_id');
 
+        Message::where('sender_id', $otherUserId)
+            ->where('receiver_id', $userId)
+            ->where('is_read', MESSAGE_NOT_SEEN)
+            ->update(['is_read' => MESSAGE_SEEN]);
+
         $messages = Message::query()
             ->where(function ($query) use ($userId, $otherUserId) {
                 $query->where('sender_id', $userId)
@@ -563,13 +568,7 @@ class SiteController extends Controller
             })->orWhere(function ($query) use ($userId, $otherUserId) {
                 $query->where('sender_id', $otherUserId)
                     ->where('receiver_id', $userId);
-            })
-            ->orderByDesc('created_at')
-            ->limit(10)
-            ->get()
-            ->reverse()
-            ->values()
-            ->map(function ($message) {
+            })->orderByDesc('created_at')->limit(10)->get()->reverse()->values()->map(function ($message) {
                 return [
                     'message_id' => $message->id,
                     'sender_id' => $message->sender_id,
@@ -607,6 +606,7 @@ class SiteController extends Controller
                 'receiver_id' => $receiverId,
                 'message' => $body,
                 'message_type' => 'text',
+                'is_read' => MESSAGE_NOT_SEEN,
             ]);
         } catch (\Exception $e) {
             return response()->json([

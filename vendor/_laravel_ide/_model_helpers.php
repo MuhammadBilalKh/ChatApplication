@@ -8344,6 +8344,7 @@ namespace App\Models {
     /**
      * App\Models\Message
      *
+     * @property mixed $is_read
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
      * @property mixed $sender_id
@@ -8361,6 +8362,7 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<Message>|Message whereSenderId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Message>|Message whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Message>|Message whereUpdatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Message>|Message whereIsRead($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Message>|Message newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<Message>|Message newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<Message>|Message query()

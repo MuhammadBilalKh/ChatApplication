@@ -141,3 +141,7 @@ defined("BLOG_STATUS_PUBLISHED") || define("BLOG_STATUS_PUBLISHED", "published")
 defined("BLOG_STATUS_ARCHIVED") || define("BLOG_STATUS_ARCHIVED", "archived");
 
 defined("BLOG_STATUS_REJETED") || define("BLOG_STATUS_REJECTED", "cancelled");
+
+defined("MESSAGE_SEEN") || define("MESSAGE_SEEN", 1);
+
+defined("MESSAGE_NOT_SEEN") || define("MESSAGE_NOT_SEEN" ,0);

@@ -12,6 +12,7 @@ class Message extends Model
 
     protected $fillable = [
         "message",
+        "is_read",
         "sender_id",
         "receiver_id",
         "message_type",
