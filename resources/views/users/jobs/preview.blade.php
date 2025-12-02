@@ -14,13 +14,6 @@
             <form method="post" id="job_preview" action="/MIGVELv1/post-a-job/">
                 <input type="hidden" id="_wpjm_nonce" name="_wpjm_nonce" value="2194508bc9"><input type="hidden"
                     name="_wp_http_referer" value="/MIGVELv1/post-a-job/">
-                <div class="job_listing_preview_title">
-                    <h4 class="preview-title">Preview</h4>
-                    <input type="submit" name="edit_job" class="button job-manager-button-edit-listing button-solid"
-                        value="Edit listing">
-                    <input type="submit" name="continue" id="job_preview_submit_button"
-                        class="button job-manager-button-submit-listing button-solid" value="Submit Listing">
-                </div>
                 <div class="job_listing_preview single_job_listing">
 
                     <div class="single_job_listing">
@@ -72,7 +65,7 @@
                                 </div>
                                 <div class="item-desc">
                                     <a class="google_map_link" href="{{ urlencode($data->location) }}"
-                                        target="_blank">testing (Remote)</a>
+                                        target="_blank">{{ $data->location }}</a>
                                 </div>
                             </li>
 
@@ -96,7 +89,7 @@
 
 
                         <div class="job_description">
-                            <p>{{ $data->description }}</p>
+                            <p>{!! $data->description !!}</p>
                         </div>
 
 
@@ -109,5 +102,12 @@
             </form>
 
         </div>
+
+        <div class="job_application application">
+
+            <div class="application_details" style="">
+                <p>To apply for this job <strong>email your details to</strong> <a class="job_application_email" href="mailto:{{ $data->application_email }}">{{ $data->application_email }}</a></p>
+            </div>
+                </div>
     </article>
 @endsection

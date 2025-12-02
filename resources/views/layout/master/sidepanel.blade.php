@@ -21,7 +21,7 @@
                         <li><span class="count" id="totalFriendsCount">{{ $friends ?? ""}}</span>
                             <p class="mute">Friends</p>
                         </li>
-                        <li><span class="count">0</span>
+                        <li><span class="count">{{ $totalGroups ?? "" }}</span>
                             <p class="mute">Groups</p>
                         </li>
                     </ul>
@@ -30,6 +30,7 @@
                     <h4 class="form-title">Login Now</h4>
                     <form action="{{ route('users.authenticate') }}" method="post" id="panel-login-form"
                         class="kmk-login-form panel-login" name="panel-login">
+                        @csrf
                         <div class="form-group">
                             <div class="user-name">
                                 <label class="screen-reader-text">Email/username</label>

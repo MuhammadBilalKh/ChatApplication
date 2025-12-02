@@ -274,8 +274,8 @@
                                                                     <ul class="profile-nav p-0">
                                                                         <li id="xprofile-personal-li"
                                                                             class="bp-personal-tab selected current">
-                                                                            <a href="{{ route('users.profile') }}" id="user-xprofile"
-                                                                                title="Profile">
+                                                                            <a href="{{ route('users.profile') }}"
+                                                                                id="user-xprofile" title="Profile">
                                                                                 <span
                                                                                     class="nav-link-text ">Profile</span>
                                                                             </a>
@@ -292,8 +292,8 @@
                                                                         </li>
                                                                         <li id="groups-personal-li"
                                                                             class="bp-personal-tab">
-                                                                            <a href="{{ route('groups.index') }}" id="user-groups"
-                                                                                title="Groups">
+                                                                            <a href="{{ route('groups.index') }}"
+                                                                                id="user-groups" title="Groups">
                                                                                 <span
                                                                                     class="nav-link-text">Groups</span>
                                                                             </a>
@@ -684,66 +684,68 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
 
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const toggle = document.querySelector('.flexMenu-viewMore > a');
-            const menu = document.querySelector('.flexMenu-popup');
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const toggle = document.querySelector('.flexMenu-viewMore > a');
+        const menu = document.querySelector('.flexMenu-popup');
 
-            toggle.addEventListener('click', function (e) {
+        toggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            menu.style.display = (menu.style.display === 'none' || menu.style.display === '') ?
+                'block' :
+                'none';
+        });
+
+        // Optional: close when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!toggle.contains(e.target) && !menu.contains(e.target)) {
+                menu.style.display = 'none';
+            }
+        });
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // When any comment button is clicked
+        document.querySelectorAll('.acomment-reply').forEach(button => {
+            button.addEventListener('click', function(e) {
                 e.preventDefault();
-                menu.style.display = (menu.style.display === 'none' || menu.style.display === '')
-                    ? 'block'
-                    : 'none';
-            });
 
-            // Optional: close when clicking outside
-            document.addEventListener('click', function (e) {
-                if (!toggle.contains(e.target) && !menu.contains(e.target)) {
-                    menu.style.display = 'none';
-                }
+                // Find the parent <li> (the post)
+                const activityItem = this.closest('.activity-item');
+                if (!activityItem) return;
+
+                // Find its form
+                const commentForm = activityItem.querySelector('.ac-form');
+                if (!commentForm) return;
+
+                // Toggle visibility
+                const isVisible = commentForm.style.display === 'block';
+                document.querySelectorAll('.ac-form').forEach(f => f.style.display =
+                'none'); // Hide all forms
+                commentForm.style.display = isVisible ? 'none' :
+                'block'; // Toggle only this one
             });
         });
 
-
-    </script>
-    <script>
-document.addEventListener('DOMContentLoaded', function() {
-  // When any comment button is clicked
-  document.querySelectorAll('.acomment-reply').forEach(button => {
-    button.addEventListener('click', function(e) {
-      e.preventDefault();
-
-      // Find the parent <li> (the post)
-      const activityItem = this.closest('.activity-item');
-      if (!activityItem) return;
-
-      // Find its form
-      const commentForm = activityItem.querySelector('.ac-form');
-      if (!commentForm) return;
-
-      // Toggle visibility
-      const isVisible = commentForm.style.display === 'block';
-      document.querySelectorAll('.ac-form').forEach(f => f.style.display = 'none'); // Hide all forms
-      commentForm.style.display = isVisible ? 'none' : 'block'; // Toggle only this one
+        // Cancel button hides its form
+        document.querySelectorAll('.ac-reply-cancel').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const form = this.closest('.ac-form');
+                if (form) form.style.display = 'none';
+            });
+        });
     });
-  });
-
-  // Cancel button hides its form
-  document.querySelectorAll('.ac-reply-cancel').forEach(btn => {
-    btn.addEventListener('click', function() {
-      const form = this.closest('.ac-form');
-      if (form) form.style.display = 'none';
-    });
-  });
-});
 </script>
 
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+
 <script>
+    const socket = io("http://localhost:3002");
     let messageOffsets = {};
     let messageLoading = {};
     const loggedInUserId = '{{ Auth::user()->user_id }}';
 
-    // Show loader utility
     function showLoader($chatWindow) {
         $chatWindow.find('.chat-loader').show();
     }
@@ -836,12 +838,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function escapeHtml(str) {
         if (!str) return '';
-        return String(str)
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#39;");
+        return str;
     }
 
     $(document).on('click', '.chat-buddy-item', function() {
@@ -884,7 +881,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Send message AJAX and trigger MessageSent event (handled server-side, this triggers it by POST)
     $(document).on('click', '.chat-window__send-btn', function() {
         let receiverId = $(this).data('receiver');
         let userId = receiverId;
@@ -924,13 +920,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (typeof msgObj.created_at === 'undefined') {
                         msgObj.created_at = (new Date()).toLocaleString();
                     }
-                    // Append as right side message (message--self)
                     $msgList.append(renderChatMessageItem(msgObj, true));
                     // Scroll to bottom after sending
                     let chatContent = $msgList.closest('.vb-content')[0];
                     if (chatContent) chatContent.scrollTop = chatContent.scrollHeight;
                     $input.text('');
-                    // No need to broadcast message on client, real-time MessageSent event will be received via Echo
                 } else if (
                     response.status === 'success' &&
                     response.message &&
@@ -941,12 +935,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         response.message.message === ''
                     )
                 ) {
-                    // Special case: status is success but .message is missing or empty
                     alert('Message was sent, but it is empty and will not be shown.');
                     $input.text('');
                 } else if (response.status === 'success' && typeof response.message === 'string' &&
                     response.message !== '') {
-                    // Legacy support: backend returned message as simple string
                     let msgObj = {
                         message: response.message,
                         sender_id: loggedInUserId,

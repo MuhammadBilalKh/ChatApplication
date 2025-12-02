@@ -135,7 +135,7 @@ class SiteController extends Controller
                 'publishing_status' => $postingType,
                 'job_notes' => $request->description,
                 'views_count' => 0,
-                'publishing_status' => PUBLISHING_STATUS_PUBLIC,
+                'publishing_status' => PUBLISHING_STATUS_DRAFT,
             ]);
 
             if ($jobPosting) {
@@ -629,6 +629,22 @@ class SiteController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => $message,
+        ]);
+    }
+
+    public function make_job_public($jobID){
+        JobPosting::where([
+            'job_posting_id' => $jobID,
+        ])->update([
+            'publishing_status' => PUBLISHING_STATUS_PUBLIC,
+        ]);
+
+        return redirect()->route('posts.jobs_listing')->with("success", 'Job Posted Successfully.');
+    }
+
+    public function preview_job($jobID){
+        return view('users.jobs.view_job_detal', [
+            'data' => JobPosting::with('getPostedBy')->find($jobID)
         ]);
     }
 }

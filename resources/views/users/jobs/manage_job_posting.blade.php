@@ -29,7 +29,6 @@
         </ul>
     </nav>
 
-
     <article id="post-505" class="post-505 page type-page status-publish hentry kmk-post">
         <div class="entry-content clearfix">
             <div id="job-manager-job-dashboard">
@@ -43,7 +42,7 @@
                                 <div class="logo">
                                     <figure>
                                         <img class="company_logo"
-                                            src="{{ assets('/storage/'.$value->company_logo) }}"
+                                            src="{{ asset('/storage/'.$value->company_logo) }}"
                                             alt="{{ ucwords($value->company_name) }}" />
                                     </figure>
                                 </div>
@@ -54,12 +53,13 @@
                                         <span class="address mute ellipsis">{{ $value->location }}</span>
                                         <p class="company-name ellipsis">
                                             {{ ucwords($value->company_name) }}</p>
-                                    </div>
-                                </div>
+                                        </div>
 
-                                <div class="job-listing-meta">
-                                    <ul class="job-types-lists ellipsis">
-                                        <li class="job-type full-time">
+                                    </div>
+
+                                    <div class="job-listing-meta">
+                                        <ul class="job-types-lists ellipsis">
+                                            <li class="job-type full-time">
                                             @switch($value->job_type)
                                                 @case(JOB_TYPE_FREELANCE)
                                                     Freelance
@@ -67,30 +67,33 @@
 
                                                 @case(JOB_TYPE_FULL_TIME)
                                                     Full Time
-                                                @break
+                                                    @break
 
-                                                @case(JOB_TYPE_INTERNSHIP)
+                                                    @case(JOB_TYPE_INTERNSHIP)
                                                     Intership
                                                 @break
 
                                                 @case(JOB_TYPE_PART_TIME)
-                                                    Part Time
+                                                Part Time
                                                 @break
 
                                                 @case(JOB_TYPE_TEMPORARY)
-                                                    Temporary Basis
+                                                Temporary Basis
                                                 @break
 
                                                 @default
-                                                    Temporary Basis
+                                                Temporary Basis
                                                 @break
-                                            @endswitch
-                                        </li>
-                                    </ul>
+                                                @endswitch
+                                            </li>
+                                            <a type="button" class="btn btn-success btn-sm" href="{{ route('posts.make_job_public', ['jobID' => $value->job_posting_id]) }}">Submit</a>
+                                            <li class="job-type">
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    &nbsp;
+                                    <span>:</span>
                                 </div>
-                                &nbsp;
-                                <span>:</span>
-                            </div>
                         </li>
                         @empty
                             <li>You do not have any active listings.</li>

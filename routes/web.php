@@ -69,6 +69,7 @@ Route::middleware(['web'])->group(function () {
 
         Route::prefix('shops')->group(function () {
             Route::get('/', [ShopController::class, 'manage_shops'])->name('shops.list');
+            Route::get("/test",[ShopController::class, 'test'])->name("shops.test");
             Route::get("/upload", [ShopController::class, 'create_products'])->name("shops.create");
             Route::get("/{id}", [ShopController::class, 'view_product'])->name('shops.show');
 
@@ -135,6 +136,8 @@ Route::middleware(['web'])->group(function () {
             Route::get('/submit-job-request', [SiteController::class, 'submit_job'])->name('posts.submit_job');
             Route::get('/view-job-posting/{jobID}', [SiteController::class, 'view_job_posting'])->name('posts.view_job_posting');
             Route::get('/manage', [SiteController::class, 'manage_job_posting'])->name('posts.manage_job_posting');
+            Route::get("/make-job-publish/{jobID}", [SiteController::class, 'make_job_public'])->name('posts.make_job_public');
+            Route::get("/preview/{jobID}", [SiteController::class, 'preview_job'])->name("jobs.preview_job");
 
             Route::post('/post-job-request', [SiteController::class, 'submit_job'])->name('posts.create_job');
         });

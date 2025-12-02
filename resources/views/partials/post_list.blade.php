@@ -88,10 +88,7 @@
                             </div>
                         </div>
                     @else
-                        {{-- NO MEDIA FALLBACK --}}
-                        <div class="post-content-no-media mt-2">
-                            <p>{{ $post->description }}</p>
-                        </div>
+
                     @endif
 
                 </div>

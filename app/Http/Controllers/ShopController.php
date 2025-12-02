@@ -17,6 +17,14 @@ class ShopController extends Controller
         ]);
     }
 
+    public function test()
+    {
+        $productListing = Product::with("images")->inRandomOrder()->orderByDesc("created_at")->paginate(10);
+        return view('users.shops.index2', [
+            'products' => $productListing,
+        ]);
+    }
+
     public function create_products(Request $request)
     {
         if ($request->isMethod(FORM_METHOD_POST)) {

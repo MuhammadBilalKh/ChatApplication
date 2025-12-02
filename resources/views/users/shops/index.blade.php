@@ -95,20 +95,14 @@
 
                     </form>
                 </div>
-
             </div>
         </div>
-
     </div>
 
-
-    {{-- PRODUCT COUNT --}}
     <p class="woocommerce-result-count" role="alert">
         Showing {{ $products->firstItem() }}–{{ $products->lastItem() }} of {{ $products->total() }} results
     </p>
 
-
-    {{-- SORT BAR --}}
     <form class="woocommerce-ordering" method="GET" action="{{ route('shops.list') }}">
 
         <select name="orderby" class="orderby" aria-label="Shop order">
@@ -135,107 +129,64 @@
         <input type="hidden" name="paged" value="1">
     </form>
 
-
-    {{-- PRODUCTS GRID --}}
     <ul class="products columns-3">
-
-        {{-- STATIC SAMPLE PRODUCT EXACTLY LIKE THEME --}}
-        <li class="animate-item slideInUp kmk-post product type-product"
-            style="visibility: visible; animation-name: slideInUp;">
-            <div class="item-product">
-
-                <div class="img-top">
-                    <div class="product-img">
-                        <img width="300" height="300" src="https://placehold.co/300x300" alt="Sample Product">
-                    </div>
-
-                    <div class="hover-only">
-                        <a href="#" class="hover-overlay"></a>
-                        <ul class="product-actions">
-                            <li><a href="#" class="button add_to_cart_button">Add to cart</a></li>
-                            <li><a href="#" class="view_cart_button">View Product</a></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="product-info">
-                    <h2><a href="#">Sample Product</a></h2>
-                    <span class="price">$15.00</span>
-                </div>
-
-            </div>
-        </li>
-
-        {{-- DYNAMIC PRODUCTS --}}
         @foreach ($products as $product)
             <li class="animate-item slideInUp kmk-post product type-product"
-                style="visibility: visible; animation-name: slideInUp;">
-
+                style="visibility: visible; border:none; animation-name: slideInUp;">
                 <div class="item-product">
 
-                    @if ($product->sale_price)
-                        <span class="onsale">Sale!</span>
-                    @endif
+                    <!-- Product Card -->
+                    <div class="card">
 
-                    <div class="img-top">
+                        @if ($product->sale_price)
+                            <span class="onsale">Sale!</span>
+                        @endif
 
-                        {{-- PRODUCT IMAGE --}}
-                        <div class="product-img">
-                            @php
-                                $img = optional($product->images[0])->file_path;
-                            @endphp
-                            <img width="300" height="300"
-                                src="{{ $img ? asset($img) : 'https://placehold.co/300x300' }}"
-                                alt="{{ $product->slug }}">
+                        <!-- Product Image -->
+                        <div class="img-top">
+                            <div class="product-img">
+                                @php
+                                    $img = optional($product->images[0])->file_path;
+                                @endphp
+                                <img width="300" height="300"
+                                    src="{{ $img ? asset($img) : 'https://placehold.co/300x300' }}"
+                                    alt="{{ $product->slug }}">
+                            </div>
+
+                            <!-- Hover Actions -->
+                            <div class="hover-only">
+                                <a href="{{ route('shops.show', $product->product_id) }}" class="hover-overlay"></a>
+                            </div>
                         </div>
 
-                        {{-- HOVER ACTIONS --}}
-                        <div class="hover-only">
-                            <a href="{{ route('shops.show', $product->product_id) }}" class="hover-overlay"></a>
+                        <!-- Product Info -->
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <a href="{{ route('shops.show', $product->product_id) }}">
+                                    {{ $product->name }}
+                                </a>
+                            </h5>
 
-                            <ul class="product-actions">
-                                <li>
-                                    <a href="#" class="button add_to_cart_button"
-                                        data-product_id="{{ $product->product_id }}">
-                                        Add to cart
-                                    </a>
-                                </li>
+                            <p class="card-text">
+                                <span class="price">
+                                    @if ($product->sale_price)
+                                        <del>${{ $product->price }}</del>
+                                        <ins>${{ $product->sale_price }}</ins>
+                                    @else
+                                        ${{ $product->price }}
+                                    @endif
+                                </span>
+                            </p>
 
-                                <li>
-                                    <a href="{{ route('shops.show', $product->product_id) }}" class="view_cart_button">
-                                        View Product
-                                    </a>
-                                </li>
-                            </ul>
-
-                        </div>
-                    </div>
-
-                    {{-- PRODUCT INFO --}}
-                    <div class="product-info">
-
-                        <h2>
-                            <a href="{{ route('shops.show', $product->product_id) }}">
-                                {{ $product->name }}
+                            <a href="#" class="btn btn-primary add_to_cart_button"
+                                data-product_id="{{ $product->product_id }}">
+                                Add to Cart
                             </a>
-                        </h2>
-
-                        <span class="price">
-                            @if ($product->sale_price)
-                                <del>${{ $product->price }}</del>
-                                <ins>${{ $product->sale_price }}</ins>
-                            @else
-                                ${{ $product->price }}
-                            @endif
-                        </span>
-
+                        </div>
                     </div>
-
                 </div>
-
             </li>
         @endforeach
-
     </ul>
 
     <nav class="woocommerce-pagination kmk-pagination">

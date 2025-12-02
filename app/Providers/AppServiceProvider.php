@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Blog;
 use App\Models\Category;
 use App\Models\FriendShip;
+use App\Models\GroupMember;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\SUpport\Facades\View;
@@ -32,6 +33,10 @@ class AppServiceProvider extends ServiceProvider
 
         View::composer('layout.profile.profile-main', function ($view) {
             return $view->with('friends', Auth::user()->getFriends()->count());
+        });
+
+        View::composer('layout.master.main', function($view){
+            return $view->with("totalGroups", GroupMember::where(['group_member_id' => Auth::user()->user_id])->count());
         });
 
         View::composer('layout.master.main', function ($view) {

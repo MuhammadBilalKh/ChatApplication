@@ -8,7 +8,7 @@
     <title>@yield('title')</title>
     <!-- CSS Files -->
     <link rel="stylesheet" href="/assets/css/index.css?ver=6.8.3" media="all" />
-    <link rel="stylesheet" href="/assets/css/kkpress.min.css?ver=2.6.14" media="all" />
+    {{-- <link rel="stylesheet" href="/assets/css/kkpress.min.css?ver=2.6.14" media="all" /> --}}
     <link rel="stylesheet" href="/assets/css/kmkcommerce-core.css?ver=1.0.8" />
     <link rel="stylesheet" href="/assets/css/mentions.min.css?ver=14.4.0" media="all" />
     <link rel="stylesheet" href="/assets/css/kmkpress.min.css?ver=14.4.0" media="screen" />
@@ -23,21 +23,16 @@
     <link rel="stylesheet" href="/assets/css/animate.min.css" media="all" />
     <link rel="stylesheet" href="/assets/css/hiraku.min.css" media="all" />
 
+    <link rel="stylesheet" href="/assets/css/kmk.min.css" media="all" />
     <link rel="stylesheet" href="/assets/css/job-manager.min.css" media="all" />
     <link rel="stylesheet" href="/assets/css/rtmedia.min.css" media="all" />
 
-    <link rel="stylesheet" href="/assets/css/kmk.min.css" media="all" />
     <link rel="stylesheet" href="/assets/css/mediaelementplayer-legacy.min.css" media="all" />
     <link rel="stylesheet" href="/assets/css/wp-mediaelement.min.css" media="all" />
     <link rel="stylesheet" href="/assets/css/godam-player-frontend.css?ver=1760540595" media="all" />
     <link rel="stylesheet" href="/assets/css/godam-player.css?ver=1760540595" media="all" />
     <link rel="stylesheet" href="/assets/css/rtm-upload-terms.min.css" media="all" />
     <link rel="stylesheet" href="/assets/css/dynamic-styles.css" media="all" />
-
-
-
-
-
 
     <!-- Google Fonts -->
     <link rel="stylesheet"
@@ -47,16 +42,16 @@
         href="https://fonts.googleapis.com/css?family=Roboto+Slab:100,300,400,500,700,900&display=swap" />
 
     <!-- KMK -->
-    <link rel="stylesheet" href="/assets/css/frontend.min.css?ver=3.32.4" />
-    <link rel="stylesheet" href="/assets/css/post-95.css?ver=1761620622" />
+    {{-- <link rel="stylesheet" href="/assets/css/frontend.min.css?ver=3.32.4" /> --}}
+    {{-- <link rel="stylesheet" href="/assets/css/post-95.css?ver=1761620622" /> --}}
 
-    <link rel="stylesheet" href="/assets/css/swiper.min.css?ver=8.4.5" />
-    <link rel="stylesheet" href="/assets/css/post-30.css?ver=1761244154" />
+    {{-- <link rel="stylesheet" href="/assets/css/post-30.css?ver=1761244154" /> --}}
+    {{-- <link rel="stylesheet" href="/assets/css/swiper.min.css?ver=8.4.5" />
     <link rel="stylesheet" href="/assets/css/fadeIn.min.css?ver=3.32.4" />
     <link rel="stylesheet" href="/assets/css/widget-heading.min.css?ver=3.32.4" />
     <link rel="stylesheet" href="/assets/css/fadeInDown.min.css?ver=3.32.4" />
     <link rel="stylesheet" href="/assets/css/widget-image.min.css?ver=3.32.4" />
-    <link rel="stylesheet" href="/assets/css/fadeInUp.min.css?ver=3.32.4" />
+    <link rel="stylesheet" href="/assets/css/fadeInUp.min.css?ver=3.32.4" /> --}}
 
 
 

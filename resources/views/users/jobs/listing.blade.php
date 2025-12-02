@@ -125,7 +125,7 @@
                                     </figure>
                                 </div>
                                 <div class="job-info">
-                                    <a href="#" class="job-title" target="_blank">{{ $value->title }}</a>
+                                    <a href="{{ route('posts.view_job_posting', ['jobID' => Crypt::encrypt($value->job_posting_id)]) }}" class="job-title" target="_blank">{{ $value->title }}</a>
 
                                     <div class="about-company">
                                         <span class="address mute ellipsis">{{ $value->location }}</span>

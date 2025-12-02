@@ -43,7 +43,7 @@
 
                         <div class="item-avatar">
                             <a href="#"><img loading="lazy"
-                                    src="{{ asset($group->profile_image) }}"
+                                    src="{{ asset('/storage/' . $group->profile_image) }}"
                                     class="avatar group-1-avatar avatar-200 photo" width="200" height="200"
                                     alt="Group logo of {{ $group->group_name }}"></a>
                         </div>

@@ -13179,7 +13179,23 @@ namespace App\Models {
     /**
      * App\Models\UserMeta
      *
+     * @property \Illuminate\Support\Carbon|null $updated_at
+     * @property \Illuminate\Support\Carbon|null $created_at
+     * @property mixed $country
+     * @property mixed $city
+     * @property mixed $sex
+     * @property mixed $date_of_birth
+     * @property mixed $user_id
+     * @property int $user_meta_id
      * @property-read \App\Models\User $getMetaUser
+     * @method static \Illuminate\Database\Eloquent\Builder<UserMeta>|UserMeta whereUserMetaId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<UserMeta>|UserMeta whereUserId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<UserMeta>|UserMeta whereDateOfBirth($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<UserMeta>|UserMeta whereSex($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<UserMeta>|UserMeta whereCity($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<UserMeta>|UserMeta whereCountry($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<UserMeta>|UserMeta whereCreatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<UserMeta>|UserMeta whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<UserMeta>|UserMeta newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<UserMeta>|UserMeta newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<UserMeta>|UserMeta query()
