@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Blog;
+use App\Models\Order;
 use App\Models\Category;
 use App\Models\FriendShip;
 use App\Models\GroupMember;
@@ -23,6 +24,7 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        session()->put("show_right_bar", true);
         View::composer('layout.master.main', function ($view) {
             $view->with('categories', Category::whereStatus(CATEGORY_STATUS_ACTIVE)->get());
         });
@@ -56,6 +58,10 @@ class AppServiceProvider extends ServiceProvider
                 ->get();
 
             return $view->with('all_friends', $friends);
+        });
+
+        View::composer("layout.master.main", function($view){
+            return $view->with("cartItems", Order::where(['user_id' => Auth::user()->user_id])->count());
         });
     }
 }

@@ -42,22 +42,21 @@ class PostController extends Controller
         ]);
 
         if ($request->hasFile('media')) {
+
             foreach ($request->file('media') as $file) {
-                $extension = strtolower($file->getClientOriginalName());
+
+                $extension = strtolower($file->getClientOriginalExtension());
                 $fileSize = $file->getSize();
 
-                $uniqueName = Auth::user()->username.'-'.uniqid('post_').'_'.time().'.'.$extension;
+                $uniqueName = Auth::user()->username . '-' . uniqid('post_') . '_' . time() . '.' . $extension;
 
-                $destination = public_path('uploads/posts');
-                $file->move($destination, $uniqueName);
-
-                $filePath = 'uploads/posts/'.$uniqueName;
+                $path = public_path('uploads/posts', $uniqueName);
 
                 PostMedia::create([
                     'post_id' => $post->post_id,
-                    'media_type' => $file->getMimeType(),
+                    'media_type' => $file->getClientOriginalExtension(),
                     'file_size' => $fileSize,
-                    'file_path' => $filePath,
+                    'file_path' => $path,
                 ]);
             }
         }

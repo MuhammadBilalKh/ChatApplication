@@ -41,21 +41,8 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Roboto+Slab:100,300,400,500,700,900&display=swap" />
 
-    <!-- KMK -->
-    {{-- <link rel="stylesheet" href="/assets/css/frontend.min.css?ver=3.32.4" /> --}}
-    {{-- <link rel="stylesheet" href="/assets/css/post-95.css?ver=1761620622" /> --}}
 
-    {{-- <link rel="stylesheet" href="/assets/css/post-30.css?ver=1761244154" /> --}}
-    {{-- <link rel="stylesheet" href="/assets/css/swiper.min.css?ver=8.4.5" />
-    <link rel="stylesheet" href="/assets/css/fadeIn.min.css?ver=3.32.4" />
-    <link rel="stylesheet" href="/assets/css/widget-heading.min.css?ver=3.32.4" />
-    <link rel="stylesheet" href="/assets/css/fadeInDown.min.css?ver=3.32.4" />
-    <link rel="stylesheet" href="/assets/css/widget-image.min.css?ver=3.32.4" />
-    <link rel="stylesheet" href="/assets/css/fadeInUp.min.css?ver=3.32.4" /> --}}
-
-
-
-   <link rel="stylesheet" href="/assets/css/adverts-frontend.min.css" media="all" />
+    <link rel="stylesheet" href="/assets/css/adverts-frontend.min.css" media="all" />
     <link rel="stylesheet" href="/assets/css/woocommerce.min.css" media="all" />
     <link rel="stylesheet" href="/assets/css/woocommerce-layout.min.css" media="all" />
 
@@ -64,7 +51,8 @@
 
     <link rel="stylesheet" href="/assets/css/mainCss.css" media="all" />
 
-
+    <link rel="stylesheet" href="/assets/css/frontend.min.css?ver=3.32.4" />
+    <link rel="stylesheet" href="/assets/css/post-95.css?ver=1761620622" />
 
     @stack('css')
 
@@ -93,7 +81,9 @@
 
                                 </main>
                             </div>
-                            @include('layout.master.right_panel')
+                            @if (session()->get('show_right_bar') == true)
+                                @include('layout.master.right_panel')
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -125,13 +115,13 @@
 @stack('script')
 
 <script>
-    jQuery(document).ready(function ($) {
+    jQuery(document).ready(function($) {
         // Initialize Fancybox
-        $('#openModalBtn').on('click', function () {
+        $('#openModalBtn').on('click', function() {
             $.fancybox.open();
         });
 
-        $('#postCloser').on('click', function () {
+        $('#postCloser').on('click', function() {
             $.fancybox.close();
         });
 
@@ -165,7 +155,7 @@
         }
 
         // Comment functionality
-        $(document).on('click', '.rt_media_comment_submit', function (e) {
+        $(document).on('click', '.rt_media_comment_submit', function(e) {
             e.preventDefault();
 
             var commentText = $('#comment_content').val();
@@ -206,7 +196,7 @@
                         content: commentText,
                         _token: "{{ csrf_token() }}"
                     },
-                    success: function (resp) {
+                    success: function(resp) {
                         if (resp.status === "success") {
                             if ($commentUl.length) {
                                 $commentUl.append(newComment);
@@ -219,7 +209,7 @@
         });
 
         // Delete comment
-        $(document).on('click', '.rtmedia-delete-comment', function (e) {
+        $(document).on('click', '.rtmedia-delete-comment', function(e) {
             e.preventDefault();
 
             if (window.confirm('Are you sure you want to delete this comment?')) {
@@ -231,7 +221,7 @@
                         comment_id: $(this).data("id"),
                         _token: "{{ csrf_token() }}",
                     },
-                    success: function (resp) {
+                    success: function(resp) {
                         if (resp.status == "success") {
                             $comment.remove();
                         }
@@ -308,7 +298,7 @@
 
         // Input field event handlers
         document.querySelectorAll('.chat-window__input--field').forEach(inputField => {
-            inputField.addEventListener('focus', function () {
+            inputField.addEventListener('focus', function() {
                 activeInputField = this;
                 updatePlaceholderVisibility(this);
                 setTimeout(() => {
@@ -316,24 +306,24 @@
                 }, 0);
             });
 
-            inputField.addEventListener('input', function () {
+            inputField.addEventListener('input', function() {
                 updatePlaceholderVisibility(this);
             });
 
-            inputField.addEventListener('blur', function () {
+            inputField.addEventListener('blur', function() {
                 if (activeInputField === this) {
                     activeInputField = null;
                 }
             });
 
-            inputField.addEventListener('keydown', function (e) {
+            inputField.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
                     sendMessage(this);
                 }
             });
 
-            inputField.addEventListener('click', function () {
+            inputField.addEventListener('click', function() {
                 setTimeout(() => {
                     placeCaretAtEnd(this);
                 }, 0);
@@ -342,7 +332,7 @@
 
         // Send button handlers
         document.querySelectorAll('.chat-window__btn--enter').forEach(button => {
-            button.addEventListener('click', function (e) {
+            button.addEventListener('click', function(e) {
                 e.preventDefault();
                 const inputArea = this.closest('.chat-window__inputarea');
                 const inputField = inputArea.querySelector('.chat-window__input--field');
@@ -355,7 +345,7 @@
         // Mobile chat toggle
         const toggleChat = document.getElementById('toggle-chat');
         if (toggleChat) {
-            toggleChat.addEventListener('click', function () {
+            toggleChat.addEventListener('click', function() {
                 if (window.innerWidth < 768) {
                     document.getElementById('buddy-chat-app').classList.toggle('d-none');
                 }
@@ -495,6 +485,26 @@
     };
 
     ['DOMContentLoaded', 'kmk/lazyload/observe'].forEach(e => document.addEventListener(e, lazyloadRunObserver));
+
+    function showTempMessage(message, type = 'success') {
+        const $message = jQuery('<div class="temp-message alert alert-' + type + '">' + message + '</div>');
+        jQuery('body').append($message);
+
+        $message.css({
+            'position': 'fixed',
+            'top': '20px',
+            'right': '20px',
+            'z-index': '9999',
+            'padding': '10px 20px',
+            'border-radius': '9px'
+        });
+
+        setTimeout(function() {
+            $message.fadeOut(300, function() {
+                jQuery(this).remove();
+            });
+        }, 2500);
+    }
 </script>
 
 </html>

@@ -760,25 +760,5 @@
             jQuery("#listPosts").html('');
             loadPosts();
         }
-
-        function showTempMessage(message, type = 'success') {
-            const $message = jQuery('<div class="temp-message alert alert-' + type + '">' + message + '</div>');
-            jQuery('body').append($message);
-
-            $message.css({
-                'position': 'fixed',
-                'top': '20px',
-                'right': '20px',
-                'z-index': '9999',
-                'padding': '10px 20px',
-                'border-radius': '9px'
-            });
-
-            setTimeout(function() {
-                $message.fadeOut(300, function() {
-                    jQuery(this).remove();
-                });
-            }, 2500);
-        }
     </script>
 @endpush

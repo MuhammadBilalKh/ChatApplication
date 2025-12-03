@@ -6,36 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
-     protected $fillable = [
-        'order_number', 'user_id', 'subtotal', 'tax', 'shipping', 'total',
-        'status', 'billing_address', 'shipping_address', 'notes'
+    protected $primaryKey = 'order_id';
+
+    protected $table = 'orders';
+
+    protected $fillable = [
+        'cart_id', 'user_id', 'order_number', 'payment_method', 'status', 'subtotal', 'tax', 'discount', 'total', 'billing_name', 'billing_email', 'billing_phone', 'billing_address',
+        'company_name',
+        'region',
     ];
 
-    protected $casts = [
-        'billing_address' => 'array',
-        'shipping_address' => 'array',
-        'subtotal' => 'decimal:2',
-        'tax' => 'decimal:2',
-        'shipping' => 'decimal:2',
-        'total' => 'decimal:2',
-    ];
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    public function items()
-    {
-        return $this->hasMany(OrderItem::class);
-    }
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($order) {
-            $order->order_number = 'ORD-' . strtoupper(uniqid());
-        });
+    public function getLineItems(){
+        return $this->hasMany(OrderLineItem::class, 'order_line_item_id', "order_id");
     }
 }

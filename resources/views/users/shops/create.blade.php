@@ -8,6 +8,10 @@
     ])
 @endsection
 
+@push('css')
+    <link rel="stylesheet" href="/assets/css/tags.css" />
+@endpush
+
 @section('dashboard-content')
     <nav class="nav-component">
         <ul id="menu-shop-menu" class="nav-component-list shop-navbar">
@@ -34,9 +38,9 @@
         </div>
     @endif
 
-    @if(session()->has('success'))
+    @if (session()->has('success'))
         <div class="alert alert-success">
-            <span>{{ session()->get("success") }}</span>
+            <span>{{ session()->get('success') }}</span>
         </div>
     @endif
 
@@ -86,6 +90,13 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label>Categories</label>
+                        <input type="text" name="categories" id="txtProductCategories" />
+                    </div>
+                </div>
+
                 <div class="col-lg-12">
                     <div class="form-group">
                         <input type="submit" value="Submit" class="btn btn-success" />
@@ -98,12 +109,13 @@
 
 @push('script')
     <script src="https://cdn.ckeditor.com/ckeditor5/41.3.0/classic/ckeditor.js"></script>
+    <script src="/assets/js/tags.min.js"></script>
 
     <script>
         ClassicEditor.create(document.querySelector('#txtProductDescription'), {
             toolbar: [
                 'bold', 'italic', 'link', 'undo', 'redo',
-                'bulletedList', 'numberedList'
+                'bulletedList', 'numberedList',
             ]
         }).catch(error => console.error(error));
     </script>
@@ -230,5 +242,13 @@
 
             renderFiles();
         })();
+
+        jQuery(document).ready(function() {
+            $('#txtProductCategories').tagsInput({
+                'defaultText': 'Add Category',
+                'delimiter': [',', ' '],
+                'width': '100%',
+            });
+        });
     </script>
 @endpush

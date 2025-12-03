@@ -129,37 +129,35 @@
         <input type="hidden" name="paged" value="1">
     </form>
 
-    <ul class="products columns-3">
-        @foreach ($products as $product)
-            <li class="animate-item slideInUp kmk-post product type-product"
-                style="visibility: visible; border:none; animation-name: slideInUp;">
+    <div class="row p-3">
+        @foreach ($products as $key => $product)
+            <div class="col-sm-4">
                 <div class="item-product">
 
-                    <!-- Product Card -->
-                    <div class="card">
+                    <div class="card border-0">
 
                         @if ($product->sale_price)
                             <span class="onsale">Sale!</span>
                         @endif
 
-                        <!-- Product Image -->
                         <div class="img-top">
                             <div class="product-img">
                                 @php
                                     $img = optional($product->images[0])->file_path;
                                 @endphp
-                                <img width="300" height="300"
-                                    src="{{ $img ? asset($img) : 'https://placehold.co/300x300' }}"
-                                    alt="{{ $product->slug }}">
+
+                                <a href="{{ route('shops.show', $product->product_id) }}">
+                                    <img width="300" height="300"
+                                        src="{{ $img ? asset($img) : 'https://placehold.co/300x300' }}"
+                                        alt="{{ $product->slug }}">
+                                </a>
                             </div>
 
-                            <!-- Hover Actions -->
                             <div class="hover-only">
                                 <a href="{{ route('shops.show', $product->product_id) }}" class="hover-overlay"></a>
                             </div>
                         </div>
 
-                        <!-- Product Info -->
                         <div class="card-body">
                             <h5 class="card-title">
                                 <a href="{{ route('shops.show', $product->product_id) }}">
@@ -178,19 +176,54 @@
                                 </span>
                             </p>
 
-                            <a href="#" class="btn btn-primary add_to_cart_button"
-                                data-product_id="{{ $product->product_id }}">
-                                Add to Cart
+                            <a onclick="AddToCart(this)" class="btn text-white small btn-primary add_to_cart_button"
+                                id="{{ $product->product_id }}">
+                                <i class="dashicons dashicons-cart"></i>
                             </a>
                         </div>
                     </div>
                 </div>
-            </li>
+            </div>
         @endforeach
-    </ul>
+    </div>
 
     <nav class="woocommerce-pagination kmk-pagination">
         {{ $products->links() }}
     </nav>
 
 @endsection
+
+@push('script')
+    <script>
+        jQuery(document).ready(function(){
+
+        });
+
+        function AddToCart(e){
+            let productID = e.id;
+
+            jQuery.ajax({
+                url:"{{ route('shops.add_to_cart') }}",
+                type:"{{ FORM_METHOD_POST }}",
+                data:{
+                    product_id: productID,
+                },
+                headers:{
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                },
+                success:function(resp){
+                    if(resp.status == {{ REQUEST_PROCESSED }}){
+                        if(resp.count == 1){
+                            showTempMessage("Product Already Added In Cart.");
+                        } else {
+                            showTempMessage("Product Added Successfully.");
+                        }
+                    }
+                },
+                error: function(){
+                    showTempMessage("An Error Occured. Please Try Again Later", "danger");
+                }
+            });
+        }
+    </script>
+@endpush

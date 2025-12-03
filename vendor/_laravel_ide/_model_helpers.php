@@ -8994,31 +8994,40 @@ namespace App\Models {
      *
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
-     * @property string|null $notes
-     * @property array $shipping_address
-     * @property array $billing_address
-     * @property string $status
-     * @property decimal:2 $total
-     * @property decimal:2 $shipping
-     * @property decimal:2 $tax
-     * @property decimal:2 $subtotal
-     * @property mixed $user_id
+     * @property string|null $region
+     * @property string|null $company_name
+     * @property string|null $billing_address
+     * @property string|null $billing_phone
+     * @property string|null $billing_email
+     * @property string|null $billing_name
+     * @property float $total
+     * @property float $discount
+     * @property float $tax
+     * @property float $subtotal
+     * @property string|null $payment_method
+     * @property mixed $status
      * @property string $order_number
-     * @property mixed $order_id
-     * @property-read \App\Models\User $user
-     * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\OrderItem> $items
-     * @property-read int|null $items_count
+     * @property mixed $user_id
+     * @property mixed $cart_id
+     * @property int $order_id
+     * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\OrderLineItem> $getLineItems
+     * @property-read int|null $getLineItems_count
      * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereOrderId($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereOrderNumber($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereCartId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereUserId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereOrderNumber($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereStatus($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order wherePaymentMethod($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereSubtotal($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereTax($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereShipping($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereDiscount($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereTotal($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereStatus($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereBillingName($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereBillingEmail($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereBillingPhone($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereBillingAddress($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereShippingAddress($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereNotes($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereCompanyName($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereRegion($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order newModelQuery()
@@ -9322,41 +9331,30 @@ namespace App\Models {
     }
 
     /**
-     * App\Models\OrderItem
+     * App\Models\OrderLineItem
      *
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
-     * @property string|null $dimensions
-     * @property float|null $weight
-     * @property string|null $sku
-     * @property string|null $variant_attributes
-     * @property float $total_price
+     * @property mixed $status
+     * @property mixed $vendor_id
      * @property mixed $quantity
-     * @property float $unit_price
-     * @property string|null $variant_name
-     * @property string $product_name
-     * @property mixed $product_variant_id
      * @property mixed $product_id
-     * @property mixed $order_id
-     * @property mixed $order_item_id
-     * @method static \Illuminate\Database\Eloquent\Builder<OrderItem>|OrderItem whereOrderItemId($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<OrderItem>|OrderItem whereOrderId($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<OrderItem>|OrderItem whereProductId($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<OrderItem>|OrderItem whereProductVariantId($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<OrderItem>|OrderItem whereProductName($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<OrderItem>|OrderItem whereVariantName($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<OrderItem>|OrderItem whereUnitPrice($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<OrderItem>|OrderItem whereQuantity($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<OrderItem>|OrderItem whereTotalPrice($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<OrderItem>|OrderItem whereVariantAttributes($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<OrderItem>|OrderItem whereSku($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<OrderItem>|OrderItem whereWeight($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<OrderItem>|OrderItem whereDimensions($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<OrderItem>|OrderItem whereCreatedAt($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<OrderItem>|OrderItem whereUpdatedAt($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<OrderItem>|OrderItem newModelQuery()
-     * @method static \Illuminate\Database\Eloquent\Builder<OrderItem>|OrderItem newQuery()
-     * @method static \Illuminate\Database\Eloquent\Builder<OrderItem>|OrderItem query()
+     * @property mixed $user_id
+     * @property int $order_line_item_id
+     * @property-read \App\Models\User $getProductVendor
+     * @property-read \App\Models\User $getPurchase
+     * @property-read \App\Models\Product $getLineItemProduct
+     * @method static \Illuminate\Database\Eloquent\Builder<OrderLineItem>|OrderLineItem whereOrderLineItemId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<OrderLineItem>|OrderLineItem whereUserId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<OrderLineItem>|OrderLineItem whereProductId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<OrderLineItem>|OrderLineItem whereQuantity($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<OrderLineItem>|OrderLineItem whereVendorId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<OrderLineItem>|OrderLineItem whereStatus($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<OrderLineItem>|OrderLineItem whereCreatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<OrderLineItem>|OrderLineItem whereUpdatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<OrderLineItem>|OrderLineItem newModelQuery()
+     * @method static \Illuminate\Database\Eloquent\Builder<OrderLineItem>|OrderLineItem newQuery()
+     * @method static \Illuminate\Database\Eloquent\Builder<OrderLineItem>|OrderLineItem query()
      * @method static mixed select($columns)
      * @method static mixed selectSub($query, $as)
      * @method static mixed selectRaw($expression, array $bindings)
@@ -9649,7 +9647,7 @@ namespace App\Models {
      * @method static mixed macroCall($method, $parameters)
      * @mixin \Illuminate\Database\Query\Builder
      */
-    class OrderItem extends \Illuminate\Database\Eloquent\Model
+    class OrderLineItem extends \Illuminate\Database\Eloquent\Model
     {
         //
     }
@@ -11273,9 +11271,10 @@ namespace App\Models {
      * @property-read mixed $name
      * @property-read mixed $current_price
      * @property-read mixed $has_discount
-     * @property-read \App\Models\Category $category
+     * @property-read \App\Models\ProductCategory $category
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\ProductMedia> $images
      * @property-read int|null $images_count
+     * @property-read \App\Models\User $getUploader
      * @method static \Illuminate\Database\Eloquent\Builder<Product>|Product whereProductId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Product>|Product whereSlug($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Product>|Product whereDescription($value)
@@ -11592,29 +11591,20 @@ namespace App\Models {
     /**
      * App\Models\ProductCategory
      *
+     * @property string|null $slug
+     * @property mixed $product_id
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
-     * @property mixed $parent_id
-     * @property bool $is_active
-     * @property string|null $image
-     * @property string|null $description
-     * @property string $slug
      * @property string $name
      * @property int $product_category_id
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Product> $products
      * @property-read int|null $products_count
-     * @property-read \App\Models\Category $parent
-     * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Category> $children
-     * @property-read int|null $children_count
      * @method static \Illuminate\Database\Eloquent\Builder<ProductCategory>|ProductCategory whereProductCategoryId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<ProductCategory>|ProductCategory whereName($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<ProductCategory>|ProductCategory whereSlug($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<ProductCategory>|ProductCategory whereDescription($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<ProductCategory>|ProductCategory whereImage($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<ProductCategory>|ProductCategory whereIsActive($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<ProductCategory>|ProductCategory whereParentId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<ProductCategory>|ProductCategory whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<ProductCategory>|ProductCategory whereUpdatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<ProductCategory>|ProductCategory whereProductId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<ProductCategory>|ProductCategory whereSlug($value)
      * @method static \Illuminate\Database\Eloquent\Builder<ProductCategory>|ProductCategory newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<ProductCategory>|ProductCategory newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<ProductCategory>|ProductCategory query()

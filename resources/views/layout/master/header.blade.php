@@ -54,8 +54,8 @@
                             </div>
                         </div>
                     </li>
-                    <li class="mini-cart nav-item"><a href="./cart/" class="cart-contents nav-link" title="View Cart"><i
-                                class="uil-cart"></i></a></li>
+                    <li class="mini-cart nav-item"><a href="{{ route('shops.manage_cart') }}" class="cart-contents nav-link" title="View Cart"><i
+                                class="uil-cart"></i><span class="count">{{ $cartItems ?? "" }}</span></a></li>
                     <li id="myaccount-url-list" class="nav-item dropdown myaccount-url-list">
                         <a class="nav-link dropdown-toggle" href="#" id="nav_my_account" role="button"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -111,7 +111,7 @@
 
                 @guest
 
-                    <li class="mini-cart nav-item"><a href="./cart/" class="cart-contents nav-link" title="View Cart"><i
+                    <li class="mini-cart nav-item"><a href="{{ route('shops.manage_cart') }}" class="cart-contents nav-link" title="View Cart"><i
                                 class="uil-cart"></i></a></li>
                     <li class="nav-item">
                         <a href="#" class="nav-link login" data-toggle="modal"

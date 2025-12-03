@@ -71,6 +71,8 @@
 
 
     <link rel="stylesheet" href="/assets/css/mainCss.css" media="all" />
+
+    @stack('css')
 </head>
 
 <body

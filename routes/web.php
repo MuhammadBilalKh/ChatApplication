@@ -1,12 +1,12 @@
 <?php
 
-use App\Http\Controllers\GroupController;
+use App\Http\Middleware\UserAuth;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\SiteController;
 use App\Http\Controllers\UserController;
-use App\Http\Middleware\UserAuth;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\GroupController;
 
 Route::middleware(['web'])->group(function () {
 
@@ -17,7 +17,7 @@ Route::middleware(['web'])->group(function () {
     Route::post('/users/store', [UserController::class, 'store_user'])->name('users.submit_registration');
 
     Route::middleware([UserAuth::class])->group(function () {
-        Route::get('/', [UserController::class, 'show_dashboard'])->name('users.show_dashboard');
+        Route::get('/dashboard', [UserController::class, 'show_dashboard'])->name('users.show_dashboard');
 
         Route::prefix('users')->group(function () {
             Route::get('/categories', [SiteController::class, 'manage_categories'])->name('users.manage_categories');
@@ -71,8 +71,10 @@ Route::middleware(['web'])->group(function () {
             Route::get('/', [ShopController::class, 'manage_shops'])->name('shops.list');
             Route::get("/test",[ShopController::class, 'test'])->name("shops.test");
             Route::get("/upload", [ShopController::class, 'create_products'])->name("shops.create");
-            Route::get("/{id}", [ShopController::class, 'view_product'])->name('shops.show');
+            Route::get("/{id}/view", [ShopController::class, 'view_product'])->name('shops.show');
+            Route::get("/manage_cart", [ShopController::class, 'manage_cart'])->name('shops.manage_cart');
 
+            Route::post("/add-to-cart", [ShopController::class, 'add_to_cart'])->name("shops.add_to_cart");
             Route::post("/submit", [ShopController::class, 'create_products'])->name('shops.submit');
         });
 
