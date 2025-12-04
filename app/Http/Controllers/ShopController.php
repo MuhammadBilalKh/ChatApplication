@@ -186,7 +186,7 @@ class ShopController extends Controller
                 });
 
             $order = Order::create([
-                'billing_address' => implode(',', array_keys($billingAddress)),
+                'billing_address' => implode(',', ($billingAddress)),
                 'billing_email' => $request->billing_email,
                 'billing_phone' => $request->billing_phone,
                 'notes' => $request->order_comments,
@@ -241,10 +241,14 @@ class ShopController extends Controller
             return redirect()->route('suspicious');
         }
 
-        $orderData = Order::with("getLineItems", "getLineItems.getLineItemProduct", "getLineItems.getLineItemProduct.images")->where(['status' => "processing", 'user_id' => Auth::user()->user_id])->first();
+        $orderData = Order::with("getLineItems.getLineItemProduct.images")->where(['order_id' => $decryptedID])->first();
         return view('users.shops.scheduled_cart_items', [
             'orderID' => $orderData->order_number,
-            'items' => $orderData,
+            'orderData' => $orderData,
         ]);
+    }
+
+    public function manage_orders(){
+        return view('users.shops.manage_orders');
     }
 }

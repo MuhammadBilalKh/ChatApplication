@@ -352,7 +352,7 @@
                                                                                 </li>
                                                                                 <li id="notifications-personal-li"
                                                                                     class="bp-personal-tab">
-                                                                                    <a href="./notifications/"
+                                                                                    <a href="{{ route('users.notifications') }}"
                                                                                         id="user-notifications"
                                                                                         title="Notifications">
                                                                                         <span

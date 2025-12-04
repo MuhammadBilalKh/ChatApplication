@@ -48,7 +48,7 @@ class PostController extends Controller
                 $extension = strtolower($file->getClientOriginalExtension());
                 $fileSize = $file->getSize();
 
-                $uniqueName = Auth::user()->username . '-' . uniqid('post_') . '_' . time() . '.' . $extension;
+                $uniqueName = Auth::user()->username.'-'.uniqid('post_').'_'.time().'.'.$extension;
 
                 $path = public_path('uploads/posts', $uniqueName);
 
@@ -62,12 +62,13 @@ class PostController extends Controller
         }
 
         Notification::createNotification(
-            $post->user_id,
+            Auth::user()->user_id,
             Auth::user()->username.' created a new post.',
             NOTIFICATION_TYPE_SYSTEM,
             $post->post_id,
             Post::class,
-            Auth::user()->username.' have created a new post.'
+            Auth::user()->username.' have created a new post.',
+            $post->postUploadedBy->user_id,
         );
 
         return redirect()->back()->with('post-upload-success', 'Post Uploaded Successfully.');
@@ -77,12 +78,20 @@ class PostController extends Controller
     {
         $authId = Auth::user()->user_id;
 
-        $userFriends = FriendShip::where(function ($q) use ($authId) {
+        $friends = FriendShip::where(function ($q) use ($authId) {
             $q->where('sender_id', $authId)
                 ->orWhere('receiver_id', $authId);
-        })->where('status', FRIEND_REQUEST_STATUS_ACCEPTED)->pluck('sender_id', 'receiver_id')->flatten()->unique()->toArray();
+        })
+            ->where('status', FRIEND_REQUEST_STATUS_ACCEPTED)
+            ->get(['sender_id', 'receiver_id'])
+            ->map(function ($item) use ($authId) {
+                return $item->sender_id == $authId ? $item->receiver_id : $item->sender_id;
+            })
+            ->unique()
+            ->values()
+            ->toArray();
 
-        $userIds = array_unique(array_merge([$authId], $userFriends));
+        $userIds = array_unique(array_merge([$authId], $friends));
 
         $limit = 5;
         $page = $request->input('page', 1);
@@ -217,12 +226,13 @@ class PostController extends Controller
         }
 
         Notification::createNotification(
-            $comment->getPost->user_id,
+            Auth::user()->user_id,
             Auth::user()->username.' commented on your post.',
             NOTIFICATION_TYPE_COMMENT,
             $comment->post_id,
             Post::class,
-            'A new comment has been added to your post.'
+            'A new comment has been added to your post.',
+            $comment->getPost->user_id
         );
 
         return back()->with('post-upload-success', 'Comment added successfully.');
@@ -331,12 +341,13 @@ class PostController extends Controller
         }
 
         Notification::createNotification(
-            Post::find($postID)->user_id,
+            Auth::user()->user_id,
             Auth::user()->username.' liked your post.',
             NOTIFICATION_TYPE_LIKE,
             $postID,
             Post::class,
-            Auth::user()->username.' liked your post.'
+            Auth::user()->username.' liked your post.',
+            Post::find($postID)->user_id,
         );
 
         return response()->json([
@@ -369,12 +380,13 @@ class PostController extends Controller
             $markType = 'create';
 
             Notification::createNotification(
-                Post::find($postID)->user_id,
+                Auth::user()->user_id,
                 Auth::user()->username.' marked your post as favorite.',
                 NOTIFICATION_TYPE_FAVORITE,
                 $postID,
                 Post::class,
-                Auth::user()->username.' marked your post as favorite.'
+                Auth::user()->username.' marked your post as favorite.',
+                Post::find($postID)->user_id,
             );
 
             return response()->json([
@@ -417,7 +429,7 @@ class PostController extends Controller
                 'post_id' => $postID,
             ])->delete();
 
-            Notification::createNotification(Auth::user()->user_id, 'Your Post Have Been Deleted By Admin', 'delete', $postID, Post::class, '');
+            Notification::createNotification(Auth::user()->user_id, 'Your Post Have Been Deleted By Admin', 'delete', $postID, Post::class, '', Post::find($postID)->user_id);
 
             return response()->json([
                 'status' => REQUEST_PROCESSED,
@@ -660,12 +672,13 @@ class PostController extends Controller
         ]);
     }
 
-    public function post_comment(Request $request){
+    public function post_comment(Request $request)
+    {
         $request->validate([
-            'comment' => "required",
-            'blog_id' => "required|numeric|exists:blog_posts,user_blog_id"
+            'comment' => 'required',
+            'blog_id' => 'required|numeric|exists:blog_posts,user_blog_id',
         ], [
-            'comment.required' => "Please Enter Comment",
+            'comment.required' => 'Please Enter Comment',
         ]);
 
         BlogComment::create([
@@ -674,7 +687,7 @@ class PostController extends Controller
             'commented_by' => Auth::user()->user_id,
         ]);
 
-        return redirect()->back()->with('succcess', "Commented Posted Successfully.");
+        return redirect()->back()->with('succcess', 'Commented Posted Successfully.');
     }
 
     public function update_blog($id, Request $request)
@@ -824,7 +837,7 @@ class PostController extends Controller
             'commentPostedBy',
             'commentParent',
             'commentBlog',
-        ])->where('user_blog_id', $user_blog_id)->orderByDesc("created_at")->paginate(10);
+        ])->where('user_blog_id', $user_blog_id)->orderByDesc('created_at')->paginate(10);
 
         return $comments;
     }

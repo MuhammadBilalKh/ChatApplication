@@ -8669,6 +8669,7 @@ namespace App\Models {
     /**
      * App\Models\Notification
      *
+     * @property mixed $notification_received_by
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
      * @property string|null $description
@@ -8691,6 +8692,7 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<Notification>|Notification whereDescription($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Notification>|Notification whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Notification>|Notification whereUpdatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Notification>|Notification whereNotificationReceivedBy($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Notification>|Notification newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<Notification>|Notification newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<Notification>|Notification query()
@@ -8994,6 +8996,7 @@ namespace App\Models {
     /**
      * App\Models\Order
      *
+     * @property mixed $vendor_id
      * @property string|null $notes
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
@@ -9032,6 +9035,7 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereNotes($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereVendorId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order query()

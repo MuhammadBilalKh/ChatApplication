@@ -15,15 +15,18 @@
 @section('dashboard-content')
     <nav class="nav-component">
         <ul id="menu-shop-menu" class="nav-component-list shop-navbar">
-            <li id="menu-item-121" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-121">
-                <a href="{{ route('shops.list') }}" aria-current="page">All products</a>
+            <li class="menu-item {{ request()->routeIs('shops.list') ? 'current-menu-item current_page_item' : '' }}">
+                <a href="{{ route('shops.list') }}">All products</a>
             </li>
-            <li id="menu-item-120" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-120">
-                <a href="./product-categories/">Categories</a>
+            <li class="menu-item">
+                <a href="{{ url('/product-categories') }}">Categories</a>
             </li>
-            <li id="menu-item-120"
-                class="menu-item menu-item-type-post_type menu-item-object-page menu-item-120 current-menu-item current_page_item">
+            <li class="menu-item {{ request()->routeIs('shops.create') ? 'current-menu-item current_page_item' : '' }}">
                 <a href="{{ route('shops.create') }}">Upload Products</a>
+            </li>
+            <li
+                class="menu-item {{ request()->routeIs('shops.manage_orders') ? 'current-menu-item current_page_item' : '' }}">
+                <a href="{{ route('shops.manage_orders') }}">Orders</a>
             </li>
         </ul>
     </nav>

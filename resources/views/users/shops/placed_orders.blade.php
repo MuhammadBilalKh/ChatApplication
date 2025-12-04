@@ -33,7 +33,7 @@
                             <td>{{ $key + 1 }}</td>
                             <td>{{ $value->order_number }}</td>
                             <td>{{ ucfirst($value->status) }}</td>
-                            <td>{{ $value->total }}</td>
+                            <td>$ {{ $value->total }}</td>
                             <td>
                                 <a href="{{ route('shops.scheduled_cart_items', ['id' => Crypt::encrypt($value->order_id)]) }}" target="_blank" style="cursor:pointer;"
                                     class="text-warning">

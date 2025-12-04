@@ -17,7 +17,7 @@ class Order extends Model
     ];
 
     public function getLineItems(){
-        return $this->hasMany(OrderLineItem::class, 'order_line_item_id', "order_id");
+        return $this->hasMany(OrderLineItem::class, 'order_id', "order_id");
     }
 
     public function setBillingNameAttribute($val){

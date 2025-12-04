@@ -20,6 +20,7 @@ Route::middleware(['userauth'])->group(function () {
 
     Route::prefix('users')->group(function () {
         Route::get('/categories', [SiteController::class, 'manage_categories'])->name('users.manage_categories');
+        Route::get("/notifications", [SiteController::class, 'manage_notifications'])->name('users.notifications');
 
         Route::prefix('advertisments')->group(function () {
             Route::get('/', [SiteController::class, 'manage_advertisments'])->name('users.advertisments');
@@ -76,6 +77,7 @@ Route::middleware(['userauth'])->group(function () {
         Route::get("/checkout", [ShopController::class, 'checkout'])->name("shops.checkout");
         Route::get("/orders", [ShopController::class, 'placed_orders'])->name('shops.placed_orders');
         Route::get("/sheduled/{id}", [ShopController::class, 'scheduled_cart_items'])->name("shops.scheduled_cart_items");
+        Route::get("/orders/manage", [ShopController::class, 'manage_orders'])->name("shops.manage_orders");
 
         Route::post("/place-order", [ShopController::class, 'checkout'])->name('shops.proceed_with_order');
         Route::post("/update-cart", [ShopController::class, 'manage_cart'])->name('shops.update_cart');

@@ -219,12 +219,13 @@ class GroupController extends Controller
         }
 
         Notification::createNotification(
-            $comment->getPost->user_id,
+            Auth::user()->user_id,
             Auth::user()->username.' commented on your post.',
             NOTIFICATION_TYPE_COMMENT,
             $comment->post_id,
             GroupPost::class,
-            'A new comment has been added to your post.'
+            'A new comment has been added to your post.',
+            $comment->getPost->user_id
         );
 
         return back()->with('post-upload-success', 'Comment added successfully.');
@@ -277,12 +278,13 @@ class GroupController extends Controller
         }
 
         Notification::createNotification(
-            GroupPost::find($postID)->user_id,
+            Auth::user()->user_id,
             Auth::user()->username.' liked your post.',
             NOTIFICATION_TYPE_LIKE,
             $postID,
             GroupPost::class,
-            Auth::user()->username.' liked your post.'
+            Auth::user()->username.' liked your post.',
+            GroupPost::find($postID)->user_id
         );
 
         return response()->json([
@@ -315,12 +317,13 @@ class GroupController extends Controller
             $markType = 'create';
 
             Notification::createNotification(
-                GroupPost::find($postID)->user_id,
+                Auth::user()->user_id,
                 Auth::user()->username.' marked your post as favorite.',
                 NOTIFICATION_TYPE_FAVORITE,
                 $postID,
                 GroupPost::class,
-                Auth::user()->username.' marked your post as favorite.'
+                Auth::user()->username.' marked your post as favorite.',
+                GroupPost::find($postID)->user_id
             );
 
             return response()->json([
@@ -363,7 +366,7 @@ class GroupController extends Controller
                 'post_id' => $postID,
             ])->delete();
 
-            Notification::createNotification(Auth::user()->user_id, 'Your Post in Group Have Been Deleted By Admin', 'delete', $postID, GroupPost::class, '');
+            Notification::createNotification(Auth::user()->user_id, 'Your Post in Group Have Been Deleted By Admin', 'delete', $postID, GroupPost::class, '', Auth::user()->user_id);
 
             return response()->json([
                 'status' => REQUEST_PROCESSED,

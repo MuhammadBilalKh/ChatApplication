@@ -88,9 +88,8 @@
 
         </form>
     @else
-        <div class="container">
-            <span class="text-info h3 text-center">No Product Found</span>
-        </div>
+        <div class="cart-empty woocommerce-info" role="status">
+            Your cart is currently empty. </div>
     @endif
 
     @if (count($orders) > 0)

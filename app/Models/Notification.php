@@ -20,6 +20,7 @@ class Notification extends Model
         'notifiable_id',
         'notifiable_type',
         'description',
+        "notification_received_by",
     ];
 
     public function user()
@@ -34,7 +35,7 @@ class Notification extends Model
 
     public $timestamps = true;
 
-    public static function createNotification($userId, $message, $type, $notifiableId, $notifiableType, $description){
+    public static function createNotification($userId, $message, $type, $notifiableId, $notifiableType, $description, $notificationReceiverID){
         return static::create([
             'user_id' => $userId,
             'message' => $message,
@@ -43,6 +44,7 @@ class Notification extends Model
             'notifiable_id' => $notifiableId,
             'notifiable_type' => $notifiableType,
             'description' => $description,
+            'notification_received_by' => $notificationReceiverID,
         ]);
     }
 }

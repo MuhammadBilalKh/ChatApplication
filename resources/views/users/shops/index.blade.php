@@ -10,8 +10,7 @@
 
 @section('dashboard-content')
 
-    {{-- SHOP TOP NAV --}}
-    <nav class="nav-component">
+  <nav class="nav-component">
         <ul id="menu-shop-menu" class="nav-component-list shop-navbar">
             <li class="menu-item {{ request()->routeIs('shops.list') ? 'current-menu-item current_page_item' : '' }}">
                 <a href="{{ route('shops.list') }}">All products</a>
@@ -22,16 +21,16 @@
             <li class="menu-item {{ request()->routeIs('shops.create') ? 'current-menu-item current_page_item' : '' }}">
                 <a href="{{ route('shops.create') }}">Upload Products</a>
             </li>
+            <li class="menu-item {{ request()->routeIs('shops.manage_orders') ? 'current-menu-item current_page_item' : '' }}">
+                <a href="{{ route('shops.manage_orders') }}">Orders</a>
+            </li>
         </ul>
     </nav>
 
-
-    {{-- FILTER BAR --}}
     <div class="shop-filters kmk-filters">
 
         <div class="filter-wrapper">
 
-            {{-- SEARCH BAR --}}
             <div class="search kmk-shop-search">
                 <form role="search" method="GET" action="{{ route('shops.list') }}" class="kmk-product-search">
 

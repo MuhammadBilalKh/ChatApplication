@@ -38,7 +38,7 @@ class AppServiceProvider extends ServiceProvider
             return $view->with('friends', Auth::user()->getFriends()->count());
         });
 
-        View::composer('layout.master.main', function($view){
+        View::composer(['layout.master.main', 'layout.profile.profile-main'], function($view){
             return $view->with("totalGroups", GroupMember::where(['group_member_id' => Auth::user()->user_id])->count());
         });
 
@@ -64,6 +64,5 @@ class AppServiceProvider extends ServiceProvider
         View::composer("layout.master.main", function($view){
             return $view->with("cartItems", OrderLineItem::where(['user_id' => Auth::user()->user_id])->where(['status' => "pending"])->count());
         });
-
     }
 }

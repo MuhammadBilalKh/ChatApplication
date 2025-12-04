@@ -13,6 +13,7 @@ use App\Models\GroupInvitation;
 use App\Models\GroupMeta;
 use App\Models\JobPosting;
 use App\Models\Message;
+use App\Models\Notification;
 use App\Models\Post;
 use App\Models\PostMedia;
 use App\Models\User;
@@ -645,6 +646,15 @@ class SiteController extends Controller
     public function preview_job($jobID){
         return view('users.jobs.view_job_detal', [
             'data' => JobPosting::with('getPostedBy')->find($jobID)
+        ]);
+    }
+
+    public function manage_notifications(){
+        $unreadNotifications = Notification::where(['notification_received_by' => Auth::user()->user_id, 'is_read' => 0])
+        ->whereNot("user_id", Auth::user()->user_id)
+        ->paginate(10);
+        return view('users.unread_notifications', [
+            'unreadNotifications' => $unreadNotifications,
         ]);
     }
 }

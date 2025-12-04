@@ -88,7 +88,7 @@
                                 </li>
                                 <li id="menu-item-491"
                                     class="bp-menu bp-notifications-nav menu-item menu-item-type-custom menu-item-object-custom menu-item-491">
-                                    <a href="./notifications/">Notifications</a>
+                                    <a href="{{ route('users.notifications') }}">Notifications</a>
                                 </li>
                                 <li id="menu-item-492"
                                     class="bp-menu bp-messages-nav menu-item menu-item-type-custom menu-item-object-custom menu-item-492">

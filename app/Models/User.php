@@ -92,4 +92,8 @@ class User extends Authenticatable
     public function getUserMeta(){
         return $this->hasOne(UserMeta::class, 'user_id', "user_id");
     }
+
+    public function getOrders(){
+        return $this->hasMany(Order::class, "vendor_id", "user_id");
+    }
 }

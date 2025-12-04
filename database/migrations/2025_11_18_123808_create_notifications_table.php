@@ -25,6 +25,8 @@ return new class extends Migration
             $table->boolean('is_read')->default(false);
             $table->string("description")->nullable();
 
+            $table->unsignedBigInteger("notification_received_by");
+
             $table->timestamps();
         });
     }
