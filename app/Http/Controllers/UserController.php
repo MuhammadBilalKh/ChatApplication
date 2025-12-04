@@ -14,9 +14,9 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-    public function login(Request $request)
+    public function login()
     {
-        if (Auth::user()) {
+        if (Auth::hasUser()) {
             return redirect()->route('users.show_dashboard');
         }
 

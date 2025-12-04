@@ -94,9 +94,13 @@
                                     class="bp-menu bp-messages-nav menu-item menu-item-type-custom menu-item-object-custom menu-item-492">
                                     <a href="./messages/">Messages</a>
                                 </li>
+                                <li id="menu-item-492"
+                                    class="bp-menu bp-messages-nav menu-item menu-item-type-custom menu-item-object-custom menu-item-492">
+                                    <a href="{{ route('shops.placed_orders') }}">Orders</a>
+                                </li>
                                 <li id="menu-item-93"
                                     class="bp-menu bp-settings-nav menu-item menu-item-type-custom menu-item-object-custom menu-item-93">
-                                    <a href="./settings/">Settings</a>
+                                    <a href="{{ route('users.general_settings') }}">Settings</a>
                                 </li>
                                 <li id="menu-item-94"
                                     class="bp-menu bp-logout-nav menu-item menu-item-type-custom menu-item-object-custom menu-item-94">

@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\Category;
 use App\Models\FriendShip;
 use App\Models\GroupMember;
+use App\Models\OrderLineItem;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\SUpport\Facades\View;
@@ -61,7 +62,8 @@ class AppServiceProvider extends ServiceProvider
         });
 
         View::composer("layout.master.main", function($view){
-            return $view->with("cartItems", Order::where(['user_id' => Auth::user()->user_id])->count());
+            return $view->with("cartItems", OrderLineItem::where(['user_id' => Auth::user()->user_id])->where(['status' => "pending"])->count());
         });
+
     }
 }

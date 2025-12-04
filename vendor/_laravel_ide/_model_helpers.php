@@ -2911,6 +2911,7 @@ namespace App\Models {
     /**
      * App\Models\Country
      *
+     * @property string|null $iata_code
      * @property string|null $country_name
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
@@ -2919,6 +2920,7 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<Country>|Country whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Country>|Country whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Country>|Country whereCountryName($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Country>|Country whereIataCode($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Country>|Country newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<Country>|Country newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<Country>|Country query()
@@ -8992,6 +8994,7 @@ namespace App\Models {
     /**
      * App\Models\Order
      *
+     * @property string|null $notes
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
      * @property string|null $region
@@ -8999,7 +9002,6 @@ namespace App\Models {
      * @property string|null $billing_address
      * @property string|null $billing_phone
      * @property string|null $billing_email
-     * @property string|null $billing_name
      * @property float $total
      * @property float $discount
      * @property float $tax
@@ -9008,12 +9010,12 @@ namespace App\Models {
      * @property mixed $status
      * @property string $order_number
      * @property mixed $user_id
-     * @property mixed $cart_id
      * @property int $order_id
+     * @property-read mixed $billing_name
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\OrderLineItem> $getLineItems
      * @property-read int|null $getLineItems_count
+     * @property-read \App\Models\User $orderPlacedBy
      * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereOrderId($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereCartId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereUserId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereOrderNumber($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereStatus($value)
@@ -9022,7 +9024,6 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereTax($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereDiscount($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereTotal($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereBillingName($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereBillingEmail($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereBillingPhone($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereBillingAddress($value)
@@ -9030,6 +9031,7 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereRegion($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereUpdatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereNotes($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order query()
@@ -9333,6 +9335,7 @@ namespace App\Models {
     /**
      * App\Models\OrderLineItem
      *
+     * @property mixed $order_id
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
      * @property mixed $status
@@ -9352,6 +9355,7 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<OrderLineItem>|OrderLineItem whereStatus($value)
      * @method static \Illuminate\Database\Eloquent\Builder<OrderLineItem>|OrderLineItem whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<OrderLineItem>|OrderLineItem whereUpdatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<OrderLineItem>|OrderLineItem whereOrderId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<OrderLineItem>|OrderLineItem newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<OrderLineItem>|OrderLineItem newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<OrderLineItem>|OrderLineItem query()

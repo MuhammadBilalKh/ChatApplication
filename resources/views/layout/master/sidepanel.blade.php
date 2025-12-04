@@ -126,10 +126,6 @@
                         class="menu-item menu-item-type-post_type menu-item-object-page menu-item-701"><a
                             href="./music/"><i class="uil-music"></i><span class="nav-link-text">Music</span></a>
                     </li>
-                    <li id="menu-item-751"
-                        class="menu-item menu-item-type-post_type menu-item-object-page menu-item-751"><a
-                            href="./stock-market/"><i class="uil-chart-bar"></i><span class="nav-link-text">Stock
-                                Market</span></a></li>
                 </ul>
             </div>
         </div>

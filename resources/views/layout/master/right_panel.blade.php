@@ -29,6 +29,7 @@
                 @endif
             </ul>
         </div>
+
         <div id="recent-comments-1" class="widget widget_recent_comments">
             <h5 class="widget-title">Recent Comments</h5>
             <ul id="recentcomments">
