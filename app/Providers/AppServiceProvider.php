@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\Category;
 use App\Models\FriendShip;
 use App\Models\GroupMember;
+use App\Models\Notification;
 use App\Models\OrderLineItem;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
@@ -36,6 +37,10 @@ class AppServiceProvider extends ServiceProvider
 
         View::composer('layout.profile.profile-main', function ($view) {
             return $view->with('friends', Auth::user()->getFriends()->count());
+        });
+
+        View::composer("layout.profile.profile-main", function($view){
+            return $view->with("recentActivity", Notification::where(['user_id' => Auth::user()->user_id])->orderByDesc("notification_id")->limit(10)->get());
         });
 
         View::composer(['layout.master.main', 'layout.profile.profile-main'], function($view){

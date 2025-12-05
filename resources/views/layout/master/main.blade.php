@@ -88,8 +88,8 @@
                     </div>
                 </div>
             </div>
-            {{-- @include('layout.master.chatbar') --}}
-            @include('layout.master.chat_windows')
+            @include('layout.master.chatbar')
+            {{-- @include('layout.master.chat_windows') --}}
         </div>
     </div>
 

@@ -9,6 +9,7 @@ use App\Models\BlogHasCategory;
 use App\Models\BlogMedia;
 use App\Models\Comment;
 use App\Models\FriendShip;
+use Illuminate\Support\Facades\File;
 use App\Models\MarkFavorite;
 use App\Models\Notification;
 use App\Models\Post;
@@ -29,7 +30,7 @@ class PostController extends Controller
             'description' => 'required|string|max:3000',
             'media.*' => 'nullable|file|max:51200',
         ], [
-            'media.*.max' => 'Each file must not exceed 5 MB. Please upload files smaller than 2 MB.',
+            'media.*.max' => 'Each file must not exceed 5 MB. Please upload files smaller than 5 MB.',
         ]);
 
         $post = Post::create([
@@ -46,17 +47,30 @@ class PostController extends Controller
             foreach ($request->file('media') as $file) {
 
                 $extension = strtolower($file->getClientOriginalExtension());
-                $fileSize = $file->getSize();
+                $fileSize  = $file->getSize();
 
-                $uniqueName = Auth::user()->username.'-'.uniqid('post_').'_'.time().'.'.$extension;
+                $uniqueName = Auth::user()->username . '-' . uniqid('post_') . '_' . time() . '.' . $extension;
 
-                $path = public_path('uploads/posts', $uniqueName);
+                $uploadPath = public_path('uploads/posts');
+                $file->move($uploadPath, $uniqueName);
+
+                $filePath = 'uploads/posts/' . $uniqueName;
+
+                $mime = File::mimeType($uploadPath . '/' . $uniqueName);
+
+                if (str_contains($mime, 'image')) {
+                    $mediaType = 'image';
+                } elseif (str_contains($mime, 'video')) {
+                    $mediaType = 'video';
+                } else {
+                    $mediaType = 'other';
+                }
 
                 PostMedia::create([
-                    'post_id' => $post->post_id,
-                    'media_type' => $file->getClientOriginalExtension(),
-                    'file_size' => $fileSize,
-                    'file_path' => $path,
+                    'post_id'    => $post->post_id,
+                    'media_type' => $mediaType,
+                    'file_size'  => $fileSize,
+                    'file_path'  => $filePath,
                 ]);
             }
         }
@@ -67,7 +81,7 @@ class PostController extends Controller
             NOTIFICATION_TYPE_SYSTEM,
             $post->post_id,
             Post::class,
-            Auth::user()->username.' have created a new post.',
+            Auth::user()->username.' has created a new post.',
             $post->postUploadedBy->user_id,
         );
 

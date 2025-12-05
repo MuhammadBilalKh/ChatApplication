@@ -20,11 +20,8 @@
             </a>
         </div>
 
-
-        {{-- MAIN CONTENT --}}
         <div class="activity-content">
 
-            {{-- HEADER --}}
             <div class="activity-header">
                 <div class="posted-meta">
                     <p>
@@ -60,7 +57,6 @@
                             <div class="row postContentModal" data-post-id="{{ $post->post_id }}" data-fancybox
                                 data-src="#postModal" id="openModalBtn" href="javascript:;">
 
-                                {{-- First media preview --}}
                                 <div class="col-sm-6 mt-2">
                                     @if ($firstMedia->media_type === 'image')
                                         <img src="{{ asset($firstMedia->file_path) }}" width="300"

@@ -352,7 +352,7 @@
                                                                                 </li>
                                                                                 <li id="notifications-personal-li"
                                                                                     class="bp-personal-tab">
-                                                                                    <a href="{{ route('users.notifications', ['type' => "unread"]) }}"
+                                                                                    <a href="{{ route('users.notifications', ['type' => 'unread']) }}"
                                                                                         id="user-notifications"
                                                                                         title="Notifications">
                                                                                         <span
@@ -488,27 +488,17 @@
                                                                         class="widget kmk-activity-widget buddypress">
                                                                         <h5 class="widget-title">Recent activity</h5>
                                                                         <ul class="widget-activity-list">
-                                                                            <li class="activity activity_comment activity-item"
-                                                                                id="activity-52">
-                                                                                <p><a href="./">Sandlas</a> posted
-                                                                                    a new activity comment</p>
-                                                                                <span class="activity mute">22 hours,
-                                                                                    49 minutes ago</span>
-                                                                            </li>
-                                                                            <li class="activity activity_comment activity-item"
-                                                                                id="activity-51">
-                                                                                <p><a href="./">Sandlas</a> posted
-                                                                                    a new activity comment</p>
-                                                                                <span class="activity mute">1 day, 4
-                                                                                    hours ago</span>
-                                                                            </li>
-                                                                            <li class="members new_avatar activity-item mini"
-                                                                                id="activity-46">
-                                                                                <p><a href="./">Sandlas</a>
-                                                                                    changed their profile picture</p>
-                                                                                <span class="activity mute">2 weeks, 1
-                                                                                    day ago</span>
-                                                                            </li>
+                                                                            @forelse ($recentActivity as $key => $value)
+                                                                                <li class="activity activity_comment activity-item"
+                                                                                    id="activity-{{ $value->notification_id }}">
+                                                                                    <p>{{ $value->message }}</p>
+                                                                                    <span
+                                                                                        class="activity mute">{{ $value->created_at->diffForHumans() }}</span>
+                                                                                </li>
+                                                                            @empty
+                                                                                <li>No Recent Activities Found.</li>
+                                                                            @endforelse
+
                                                                         </ul>
                                                                     </div>
                                                                 </aside>
@@ -722,9 +712,9 @@
                 // Toggle visibility
                 const isVisible = commentForm.style.display === 'block';
                 document.querySelectorAll('.ac-form').forEach(f => f.style.display =
-                'none'); // Hide all forms
+                    'none'); // Hide all forms
                 commentForm.style.display = isVisible ? 'none' :
-                'block'; // Toggle only this one
+                    'block'; // Toggle only this one
             });
         });
 
