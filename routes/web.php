@@ -20,7 +20,7 @@ Route::middleware(['userauth'])->group(function () {
 
     Route::prefix('users')->group(function () {
         Route::get('/categories', [SiteController::class, 'manage_categories'])->name('users.manage_categories');
-        Route::get("/notifications", [SiteController::class, 'manage_notifications'])->name('users.notifications');
+        Route::get("/notifications/{type}", [SiteController::class, 'manage_notifications'])->name('users.notifications');
 
         Route::prefix('advertisments')->group(function () {
             Route::get('/', [SiteController::class, 'manage_advertisments'])->name('users.advertisments');
@@ -52,7 +52,9 @@ Route::middleware(['userauth'])->group(function () {
         Route::get('/load', [PostController::class, 'load_posts'])->name('posts.load');
         Route::get('/photos', [PostController::class, 'show_photos'])->name('posts.show_photos');
         Route::get('/videos', [PostController::class, 'show_videos'])->name('posts.show_videos');
+        Route::get("/notification/{id}", [PostController::class, 'manage_notifications'])->name("notifications.manage_notifications");
 
+        Route::post("/bulk-notifications", [PostController::class, 'manage_bulk_notification'])->name('notifications.bulk_action');
         Route::post('/load-post-comments', [PostController::class, 'load_post_comments'])->name('comments.fetch');
         Route::post('/load-post', [PostController::class, 'generate_post_content'])->name('posts.generate_post_content');
         Route::post('/manage-like-dislike', [PostController::class, 'toggleLike'])->name('posts.toggle_like');

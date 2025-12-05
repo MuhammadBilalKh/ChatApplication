@@ -208,9 +208,19 @@ class PostController extends Controller
 
         Post::where('post_id', $validated['post_id'])->increment('comments_count');
 
-        $comment->load(['commentPostedBy']);
+        $comment->load(['commentPostedBy', 'commentPost']);
 
         $depth = $validated['parent_comment_id'] ? 1 : 0;
+
+        Notification::createNotification(
+            Auth::user()->user_id,
+            Auth::user()->username.' commented on your post.',
+            NOTIFICATION_TYPE_COMMENT,
+            $comment->post_id,
+            Post::class,
+            'A new comment has been added to your post.',
+            $comment->commentPost->user_id
+        );
 
         if ($request->ajax()) {
             $html = view('partials.comment_item', [
@@ -224,16 +234,6 @@ class PostController extends Controller
                 'message' => 'Comment added successfully.',
             ]);
         }
-
-        Notification::createNotification(
-            Auth::user()->user_id,
-            Auth::user()->username.' commented on your post.',
-            NOTIFICATION_TYPE_COMMENT,
-            $comment->post_id,
-            Post::class,
-            'A new comment has been added to your post.',
-            $comment->getPost->user_id
-        );
 
         return back()->with('post-upload-success', 'Comment added successfully.');
     }
@@ -852,5 +852,55 @@ class PostController extends Controller
         ]);
 
         return redirect()->route('blogs.list', ['type' => 'list-blog'])->with('success', 'Blog Status Updated Successfully');
+    }
+
+    public function manage_notifications($id, Request $request)
+    {
+        $existNotification = Notification::where(['notification_id' => $id, 'notification_received_by' => Auth::user()->user_id])->exists();
+
+        if (! in_array($request->action_type, ['read', 'unread', 'delete'])) {
+            return redirect()->route('suspicious');
+        } elseif (! $existNotification) {
+            return redirect()->route('suspicious');
+        } else {
+            $Notification = Notification::where([
+                'notification_id' => $id,
+                'notification_received_by' => Auth::user()->user_id,
+            ]);
+
+            if($request->action_type == "delete"){
+                $Notification->delete();
+            } else {
+                $Notification->update(['is_read' => $request->action_type == "read" ? 1 : 0]);
+            }
+        }
+
+        return redirect()->back()->with('success', 'Notification '.ucfirst($request->action_type).' Successfully.');
+    }
+
+    public function manage_bulk_notification(Request $request){
+        $actionType = $request->action_type;
+
+        foreach($request->ids as $key => $value){
+            $existNotification = Notification::where(['notification_id' => $value, 'notification_received_by' => Auth::user()->user_id])->exists();
+             if (! in_array($request->action_type, ['read', 'unread', 'delete'])) {
+                return redirect()->route('suspicious');
+            } elseif (! $existNotification) {
+                return redirect()->route('suspicious');
+            }
+        }
+
+        $Notifications = Notification::whereIn("notification_id", $request->ids);
+
+        if($actionType == "delete"){
+            $Notifications->delete();
+        } elseif($actionType == "read"){
+            $Notifications->update([
+                'is_read' => 1,
+            ]);
+        }
+
+        session()->flash('success', count($request->ids).' Notifications Marked '.ucfirst($request->action_type).' Successfully.');
+        return true;
     }
 }

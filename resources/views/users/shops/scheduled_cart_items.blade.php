@@ -55,51 +55,51 @@
             <span>$ {{ number_format($orderData->total) }}</span>
         </div>
 
-        <div class="col-sm-6 mt-2">
+        <div class="col-sm-3 mt-2">
             <span>Full Name:</span>
         </div>
 
-        <div class="col-sm-6 mt-2">
+        <div class="col-sm-9 mt-2">
             <span> {{ ($orderData->billing_name) }}</span>
         </div>
 
-        <div class="col-sm-6 mt-2">
+        <div class="col-sm-3 mt-2">
             <span>Company Name:</span>
         </div>
 
-        <div class="col-sm-6 mt-2">
+        <div class="col-sm-9 mt-2">
             <span> {{ ($orderData->company_name ?? "NA") }}</span>
         </div>
 
-        <div class="col-sm-6 mt-2">
+        <div class="col-sm-3 mt-2">
             <span>Billing Email:</span>
         </div>
 
-        <div class="col-sm-6 mt-2">
+        <div class="col-sm-9 mt-2">
             <span> {{ ($orderData->billing_email ?? "NA") }}</span>
         </div>
 
-        <div class="col-sm-6 mt-2">
+        <div class="col-sm-3 mt-2">
             <span>Billing Phone:</span>
         </div>
 
-        <div class="col-sm-6 mt-2">
+        <div class="col-sm-9 mt-2">
             <span> {{ ($orderData->billing_phone ?? "NA") }}</span>
         </div>
 
-        <div class="col-sm-6 mt-2">
+        <div class="col-sm-3 mt-2">
             <span>Billing Address:</span>
         </div>
 
-        <div class="col-sm-6 mt-2">
+        <div class="col-sm-9 mt-2">
             <span> {{ ($orderData->billing_address ?? "NA") }}</span>
         </div>
 
-        <div class="col-sm-6 mt-2">
+        <div class="col-sm-3 mt-2">
             <span>Region:</span>
         </div>
 
-        <div class="col-sm-6 mt-2">
+        <div class="col-sm-9 mt-2">
             <span> {{ ($orderData->region ?? "NA") }}</span>
         </div>
 

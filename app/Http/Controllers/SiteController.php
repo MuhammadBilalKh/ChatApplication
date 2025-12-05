@@ -8,9 +8,6 @@ use App\Models\Category;
 use App\Models\FeaturedAdvert;
 use App\Models\FeaturedPackage;
 use App\Models\FriendShip;
-use App\Models\Group;
-use App\Models\GroupInvitation;
-use App\Models\GroupMeta;
 use App\Models\JobPosting;
 use App\Models\Message;
 use App\Models\Notification;
@@ -633,28 +630,36 @@ class SiteController extends Controller
         ]);
     }
 
-    public function make_job_public($jobID){
+    public function make_job_public($jobID)
+    {
         JobPosting::where([
             'job_posting_id' => $jobID,
         ])->update([
             'publishing_status' => PUBLISHING_STATUS_PUBLIC,
         ]);
 
-        return redirect()->route('posts.jobs_listing')->with("success", 'Job Posted Successfully.');
+        return redirect()->route('posts.jobs_listing')->with('success', 'Job Posted Successfully.');
     }
 
-    public function preview_job($jobID){
+    public function preview_job($jobID)
+    {
         return view('users.jobs.view_job_detal', [
-            'data' => JobPosting::with('getPostedBy')->find($jobID)
+            'data' => JobPosting::with('getPostedBy')->find($jobID),
         ]);
     }
 
-    public function manage_notifications(){
-        $unreadNotifications = Notification::where(['notification_received_by' => Auth::user()->user_id, 'is_read' => 0])
-        ->whereNot("user_id", Auth::user()->user_id)
-        ->paginate(10);
-        return view('users.unread_notifications', [
-            'unreadNotifications' => $unreadNotifications,
-        ]);
+    public function manage_notifications($type)
+    {
+        if(!in_array($type, ["read", "unread"])){
+            return redirect()->route('suspicious');
+        } else {
+            $unreadNotifications = Notification::where(['notification_received_by' => Auth::user()->user_id, 'is_read' => $type == "read" ? 1 : 0])
+            ->whereNot('user_id', Auth::user()->user_id)
+            ->paginate(10);
+
+            return view('users.notification', [
+                'unreadNotifications' => $unreadNotifications,
+            ]);
+        }
     }
 }

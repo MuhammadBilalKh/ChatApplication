@@ -352,7 +352,7 @@
                                                                                 </li>
                                                                                 <li id="notifications-personal-li"
                                                                                     class="bp-personal-tab">
-                                                                                    <a href="{{ route('users.notifications') }}"
+                                                                                    <a href="{{ route('users.notifications', ['type' => "unread"]) }}"
                                                                                         id="user-notifications"
                                                                                         title="Notifications">
                                                                                         <span
@@ -754,7 +754,6 @@
         $chatWindow.find('.chat-loader').hide();
     }
 
-    // Load initial and scrollable messages (+scroll to bottom/top logic)
     function loadMessages(userId, {
         append = false,
         beforeMessageId = null,
