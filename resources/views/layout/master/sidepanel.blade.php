@@ -113,10 +113,6 @@
                         <a href="{{ route('posts.jobs_listing') }}"><i class="uil-briefcase-alt"></i><span
                                 class="nav-link-text">Jobs</span></a>
                     </li>
-                    <li id="menu-item-478"
-                        class="menu-item menu-item-type-post_type menu-item-object-page menu-item-478"><a
-                            href="./forums/"><i class="uil-comments"></i><span
-                                class="nav-link-text">Forums</span></a></li>
                     <li id="menu-item-477"
                         class="menu-item menu-item-type-post_type menu-item-object-page menu-item-477"><a
                             href="{{ route('blogs.list') }}"><i class="uil-newspaper"></i><span
