@@ -124,7 +124,7 @@
                     </li>
                     <li id="menu-item-701"
                         class="menu-item menu-item-type-post_type menu-item-object-page menu-item-701"><a
-                            href="./music/"><i class="uil-music"></i><span class="nav-link-text">Music</span></a>
+                            href="{{ route('peoples.music') }}"><i class="uil-music"></i><span class="nav-link-text">Music</span></a>
                     </li>
                 </ul>
             </div>

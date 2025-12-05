@@ -63,6 +63,10 @@ class SiteController extends Controller
         return view('users.games');
     }
 
+    public function music(){
+        return view('users.music');
+    }
+
     public function jobs_listing(Request $request)
     {
         $jobPostingQuery = JobPosting::query();

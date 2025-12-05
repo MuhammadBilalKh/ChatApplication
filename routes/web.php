@@ -130,6 +130,7 @@ Route::middleware(['userauth'])->group(function () {
     Route::prefix('peoples')->group(function () {
         Route::get('/list', [SiteController::class, 'list'])->name('peoples.list');
         Route::get('/games', [SiteController::class, 'games'])->name('peoples.games');
+        Route::get("/music", [SiteController::class, 'music'])->name("peoples.music");
 
         Route::get('/load-friends', [SiteController::class, 'list_friends'])->name('peoples.list_friends');
         Route::get('/load-requests', [SiteController::class, 'list_requests'])->name('peoples.list_requests');
