@@ -69,5 +69,9 @@ class AppServiceProvider extends ServiceProvider
         View::composer("layout.master.main", function($view){
             return $view->with("cartItems", OrderLineItem::where(['user_id' => Auth::user()->user_id])->where(['status' => "pending"])->count());
         });
+
+        View::composer(["layout.master.main", 'layout.profile.profile-main'], function($view){
+            return $view->with("unread_notification", Notification::where(['notification_received_by' => Auth::user()->user_id])->where(["is_read" => 0])->count());
+        });
     }
 }

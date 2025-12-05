@@ -70,7 +70,7 @@
 
                                 <div class="seller-info">
                                     <div class="seller-details">
-                                        <img src="https://placehold.co/50" alt="avatar">
+                                        <img src="{{ asset($advert->advertPostedBy->profile_picture) }}" alt="Profile Picture of {{ $advert->advertPostedBy->username }}" />
                                         <div>
                                             <div class="seller-name">{{ $advert->advertPostedBy->username }}</div>
                                             <div class="seller-date">Published
@@ -199,7 +199,7 @@
                 </div>
             </div>
 
-            @if (isset($packageData) && !empty($packageData))
+            @if (isset($packageData) && !empty($packageData) && Auth::user()->user_type == USER_TYPE_ADMIN)
                 <div class="atw-mb-6">
                     <div class="mt-3">
                         <div>

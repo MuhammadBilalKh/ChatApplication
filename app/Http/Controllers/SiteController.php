@@ -358,7 +358,7 @@ class SiteController extends Controller
                 'pendingAdverts' => $pendingFeaturedAds,
                 'packages' => FeaturedPackage::all(),
             ]);
-        } elseif ($viewType == 'pending-for-approval') {
+        } elseif ($viewType == 'review-pending') {
 
             $pendingApproval = FeaturedAdvert::with('getAdvertisment', 'getAdvertisment.getAdvertMedia')->where([
                 'is_featured' => 1,
@@ -464,14 +464,10 @@ class SiteController extends Controller
 
         $advertData = Advert::with('getCategory', 'advertPostedBy', 'getAdvertMedia')->findOrFail($id);
 
-        if ($advertData->posted_by != Auth::user()->user_id) {
-            abort(403, 'Unauthorized Access');
-        } else {
-            return view('users.advertisment.view', [
-                'advert' => $advertData,
-                'packageData' => $packageData,
-            ]);
-        }
+        return view('users.advertisment.view', [
+            'advert' => $advertData,
+            'packageData' => $packageData,
+        ]);
     }
 
     public function mark_advertisment_for_featured(Request $request)
@@ -616,16 +612,6 @@ class SiteController extends Controller
                 'message' => 'Failed to send message.',
                 'errMessage' => $e->getMessage(),
             ], 500);
-        }
-
-        try {
-            Http::post('http://localhost:3002/send', [
-                'sender_id' => Auth::id(),
-                'receiver_id' => $receiverId,
-                'message' => $request->message,
-                'created_at' => now()->format('Y-m-d H:i:s'),
-            ]);
-        } catch (\Exception $e) {
         }
 
         return response()->json([

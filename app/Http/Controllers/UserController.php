@@ -96,10 +96,6 @@ class UserController extends Controller
 
     public function show_dashboard(Request $request)
     {
-        if ($request->ajax()) {
-            return true;
-        }
-
         $totalFriendsCount = FriendShip::where(['sender_id' => Auth::user()->user_id, 'status' => FRIEND_REQUEST_STATUS_ACCEPTED])->count();
         $recentPosts = Post::where(['user_id' => Auth::user()->user_id])->latest()
             ->take(LIMITED_POST_IN_RIGHTBAR)->pluck('title', 'post_id')->toArray();
@@ -289,5 +285,38 @@ class UserController extends Controller
         Auth::logout();
 
         return redirect()->route('users.login');
+    }
+
+    public function load_friends(){
+        $friends = FriendShip::with(['getSender', 'getReceiver'])
+            ->where(function ($q) {
+                $q->where('sender_id', Auth::user()->user_id)
+                ->orWhere('receiver_id', Auth::user()->user_id);
+            })
+            ->where('status', FRIEND_REQUEST_STATUS_ACCEPTED)
+            ->get()
+            ->map(function ($row) {
+
+                if ($row->sender_id == Auth::user()->user_id) {
+                    return [
+                        'user_id' => $row->getReceiver->user_id,
+                        'username' => $row->getReceiver->username
+                    ];
+                }
+
+                return [
+                    'user_id' => $row->getSender->user_id,
+                    'username' => $row->getSender->username
+                ];
+            });
+        return $friends;
+    }
+
+    public function show_favorite_posts(){
+        return view('users.mark_favorite_posts');
+    }
+
+    public function show_friends_posts(){
+        return view('users.friends_posts');
     }
 }

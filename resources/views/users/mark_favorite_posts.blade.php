@@ -1,10 +1,10 @@
 @extends('layout.master.main')
 
-@section('title', 'Welcome ' . Auth::user()->username)
+@section('title', "Welcome ".Auth::user()->username)
 
 @section('dashboard-breadcrumbs')
     @include('layout.master.breadcrumbs', [
-        'pageTitle' => 'Posts',
+        'pageTitle' => 'Favorite Posts',
     ])
 @endsection
 
@@ -270,7 +270,7 @@
             alertResponse.html('<i class="fa fa-spinner fa-spin"></i> Loading Community Events...');
             alertResponse.fadeIn();
 
-            fetch(`{{ route('posts.load') }}?page=${page}`)
+            fetch(`{{ route('posts.load_favorite_posts') }}?page=${page}`)
                 .then(res => res.json())
                 .then(data => {
                     if (data.html.trim() !== '') {

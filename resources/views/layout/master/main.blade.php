@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="/assets/css/index.css?ver=6.8.3" media="all" />
     {{-- <link rel="stylesheet" href="/assets/css/kkpress.min.css?ver=2.6.14" media="all" /> --}}
     <link rel="stylesheet" href="/assets/css/kmkcommerce-core.css?ver=1.0.8" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tributejs@5.1.0/dist/tribute.css">
     <link rel="stylesheet" href="/assets/css/mentions.min.css?ver=14.4.0" media="all" />
     <link rel="stylesheet" href="/assets/css/kmkpress.min.css?ver=14.4.0" media="screen" />
     <link rel="stylesheet" href="/assets/css/job-listings.css?ver=598383a28ac5f9f156e4" media="all" />
@@ -89,7 +90,6 @@
                 </div>
             </div>
             @include('layout.master.chatbar')
-            {{-- @include('layout.master.chat_windows') --}}
         </div>
     </div>
 
@@ -110,8 +110,8 @@
 <script src="/assets/js/kmk.min.js"></script>
 <script src="https://js.pusher.com/8.4.0/pusher.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tributejs@5.1.0/dist/tribute.min.js"></script>
 
-<!-- chat -->
 @stack('script')
 
 <script>
@@ -208,7 +208,6 @@
             }
         });
 
-        // Delete comment
         $(document).on('click', '.rtmedia-delete-comment', function(e) {
             e.preventDefault();
 

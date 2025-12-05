@@ -97,7 +97,7 @@
                       <div class="action">
                           <div class="price advert-price color-primary">
                               ${{ number_format($value->getAdvertisment->price) }}</div>
-                          <a href="{{ $value->getAdvertisment->advertisment_id }}" class="button small">Detail</a>
+                          <a href="{{ route('adverts.view', ['id' => $value->getAdvertisment->advertisment_id ]) }}" target="_blank" class="button small">Detail</a>
                       </div>
                   @empty
                       <div class="advert-overview">

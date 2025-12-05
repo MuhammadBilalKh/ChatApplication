@@ -17,10 +17,13 @@ Route::middleware(['guest'])->group(function () {
 Route::middleware(['userauth'])->group(function () {
 
     Route::get('/dashboard', [UserController::class, 'show_dashboard'])->name('users.show_dashboard');
+    Route::get("/post/favorite", [UserController::class, 'show_favorite_posts'])->name('users.show_favorite_posts');
+    Route::get("/post/friends", [UserController::class, 'show_friends_posts'])->name("users.show_friends_posts");
 
     Route::prefix('users')->group(function () {
         Route::get('/categories', [SiteController::class, 'manage_categories'])->name('users.manage_categories');
         Route::get("/notifications/{type}", [SiteController::class, 'manage_notifications'])->name('users.notifications');
+        Route::get("/load-friends", [UserController::class, 'load_friends'])->name("users.load_friends");
 
         Route::prefix('advertisments')->group(function () {
             Route::get('/', [SiteController::class, 'manage_advertisments'])->name('users.advertisments');
@@ -50,6 +53,8 @@ Route::middleware(['userauth'])->group(function () {
     Route::post('/load-images-media', [SiteController::class, 'load_profile_pictures'])->name('site.load_profile_pictures');
     Route::prefix('post')->group(function () {
         Route::get('/load', [PostController::class, 'load_posts'])->name('posts.load');
+        Route::get("/load/favorites", [PostController::class, 'load_favorite_posts'])->name("posts.load_favorite_posts");
+        Route::get("/load/friends", [PostController::class, 'load_friends_posts'])->name('posts.load_friends_posts');
         Route::get('/photos', [PostController::class, 'show_photos'])->name('posts.show_photos');
         Route::get('/videos', [PostController::class, 'show_videos'])->name('posts.show_videos');
         Route::get("/notification/{id}", [PostController::class, 'manage_notifications'])->name("notifications.manage_notifications");

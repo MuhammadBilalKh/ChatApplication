@@ -107,7 +107,7 @@ class PostController extends Controller
 
         $userIds = array_unique(array_merge([$authId], $friends));
 
-        $limit = 5;
+        $limit = 50;
         $page = $request->input('page', 1);
 
         $posts = Post::with([
@@ -916,5 +916,116 @@ class PostController extends Controller
 
         session()->flash('success', count($request->ids).' Notifications Marked '.ucfirst($request->action_type).' Successfully.');
         return true;
+    }
+
+    public function load_favorite_posts(){
+
+        $authId = Auth::user()->user_id;
+
+        $limit = 10;
+
+        $posts = Post::with([
+            'getLikedBy',
+            'postUploadedBy',
+            'getMarkedFavorite',
+            'postMedia',
+            'comments' => function ($query) {
+                $query->whereNull('parent_comment_id')
+                    ->with([
+                        'commentPostedBy',
+                        'replies' => function ($q) {
+                            $q->with('commentPostedBy');
+                        }
+                    ]);
+            }
+        ])
+        ->whereHas('getMarkedFavorite', function ($q) use ($authId) {
+            $q->where('user_id', $authId);
+        })
+        ->where(function ($q) {
+            $q->where('post_type', POSTING_TYPE_POST)
+            ->orWhere('new_joining_post', NEW_JOINING_USER_POST);
+        })
+        ->orderByDesc('created_at')
+        ->paginate($limit);
+
+        $html = view('partials.post_list', compact('posts'))->render();
+
+        return response()->json(['html' => $html]);
+    }
+
+    public function load_friends_posts(Request $request){
+        $authId = Auth::user()->user_id;
+
+        $friends = FriendShip::where(function ($q) use ($authId) {
+            $q->where('sender_id', $authId)
+                ->orWhere('receiver_id', $authId);
+        })
+            ->where('status', FRIEND_REQUEST_STATUS_ACCEPTED)
+            ->get(['sender_id', 'receiver_id'])
+            ->map(function ($item) use ($authId) {
+                return $item->sender_id == $authId ? $item->receiver_id : $item->sender_id;
+            })
+            ->unique()
+            ->values()
+            ->toArray();
+
+        $userIds = array_unique($friends);
+
+        $limit = 50;
+        $page = $request->input('page', 1);
+
+        $posts = Post::with([
+            'getLikedBy',
+            'postUploadedBy',
+            'getMarkedFavorite',
+            'postMedia',
+            'comments' => function ($query) {
+                $query->whereNull('parent_comment_id')
+                    ->with(['commentPostedBy',
+                        'replies' => function ($q) {
+                            $q->with('commentPostedBy');
+                        }]);
+            },
+        ])->whereIn('user_id', $userIds)->where('post_type', POSTING_TYPE_POST)->orWhere('new_joining_post', NEW_JOINING_USER_POST)->orderByDesc('created_at')->paginate($limit);
+
+        $postUserIds = $posts->pluck('user_id')->unique();
+
+        $friendships = FriendShip::where(function ($q) use ($authId, $postUserIds) {
+            $q->where('sender_id', $authId)
+                ->whereIn('receiver_id', $postUserIds);
+        })
+            ->orWhere(function ($q) use ($authId, $postUserIds) {
+                $q->where('receiver_id', $authId)
+                    ->whereIn('sender_id', $postUserIds);
+            })
+            ->get();
+
+        foreach ($posts as $post) {
+            $friendship = $friendships->first(function ($f) use ($authId, $post) {
+                return ($f->sender_id == $authId && $f->receiver_id == $post->user_id)
+                    || ($f->receiver_id == $authId && $f->sender_id == $post->user_id);
+            });
+
+            if (! $friendship) {
+                $post->friend_status = 'none';
+            } else {
+                if ($friendship->status == FRIEND_REQUEST_STATUS_PENDING) {
+                    if ($friendship->sender_id == $authId) {
+                        $post->friend_status = 'sent';
+                    } else {
+                        $post->friend_status = 'received';
+                    }
+                } elseif ($friendship->status == FRIEND_REQUEST_STATUS_ACCEPTED) {
+                    $post->friend_status = 'friends';
+                } else {
+                    $post->friend_status = 'none';
+                }
+            }
+        }
+
+        $html = view('partials.post_list', compact('posts'))->render();
+
+        return response()->json(['html' => $html]);
     }
 }
