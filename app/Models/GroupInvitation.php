@@ -10,7 +10,7 @@ class GroupInvitation extends Model
 {
     protected $primaryKey = "group_invitation_id";
 
-    protected $fillable = ["invited_to", "invited_by", "invited_at", "status"];
+    protected $fillable = ["invited_to", "invited_by", "invited_at", "status", "group_id"];
 
     public function getInvitedBy(){
         return $this->belongsTo(User::class, "invited_by", "user_id");
@@ -18,5 +18,9 @@ class GroupInvitation extends Model
 
     public function getGroup(){
         return $this->belongsTo(Group::class, "group_id", "group_id");
+    }
+
+    public function Invitations(){
+        return $this->belongsTo(User::class, 'invited_to', "user_id");
     }
 }

@@ -7,7 +7,7 @@
     <meta name="viewport"
         content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" />
 
-      <link rel="stylesheet" href="/assets/css/index.css?ver=6.8.3" media="all" />
+    <link rel="stylesheet" href="/assets/css/index.css?ver=6.8.3" media="all" />
     <link rel="stylesheet" href="/assets/css/kkpress.min.css?ver=2.6.14" media="all" />
     <link rel="stylesheet" href="/assets/css/kmkcommerce-core.css?ver=1.0.8" media="all" />
     <link rel="stylesheet" href="/assets/css/mentions.min.css?ver=14.4.0" media="all" />
@@ -15,7 +15,8 @@
     <link rel="stylesheet" href="/assets/css/job-listings.css?ver=598383a28ac5f9f156e4" media="all" />
     <link rel="stylesheet" href="/assets/css/brands.css?ver=10.3.0" media="all" />
 
-    <link rel="stylesheet" href="https://mythemestore.com/beehive-preview/wp-content/themes/beehive/assets/css/bootstrap.min.css?ver=1.6.1" />
+    <link rel="stylesheet"
+        href="https://mythemestore.com/beehive-preview/wp-content/themes/beehive/assets/css/bootstrap.min.css?ver=1.6.1" />
     <link rel="stylesheet" href="/assets/css/dashicons.min.css?ver=6.8.3" media="all" />
     <link rel="stylesheet" href="/assets/css/ionicons.min.css" media="all" />
     <link rel="stylesheet" href="/assets/css/unicons.min.css" media="all" />
@@ -62,93 +63,127 @@
         <div class="inner-panel ass-scrollbar">
             <div class="panel-block dark">
                 <a href="./" class="panel-logo item">
-                    <img src="{{ asset('assets/images/logo.png') }}" alt=" Business Name" />
+                    <img src="/assets/images/logo.png" alt=" Business Name" />
                 </a>
                 <div class="my-card item">
-                    <h4 class="form-title">Login Now</h4>
-                    <form action="{{ route('users.authenticate') }}" method="{{ FORM_METHOD_POST }}"
-                        id="panel-login-form" class="kmk-login-form panel-login" name="panel-login">
-                        <div class="form-group">
-                            <div class="user-name">
-                                <label class="screen-reader-text">Email/username</label>
-                                <span class="icon"><i class="uil-user"></i></span>
-                                <input type="text" id="username" class="username-control" required name="log"
-                                    value="" placeholder="Email or username">
+                    @auth
+                        <div class="info">
+                            <a href="{{ route('users.profile') }}" class="profile-avatar">
+                                <img src="{{ asset(Auth::user()->profile_picture) }}" alt="{{ Auth::user()->username }}"
+                                    class="avatar mCS_img_loaded">
+                            </a>
+                            <div class="profile-name">
+                                <a href="{{ route('users.profile') }}" class="name ellipsis">{{ Auth::user()->name }}</a>
+                                <small>{{ Auth::user()->user_type == USER_TYPE_ADMIN ? 'Administrator' : 'User' }}</small>
+
                             </div>
                         </div>
-                        <div class="form-group">
-                            <div class="pass">
-                                <label class="screen-reader-text">Password</label>
-                                <span class="icon"><i class="uil-key-skeleton-alt"></i></span>
-                                <input type="password" id="password" class="password-control" required
-                                    name="pwd" value="" placeholder="Password">
+                        <ul class="connections ml-4">
+                            <li><span class="count" id="totalFriendsCount">{{ $friends ?? '' }}</span>
+                                <p class="mute">Friends</p>
+                            </li>
+                            <li><span class="count">{{ $totalGroups ?? '' }}</span>
+                                <p class="mute">Groups</p>
+                            </li>
+                        </ul>
+                    @endauth
+                    @guest
+                        <h4 class="form-title">Login Now</h4>
+                        <form action="{{ route('users.authenticate') }}" method="post" id="panel-login-form"
+                            class="kmk-login-form panel-login" name="panel-login">
+                            @csrf
+                            <div class="form-group">
+                                <div class="user-name">
+                                    <label class="screen-reader-text">Email/username</label>
+                                    <span class="icon"><i class="uil-user"></i></span>
+                                    <input type="text" id="username" class="username-control" required
+                                        name="log" value="" placeholder="Email or username">
+                                </div>
                             </div>
-                        </div>
-                        <div class="kmk-login-result"></div>
-                        <div class="submit">
-                            <button type="submit" id="login_submit" class="submit-login" name="wp-submit">Log
-                                In</button>
-                        </div>
-                        <input type="hidden" id="panel-login-security" name="panel-login-security"
-                            value="171d7e1524" /><input type="hidden" name="_wp_http_referer"
-                            value="/MIGVELv1/register/" />
-                        <div class="register-link">
-                            <a href="./register/" class="register color-primary">Create an account</a>
-                        </div>
-                    </form>
+                            <div class="form-group">
+                                <div class="pass">
+                                    <label class="screen-reader-text">Password</label>
+                                    <span class="icon"><i class="uil-key-skeleton-alt"></i></span>
+                                    <input type="password" id="password" class="password-control" required
+                                        name="pwd" value="" placeholder="Password">
+                                </div>
+                            </div>
+                            <div class="kmk-login-result"></div>
+                            <div class="submit">
+                                <button type="submit" id="login_submit" class="submit-login" name="wp-submit">Log
+                                    In</button>
+                            </div>
+                            <input type="hidden" id="panel-login-security" name="panel-login-security"
+                                value="171d7e1524" /><input type="hidden" name="_wp_http_referer"
+                                value="/MIGVELv1/activity-2/" />
+                            <div class="register-link">
+                                <a href="./register/" class="register color-primary">Create an account</a>
+                            </div>
+                        </form>
+                    @endguest
                 </div>
             </div>
             <div class="panel-block light">
-                <div class="panel-menu item d-n000one">
-                    <ul id="menu-dashboard-menu " class="navbar-panel">
+                <div class="panel-menu item">
+                    <ul id="menu-dashboard-menu" class="navbar-panel">
                         <li id="menu-item-475"
-                            class="menu-item menu-item-type-post_type menu-item-object-page menu-item-475"><a
-                                href="./activity-2/"><i class="uil-notebooks"></i><span
-                                    class="nav-link-text">Activity</span></a></li>
+                            class="menu-item menu-item-type-post_type menu-item-object-page
+                            @if (Route::currentRouteName() == 'users.show_dashboard') current-menu-item @endif
+                            page_item page-item-35 menu-item-475">
+                            <a href="{{ route('users.show_dashboard') }}">
+                                <i class="uil-notebooks"></i>
+                                <span class="nav-link-text">Activity</span>
+                            </a>
+                        </li>
+
                         <li id="menu-item-481"
-                            class="menu-item menu-item-type-post_type menu-item-object-page menu-item-481"><a
-                                href="./photos/"><i class="uil-image-v"></i><span
-                                    class="nav-link-text">Photos</span></a></li>
+                            class="menu-item menu-item-type-post_type menu-item-object-page
+                            @if (Route::currentRouteName() == 'posts.show_photos') current-menu-item @endif
+                            menu-item-481">
+                            <a href="{{ route('posts.show_photos') }}">
+                                <i class="uil-image-v"></i>
+                                <span class="nav-link-text">Photos</span>
+                            </a>
+                        </li>
                         <li id="menu-item-483"
-                            class="menu-item menu-item-type-post_type menu-item-object-page menu-item-483"><a
-                                href="./videos/"><i class="uil-play"></i><span class="nav-link-text">Watch</span></a>
+                            class="menu-item menu-item-type-post_type menu-item-object-page @if (Route::currentRouteName() == 'posts.show_videos') current-menu-item @endif menu-item-483">
+                            <a href="{{ route('posts.show_videos') }}"><i class="uil-play"></i><span
+                                    class="nav-link-text">Watch</span></a>
                         </li>
                         <li id="menu-item-484"
-                            class="menu-item menu-item-type-post_type menu-item-object-page menu-item-484"><a
-                                href="./members-2/"><i class="uil-user"></i><span
-                                    class="nav-link-text">People</span></a></li>
+                            class="menu-item menu-item-type-post_type menu-item-object-page @if (Route::currentRouteName() == 'peoples.list') current-menu-item @endif menu-item-484">
+                            <a href="{{ route('peoples.list') }}"><i class="uil-user"></i><span
+                                    class="nav-link-text">People</span></a>
+                        </li>
                         <li id="menu-item-614"
-                            class="menu-item menu-item-type-post_type menu-item-object-page menu-item-614"><a
-                                href="./games/"><i class="uil-users-alt"></i><span
-                                    class="nav-link-text">Games</span></a></li>
+                            class="menu-item menu-item-type-post_type menu-item-object-page @if (Route::currentRouteName() == 'peoples.games') current-menu-item @endif menu-item-614">
+                            <a href="{{ route('peoples.games') }}"><i class="uil-users-alt"></i><span
+                                    class="nav-link-text">Games</span></a>
+                        </li>
                         <li id="menu-item-476"
                             class="menu-item menu-item-type-post_type menu-item-object-page menu-item-476"><a
-                                href="./adverts/"><i class="uil-tv-retro"></i><span
-                                    class="nav-link-text">Adverts</span></a></li>
+                                href="{{ route('users.advertisments') }}"><i class="uil-tv-retro"></i><span
+                                    class="nav-link-text">Adverts</span></a>
+                        </li>
                         <li id="menu-item-482"
                             class="menu-item menu-item-type-post_type menu-item-object-page menu-item-482"><a
-                                href="./shop/"><i class="uil-shopping-trolley"></i><span
+                                href="{{ route('shops.list') }}"><i class="uil-shopping-trolley"></i><span
                                     class="nav-link-text">Shop</span></a></li>
                         <li id="menu-item-480"
-                            class="menu-item menu-item-type-post_type menu-item-object-page menu-item-480"><a
-                                href="./jobs/"><i class="uil-briefcase-alt"></i><span
-                                    class="nav-link-text">Jobs</span></a></li>
-                        <li id="menu-item-478"
-                            class="menu-item menu-item-type-post_type menu-item-object-page menu-item-478"><a
-                                href="./forums/"><i class="uil-comments"></i><span
-                                    class="nav-link-text">Forums</span></a></li>
+                            class="menu-item menu-item-type-post_type menu-item-object-page @if (Route::currentRouteName() == 'posts.jobs_listing') current-menu-item @endif menu-item-480">
+                            <a href="{{ route('posts.jobs_listing') }}"><i class="uil-briefcase-alt"></i><span
+                                    class="nav-link-text">Jobs</span></a>
+                        </li>
                         <li id="menu-item-477"
                             class="menu-item menu-item-type-post_type menu-item-object-page menu-item-477"><a
-                                href="./blog/"><i class="uil-newspaper"></i><span
-                                    class="nav-link-text">Blog</span></a></li>
+                                href="{{ route('blogs.list') }}"><i class="uil-newspaper"></i><span
+                                    class="nav-link-text">Blog</span></a>
+                        </li>
                         <li id="menu-item-701"
                             class="menu-item menu-item-type-post_type menu-item-object-page menu-item-701"><a
-                                href="./music/"><i class="uil-music"></i><span class="nav-link-text">Music</span></a>
+                                href="{{ route('peoples.music') }}"><i class="uil-music"></i><span
+                                    class="nav-link-text">Music</span></a>
                         </li>
-                        <li id="menu-item-751"
-                            class="menu-item menu-item-type-post_type menu-item-object-page menu-item-751"><a
-                                href="./stock-market/"><i class="uil-chart-bar"></i><span class="nav-link-text">Stock
-                                    Market</span></a></li>
                     </ul>
                 </div>
             </div>
@@ -195,8 +230,7 @@
                                     <article id="post-0"
                                         class="bp_group type-bp_group post-0 page type-page status-publish hentry beehive-post">
                                         <div class="entry-content clearfix">
-                                            <div id="kmk"
-                                                class="kmk-wrap beehive bp-dir-hori-nav alignwide">
+                                            <div id="kmk" class="kmk-wrap beehive bp-dir-hori-nav alignwide">
 
                                                 <div id="item-header" role="complementary" data-bp-item-id="1"
                                                     data-bp-item-component="groups"
@@ -267,7 +301,7 @@
                                                                                     <img loading="lazy"
                                                                                         decoding="async"
                                                                                         loading="lazy"
-                                                                                        src="{{ asset('/storage/'.$groupData->groupCreatedBy->profile_picture) }}"
+                                                                                        src="{{ asset('/storage/' . $groupData->groupCreatedBy->profile_picture) }}"
                                                                                         class="avatar user-1-avatar avatar-50 photo"
                                                                                         width="50" height="50"
                                                                                         alt="Profile picture of wpdeveloper" />
@@ -331,18 +365,18 @@
                                                                                     class="count color-primary">1</span>
                                                                             </a>
                                                                         </li>
-
-
-                                                                        <li id="invite-groups-li"
-                                                                            class="bp-groups-tab">
-                                                                            <a href="https://www.clientbetalink.xyz/MIGVELv1/groups/tech-group/send-invites/"
-                                                                                id="invite" title="Invite">
-                                                                                <span
-                                                                                    class="nav-link-text">Invite</span>
-
-                                                                            </a>
-                                                                        </li>
-
+                                                                        @if (
+                                                                            $groupData->getMeta->friend_invitation == 'all' ||
+                                                                                ($groupData->getMeta->friend_invitation == 'admins' && $groupData->created_by == Auth::user()->user_id))
+                                                                            <li id="invite-groups-li"
+                                                                                class="bp-groups-tab">
+                                                                                <a href="{{ route('groups.manage_invite', ['group' => $groupData->group_id]) }}"
+                                                                                    id="invite" title="Invite">
+                                                                                    <span
+                                                                                        class="nav-link-text">Invite</span>
+                                                                                </a>
+                                                                            </li>
+                                                                        @endif
 
                                                                         <li id="media-groups-li"
                                                                             class="bp-groups-tab">
@@ -354,29 +388,25 @@
                                                                             </a>
                                                                         </li>
 
+                                                                        @if ($groupData->created_by == Auth::user()->user_id)
+                                                                            <li id="admin-groups-li"
+                                                                                class="bp-groups-tab current selected">
+                                                                                <a href="https://www.clientbetalink.xyz/MIGVELv1/groups/tech-group/admin/"
+                                                                                    id="admin" title="Manage">
+                                                                                    <span
+                                                                                        class="nav-link-text">Manage</span>
 
-                                                                        <li id="admin-groups-li"
-                                                                            class="bp-groups-tab current selected">
-                                                                            <a href="https://www.clientbetalink.xyz/MIGVELv1/groups/tech-group/admin/"
-                                                                                id="admin" title="Manage">
-                                                                                <span
-                                                                                    class="nav-link-text">Manage</span>
-
-                                                                            </a>
-                                                                        </li>
-
-
+                                                                                </a>
+                                                                            </li>
+                                                                        @endif
 
                                                                     </ul>
-
-
 
                                                                 </div>
                                                             </div>
                                                         </div>
 
                                                     </nav>
-
 
                                                     <div id="item-body" class="item-body">
 
@@ -404,7 +434,7 @@
                                                                                                 loading="lazy"
                                                                                                 decoding="async"
                                                                                                 loading="lazy"
-                                                                                                src="{{ asset("/storage/".$groupData->groupCreatedBy->profile_picture) }}"
+                                                                                                src="{{ asset('/storage/' . $groupData->groupCreatedBy->profile_picture) }}"
                                                                                                 class="avatar user-1-avatar avatar-30 photo"
                                                                                                 width="30"
                                                                                                 height="30"
@@ -418,7 +448,7 @@
                                                             </div>
 
                                                             <div class="col-lg-6 profile-col-main">
-                                                                @yield("group-content")
+                                                                @yield('group-content')
                                                             </div>
 
                                                             <div class="col-lg-3 profile-col-aside right">
@@ -507,4 +537,5 @@
 </script>
 
 @stack('script')
+
 </html>

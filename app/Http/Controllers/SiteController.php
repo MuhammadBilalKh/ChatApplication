@@ -506,6 +506,7 @@ class SiteController extends Controller
     public function manageFeaturedAdvertStatus(Request $request)
     {
         $advertismentID = Advert::where(['advertisment_code' => $request->advertisment_id])->value('advertisment_id');
+        $advertismentUploadedBy = Advert::where(['advertisment_code' => $request->advertisment_id])->value('posted_by');
 
         $packageID = FeaturedAdvert::where([
             'advertisment_id' => $advertismentID,
@@ -525,6 +526,8 @@ class SiteController extends Controller
         ])->update([
             'is_featured' => $request->approval_status == 'approve' ? 2 : 3,
         ]);
+
+        Notification::createNotification(Auth::user()->user_id, "Your Advertisment With Code $advertismentID Have Been ".$request->approval_status == 'approve' ? "Approved" : "Rejected", "system", $advertismentID, Advert::class, "Advertisment", $advertismentUploadedBy);
 
         return redirect()->back()->with('success', 'Selected Featured Have Been Marked '.ucfirst($request->approval_status).' Successfully.');
     }

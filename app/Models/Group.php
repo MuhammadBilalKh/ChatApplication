@@ -21,4 +21,12 @@ class Group extends Model
     public function groupCreatedBy(){
         return $this->belongsTo(User::class, 'created_by', "user_id");
     }
+
+    public function getMeta(){
+        return $this->hasOne(GroupMeta::class, "group_id", "group_id");
+    }
+
+    public function getGroupMembers(){
+        return $this->hasMany(User::class, "user_id", "user_id");
+    }
 }

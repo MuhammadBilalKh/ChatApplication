@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\FriendShip;
 use App\Models\Group;
 use App\Models\GroupInvitation;
-use App\Models\Notification;
 use App\Models\GroupMember;
 use App\Models\GroupMeta;
 use App\Models\GroupPost;
@@ -12,6 +12,8 @@ use App\Models\GroupPostComment;
 use App\Models\GroupPostLike;
 use App\Models\GroupPostMedia;
 use App\Models\MarkFavoriteGroupPost;
+use App\Models\Notification;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
@@ -24,13 +26,22 @@ class GroupController extends Controller
     {
         $this->groupData = $request->route('group');
         if (isset($this->groupData)) {
-            View::share('groupData', Group::findOrFail($this->groupData));
+            $groupData = Group::with('getMeta', 'getGroupMembers')->findOrFail($this->groupData);
+
+            if (! GroupMember::where(['user_id' => Auth::user()->user_id, 'group_id' => $groupData->group_id])->exists()) {
+                return redirect()->route('suspicious');
+            }
+
+            View::share('groupData', $groupData);
+        } else {
+            return redirect()->route('suspicious');
         }
     }
 
     public function manage_groups(Request $request)
     {
-        $groups = Group::with('groupCreatedBy')->where(['created_by' => Auth::user()->user_id])->paginate(10);
+        $joinedGroups = GroupMember::where(['user_id' => Auth::user()->user_id])->pluck('group_id');
+        $groups = Group::with('groupCreatedBy')->whereIn('group_id', $joinedGroups)->paginate(10);
 
         return view('users.profile.groups.index', compact('groups'));
     }
@@ -71,7 +82,7 @@ class GroupController extends Controller
                 GroupMember::create([
                     'user_id' => Auth::user()->user_id,
                     'group_id' => $group->group_id,
-                    'role' => "admins",
+                    'role' => 'admins',
                 ]);
 
                 return redirect()->back()->with('success', 'Group Created Successfully.');
@@ -108,12 +119,12 @@ class GroupController extends Controller
             'postCreatedBy',
             'getMarkedFavorite',
             'postMedia',
-            "comments.replies",
+            'comments.replies',
             'comments' => function ($query) {
                 $query->whereNull('parent_comment_id')
                     ->with([
                         'commentPostedBy',
-                        'replies.commentPostedBy'
+                        'replies.commentPostedBy',
                     ]);
             },
         ])->where(['group_id' => $groupID])->orderByDesc('created_at')->paginate($limit);
@@ -124,7 +135,7 @@ class GroupController extends Controller
         return response()->json(['html' => $html]);
     }
 
-     public function upload_post(Request $request)
+    public function upload_post(Request $request)
     {
         $request->validate([
             'description' => 'required|string|max:3000',
@@ -140,7 +151,7 @@ class GroupController extends Controller
             'visibility' => POST_VISIBILITY_PUBLIC,
             'post_type' => POSTING_TYPE_POST,
             'new_joining_post' => 0,
-            'group_id' => $request->route("group"),
+            'group_id' => $request->route('group'),
         ]);
 
         if ($request->hasFile('media')) {
@@ -151,18 +162,18 @@ class GroupController extends Controller
 
                 $fileSize = $file->getSize();
 
-                $uniqueName = Auth::user()->username . '-' . uniqid('group_post_') . '_' . time() . '.' . $extension;
+                $uniqueName = Auth::user()->username.'-'.uniqid('group_post_').'_'.time().'.'.$extension;
 
                 $mediaType = explode('/', $file->getMimeType())[0];
 
                 $destination = public_path('uploads/group_posts');
-                if (!file_exists($destination)) {
+                if (! file_exists($destination)) {
                     mkdir($destination, 0777, true);
                 }
 
                 $file->move($destination, $uniqueName);
 
-                $filePath = 'uploads/group_posts/' . $uniqueName;
+                $filePath = 'uploads/group_posts/'.$uniqueName;
 
                 GroupPostMedia::create([
                     'post_id' => $post->group_post_id,
@@ -231,8 +242,9 @@ class GroupController extends Controller
         return back()->with('post-upload-success', 'Comment added successfully.');
     }
 
-    public function update_comment(Request $request){
-         $comment = GroupPostComment::where('group_post_comment_id', $request->comment_id)
+    public function update_comment(Request $request)
+    {
+        $comment = GroupPostComment::where('group_post_comment_id', $request->comment_id)
             ->where('commented_by', Auth::user()->user_id)
             ->first();
 
@@ -263,7 +275,7 @@ class GroupController extends Controller
         return back()->with('success', 'Comment updated successfully.');
     }
 
-     public function toggleLike(Request $request)
+    public function toggleLike(Request $request)
     {
         $postID = (int) str_replace('post-', '', $request->post_id);
         $existLike = GroupPostLike::where(['post_id' => $postID, 'user_id' => Auth::user()->user_id])->exists();
@@ -372,5 +384,87 @@ class GroupController extends Controller
                 'status' => REQUEST_PROCESSED,
             ]);
         }
+    }
+
+    public function manage_invite()
+    {
+        $userId = Auth::user()->user_id;
+        $friends = FriendShip::where('status', FRIEND_REQUEST_STATUS_ACCEPTED)
+            ->where(function ($q) {
+                $q->where('sender_id', Auth::user()->user_id)
+                    ->orWhere('receiver_id', Auth::user()->user_id);
+            })
+            ->get()
+            ->map(function ($row) {
+                return $row->sender_id == Auth::user()->user_id
+                    ? $row->receiver_id
+                    : $row->sender_id;
+            })->toArray();
+
+        $notInGroupFriends = User::with('getInvitations')->whereIn('user_id', $friends)
+            ->whereNotIn('user_id', function ($q) {
+                $q->select('user_id')
+                    ->from('group_members')
+                    ->where('group_id', $this->groupData);
+            })
+            ->where('user_id', '!=', $userId)
+            ->paginate();
+
+        return view('users.profile.groups.invitations.my_friends', [
+            'membersToInvite' => $notInGroupFriends,
+        ]);
+    }
+
+    public function send_remove_group_invitation(Request $request)
+    {
+        $userId = Auth::user()->user_id;
+        $groupId = $this->groupData;
+
+        $existRequest = GroupInvitation::where([
+            'group_id' => $groupId,
+            'invited_by' => $userId,
+            'invited_to' => $request->user_id,
+        ])->first();
+
+        if ($existRequest) {
+
+            $existRequest->delete();
+
+        } else {
+
+            $invite = GroupInvitation::create([
+                'group_id' => $groupId,
+                'invited_at' => now(),
+                'status' => 'pending',
+                'invited_by' => $userId,
+                'invited_to' => $request->user_id,
+            ]);
+
+            $groupName = Group::where('group_id', $groupId)->value('group_name');
+
+            Notification::createNotification(
+                $userId,
+                Auth::user()->username." Invited You To Join Group $groupName",
+                NOTIFICATION_TYPE_SYSTEM,
+                $invite->group_invitation_id,
+                'invite',
+                'Notification to Join Group',
+                $request->user_id
+            );
+        }
+
+        return response()->json([
+            'status' => REQUEST_PROCESSED,
+        ]);
+    }
+
+    public function all_members()
+    {
+        $groupMembersUsers = GroupMember::where(['group_id' => $this->groupData])->pluck('user_id');
+        $members = User::whereIn('user_id', $groupMembersUsers)->whereNot('user_id', Auth::user()->user_id)->orderByDesc('user_id')->paginate(10);
+
+        return view('users.profile.groups.invitations.all_members', [
+            'membersToInvite' => $members,
+        ]);
     }
 }

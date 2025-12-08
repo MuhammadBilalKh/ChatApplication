@@ -26,7 +26,7 @@
                         <a class="nav-link dropdown-toggle" href="#" id="nav_notification" role="button"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="uil-bell"></i>
-                            <span class="nav-item-title">Notifications</span>
+                            <span class="nav-item-title">Notifications <span class="count">6</span></span>
                         </a>
                         <div class="dropdown-menu" aria-labelledby="nav_notification">
                             <div class="dropdown-title">Notifications</div>
@@ -34,7 +34,7 @@
                                 <div class="alert alert-warning" role="alert">No notifications found</div>
                             </div>
                             <div class="dropdown-footer">
-                                <a href="./notifications/unread/" class="button">All Notifications</a>
+                                <a href="{{ route('users.notifications', ['type' => "unread"]) }}" class="button">All Notifications</a>
                             </div>
                         </div>
                     </li>

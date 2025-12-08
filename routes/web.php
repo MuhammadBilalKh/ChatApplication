@@ -45,7 +45,9 @@ Route::middleware(['userauth'])->group(function () {
         Route::get('/', [UserController::class, 'show_profile'])->name('users.profile');
         Route::get('/settings/general', [UserController::class, 'general_settings'])->name('users.general_settings');
         Route::get('/setting/profile-visibility', [UserController::class, 'profile_visibility_settings'])->name('users.profile_visibility_settings');
+        Route::get("/settings/email", [UserController::class, 'email_setting'])->name("users.email_setting");
 
+        Route::post("/settings/email/update", [UserController::class, 'email_setting'])->name("users.update_email_setting");
         Route::post('/setting/update-profile-visibility', [UserController::class, 'profile_visibility_settings'])->name('users.update_profile_visibility_settings');
         Route::post('/settings/general/update', [UserController::class, 'general_settings'])->name('users.update_general_settings');
     });
@@ -106,11 +108,13 @@ Route::middleware(['userauth'])->group(function () {
         Route::prefix('{group}')->group(function () {
             Route::get('/dashboard', [GroupController::class, 'show_dashboard'])->name('groups.dashboard');
             Route::get('/load-posts', [GroupController::class, 'load_group_posts'])->name('group_posts.load');
+            Route::get("/manage_invite", [GroupController::class, 'manage_invite'])->name("groups.manage_invite");
+            Route::get("/all-members", [GroupController::class, 'all_members'])->name('groups.all_members');
 
+            Route::post("/send-invitation", [GroupController::class, 'send_remove_group_invitation'])->name("groups.send_remove_group_invitation");
             Route::post('/manage-like-dislike', [GroupController::class, 'toggleLike'])->name('group_posts.toggle_like');
             Route::post('/delete-post', [GroupController::class, 'delete_post'])->name('group_posts.delete');
             Route::post('/mark-favorite', [GroupController::class, 'toggleMarkFavorite'])->name('group_posts.toggle_mark_favorite');
-
             Route::post('/create-post', [GroupController::class, 'upload_post'])->name('groups.create_post');
             Route::post('/post-comment', [GroupController::class, 'add_comment'])->name('group_comments.store');
             Route::post('/update-comment', [GroupController::class, 'update_comment'])->name('group_comments.update');

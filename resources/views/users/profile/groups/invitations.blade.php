@@ -30,18 +30,19 @@
 
     <div class="groups mygroups" data-bp-list="groups">
         @forelse ($invitations as $key => $value)
+
             <li class="item-entryanimate-itemslideInUp even public is-admin is-member group-has-avatar" data-bp-item-id="1"
                 data-bp-item-component="groups">
                 <div class="list-wrap">
                     <div class="item-cover"
-                        style="background-image: url('{{ asset('/storage/' . $group->cover_image) }}');">
+                        style="background-image: url('{{ asset('/storage/' . $value->getgroup->cover_image) }}');">
                     </div>
 
                     <div class="item-avatar">
                         <a href="https://www.clientbetalink.xyz/MIGVELv1/groups/tech-group/"><img loading="lazy"
-                                src="{{ asset('/storage/' . $group->profile_image) }}"
+                                src="{{ asset('/storage/' . $value->getgroup->profile_image) }}"
                                 class="avatar group-1-avatar avatar-200 photo" width="200" height="200"
-                                alt="Group logo of {{ $group->group_name }}"></a>
+                                alt="Group logo of {{ $value->getgroup->group_name }}"></a>
                     </div>
 
                     <div class="item">
@@ -50,14 +51,14 @@
 
                             <h5 class="list-title groups-title"><a
                                     href="https://www.clientbetalink.xyz/MIGVELv1/groups/tech-group/"
-                                    class="bp-group-home-link tech-group-home-link">{{ $group->group_name }}</a></h5>
+                                    class="bp-group-home-link tech-group-home-link">{{ $value->getgroup->group_name }}</a></h5>
 
                             <ul class="inline-members">
 
                                 <li>
                                     <a href="https://www.clientbetalink.xyz/MIGVELv1/members-2/wpdeveloper/"
                                         title="wpdeveloper" target="_blank">
-                                        <img loading="lazy" src="{{ asset($group->groupCreatedBy->profile_picture) }}"
+                                        <img loading="lazy" src="{{ asset($value->getgroup->groupCreatedBy->profile_picture) }}"
                                             class="avatar user-1-avatar avatar-35 photo" width="35" height="35"
                                             alt="Profile picture of wpdeveloper"> </a>
                                 </li>

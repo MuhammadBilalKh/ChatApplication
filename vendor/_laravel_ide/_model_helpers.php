@@ -4192,6 +4192,9 @@ namespace App\Models {
      * @property-read mixed $group_name
      * @property-read mixed $group_description
      * @property-read \App\Models\User $groupCreatedBy
+     * @property-read \App\Models\GroupMeta $getMeta
+     * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $getGroupMembers
+     * @property-read int|null $getGroupMembers_count
      * @method static \Illuminate\Database\Eloquent\Builder<Group>|Group whereGroupId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Group>|Group wherePrivacy($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Group>|Group whereProfileImage($value)
@@ -5130,6 +5133,7 @@ namespace App\Models {
      * @property int $group_invitation_id
      * @property-read \App\Models\User $getInvitedBy
      * @property-read \App\Models\Group $getGroup
+     * @property-read \App\Models\User $Invitations
      * @method static \Illuminate\Database\Eloquent\Builder<GroupInvitation>|GroupInvitation whereGroupInvitationId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<GroupInvitation>|GroupInvitation whereInvitedTo($value)
      * @method static \Illuminate\Database\Eloquent\Builder<GroupInvitation>|GroupInvitation whereInvitedBy($value)
@@ -13177,6 +13181,16 @@ namespace App\Models {
     /**
      * App\Models\UserMeta
      *
+     * @property mixed $email_on_group_joining_accepted_or_rejected
+     * @property mixed $email_on_receiving_request_for_private_group
+     * @property mixed $email_on_changing_group_role
+     * @property mixed $email_on_receiving_membership_invitation
+     * @property mixed $email_on_friend_request_accept
+     * @property mixed $email_on_friend_request_receive
+     * @property mixed $email_on_accept_membership_invitation
+     * @property mixed $email_on_sending_message
+     * @property mixed $email_on_reply_or_comment
+     * @property mixed $email_on_metion
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
      * @property mixed $country
@@ -13194,6 +13208,16 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<UserMeta>|UserMeta whereCountry($value)
      * @method static \Illuminate\Database\Eloquent\Builder<UserMeta>|UserMeta whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<UserMeta>|UserMeta whereUpdatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<UserMeta>|UserMeta whereEmailOnMetion($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<UserMeta>|UserMeta whereEmailOnReplyOrComment($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<UserMeta>|UserMeta whereEmailOnSendingMessage($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<UserMeta>|UserMeta whereEmailOnAcceptMembershipInvitation($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<UserMeta>|UserMeta whereEmailOnFriendRequestReceive($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<UserMeta>|UserMeta whereEmailOnFriendRequestAccept($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<UserMeta>|UserMeta whereEmailOnReceivingMembershipInvitation($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<UserMeta>|UserMeta whereEmailOnChangingGroupRole($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<UserMeta>|UserMeta whereEmailOnReceivingRequestForPrivateGroup($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<UserMeta>|UserMeta whereEmailOnGroupJoiningAcceptedOrRejected($value)
      * @method static \Illuminate\Database\Eloquent\Builder<UserMeta>|UserMeta newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<UserMeta>|UserMeta newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<UserMeta>|UserMeta query()

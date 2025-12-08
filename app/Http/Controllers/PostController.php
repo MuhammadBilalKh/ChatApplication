@@ -9,7 +9,6 @@ use App\Models\BlogHasCategory;
 use App\Models\BlogMedia;
 use App\Models\Comment;
 use App\Models\FriendShip;
-use Illuminate\Support\Facades\File;
 use App\Models\MarkFavorite;
 use App\Models\Notification;
 use App\Models\Post;
@@ -20,6 +19,7 @@ use App\Models\Tag;
 use getID3;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
 class PostController extends Controller
@@ -47,16 +47,16 @@ class PostController extends Controller
             foreach ($request->file('media') as $file) {
 
                 $extension = strtolower($file->getClientOriginalExtension());
-                $fileSize  = $file->getSize();
+                $fileSize = $file->getSize();
 
-                $uniqueName = Auth::user()->username . '-' . uniqid('post_') . '_' . time() . '.' . $extension;
+                $uniqueName = Auth::user()->username.'-'.uniqid('post_').'_'.time().'.'.$extension;
 
                 $uploadPath = public_path('uploads/posts');
                 $file->move($uploadPath, $uniqueName);
 
-                $filePath = 'uploads/posts/' . $uniqueName;
+                $filePath = 'uploads/posts/'.$uniqueName;
 
-                $mime = File::mimeType($uploadPath . '/' . $uniqueName);
+                $mime = File::mimeType($uploadPath.'/'.$uniqueName);
 
                 if (str_contains($mime, 'image')) {
                     $mediaType = 'image';
@@ -67,10 +67,10 @@ class PostController extends Controller
                 }
 
                 PostMedia::create([
-                    'post_id'    => $post->post_id,
+                    'post_id' => $post->post_id,
                     'media_type' => $mediaType,
-                    'file_size'  => $fileSize,
-                    'file_path'  => $filePath,
+                    'file_size' => $fileSize,
+                    'file_path' => $filePath,
                 ]);
             }
         }
@@ -119,7 +119,7 @@ class PostController extends Controller
                 $query->whereNull('parent_comment_id')
                     ->with(['commentPostedBy',
                         'replies' => function ($q) {
-                            $q->with('commentPostedBy');
+                            $q->whereNotNull('parent_comment_id')->with('commentPostedBy');
                         }]);
             },
         ])->whereIn('user_id', $userIds)->where('post_type', POSTING_TYPE_POST)->orWhere('new_joining_post', NEW_JOINING_USER_POST)->orderByDesc('created_at')->paginate($limit);
@@ -465,9 +465,8 @@ class PostController extends Controller
                     ->limit(10)
                     ->with(['commentPostedBy',
                         'replies' => function ($q) {
-                            $q->with('commentPostedBy');
-                        },
-                    ]);
+                            $q->whereNotNull('parent_comment_id')->with('commentPostedBy');
+                        }]);
             },
         ])->where(['post_id' => $request->post_id])->first();
 
@@ -882,43 +881,46 @@ class PostController extends Controller
                 'notification_received_by' => Auth::user()->user_id,
             ]);
 
-            if($request->action_type == "delete"){
+            if ($request->action_type == 'delete') {
                 $Notification->delete();
             } else {
-                $Notification->update(['is_read' => $request->action_type == "read" ? 1 : 0]);
+                $Notification->update(['is_read' => $request->action_type == 'read' ? 1 : 0]);
             }
         }
 
         return redirect()->back()->with('success', 'Notification '.ucfirst($request->action_type).' Successfully.');
     }
 
-    public function manage_bulk_notification(Request $request){
+    public function manage_bulk_notification(Request $request)
+    {
         $actionType = $request->action_type;
 
-        foreach($request->ids as $key => $value){
+        foreach ($request->ids as $key => $value) {
             $existNotification = Notification::where(['notification_id' => $value, 'notification_received_by' => Auth::user()->user_id])->exists();
-             if (! in_array($request->action_type, ['read', 'unread', 'delete'])) {
+            if (! in_array($request->action_type, ['read', 'unread', 'delete'])) {
                 return redirect()->route('suspicious');
             } elseif (! $existNotification) {
                 return redirect()->route('suspicious');
             }
         }
 
-        $Notifications = Notification::whereIn("notification_id", $request->ids);
+        $Notifications = Notification::whereIn('notification_id', $request->ids);
 
-        if($actionType == "delete"){
+        if ($actionType == 'delete') {
             $Notifications->delete();
-        } elseif($actionType == "read"){
+        } elseif ($actionType == 'read') {
             $Notifications->update([
                 'is_read' => 1,
             ]);
         }
 
         session()->flash('success', count($request->ids).' Notifications Marked '.ucfirst($request->action_type).' Successfully.');
+
         return true;
     }
 
-    public function load_favorite_posts(){
+    public function load_favorite_posts()
+    {
 
         $authId = Auth::user()->user_id;
 
@@ -934,27 +936,27 @@ class PostController extends Controller
                     ->with([
                         'commentPostedBy',
                         'replies' => function ($q) {
-                            $q->with('commentPostedBy');
-                        }
-                    ]);
-            }
+                            $q->whereNotNull('parent_comment_id')->with('commentPostedBy');
+                        }]);
+            },
         ])
-        ->whereHas('getMarkedFavorite', function ($q) use ($authId) {
-            $q->where('user_id', $authId);
-        })
-        ->where(function ($q) {
-            $q->where('post_type', POSTING_TYPE_POST)
-            ->orWhere('new_joining_post', NEW_JOINING_USER_POST);
-        })
-        ->orderByDesc('created_at')
-        ->paginate($limit);
+            ->whereHas('getMarkedFavorite', function ($q) use ($authId) {
+                $q->where('user_id', $authId);
+            })
+            ->where(function ($q) {
+                $q->where('post_type', POSTING_TYPE_POST)
+                    ->orWhere('new_joining_post', NEW_JOINING_USER_POST);
+            })
+            ->orderByDesc('created_at')
+            ->paginate($limit);
 
         $html = view('partials.post_list', compact('posts'))->render();
 
         return response()->json(['html' => $html]);
     }
 
-    public function load_friends_posts(Request $request){
+    public function load_friends_posts(Request $request)
+    {
         $authId = Auth::user()->user_id;
 
         $friends = FriendShip::where(function ($q) use ($authId) {
@@ -984,7 +986,7 @@ class PostController extends Controller
                 $query->whereNull('parent_comment_id')
                     ->with(['commentPostedBy',
                         'replies' => function ($q) {
-                            $q->with('commentPostedBy');
+                            $q->whereNotNull('parent_comment_id')->with('commentPostedBy');
                         }]);
             },
         ])->whereIn('user_id', $userIds)->where('post_type', POSTING_TYPE_POST)->orWhere('new_joining_post', NEW_JOINING_USER_POST)->orderByDesc('created_at')->paginate($limit);

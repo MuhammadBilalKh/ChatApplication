@@ -6,22 +6,6 @@
                     src="https://www.clientbetalink.xyz/MIGVELv1/wp-content/uploads/avatars/2/1761166349-bpthumb.jpg"
                     class="avatar avatar-24 photo" height="24" width="24"></button>
 
-            <div id="kmk-ajax-search" class="kmk-ajax-search">
-                <form role="search" method="get" id="ajax-search-form" class="ajax-search-form form-inline"
-                    action="#">
-                    <div class="search-field">
-                        <i class="icon ion-android-search"></i>
-                        <input id="ajax-search-textfield" type="text" name="s" placeholder="Search..."
-                            value="" autocomplete="off" required="">
-                        <span class="kmk-loading-ring"></span>
-                    </div>
-                    <div class="search-button">
-                        <button type="submit" class="search-submit"><i class="icon ion-android-search"></i></button>
-                    </div>
-                </form>
-                <div id="ajax-search-result"></div>
-            </div>
-
             <ul id="navbar-user" class="navbar-nav navbar-user">
                 <li id="friend-requests-list" class="nav-item dropdown friend-requests-list">
                     <a class="nav-link dropdown-toggle" href="#" id="nav_friend_requests" role="button"
@@ -51,7 +35,7 @@
                             <div class="alert alert-warning" role="alert">No notifications found</div>
                         </div>
                         <div class="dropdown-footer">
-                            <a href="./notifications/unread/" class="button">All Notifications</a>
+                            <a href="{{ route('users.notifications', ['type' => "unread"]) }}" class="button">All Notifications</a>
                         </div>
                     </div>
                 </li>
@@ -106,7 +90,7 @@
                             </li>
                             <li id="menu-item-491"
                                 class="bp-menu bp-notifications-nav menu-item menu-item-type-custom menu-item-object-custom menu-item-491">
-                                <a href="./notifications/">Notifications</a>
+                                <a href="{{ route('users.notifications', ['type' => "unread"]) }}">Notifications</a>
                             </li>
                             <li id="menu-item-492"
                                 class="bp-menu bp-messages-nav menu-item menu-item-type-custom menu-item-object-custom menu-item-492">

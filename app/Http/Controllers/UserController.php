@@ -267,8 +267,8 @@ class UserController extends Controller
                 'country' => $request->country_visibility,
             ]);
 
-            if($updateUserMeta){
-                return redirect()->back()->with("success", "User Meta Detail Updated Successfully.");
+            if ($updateUserMeta) {
+                return redirect()->back()->with('success', 'User Meta Detail Updated Successfully.');
             }
         } else {
             $userMetaData = UserMeta::where(['user_id' => Auth::user()->user_id])->first();
@@ -287,11 +287,12 @@ class UserController extends Controller
         return redirect()->route('users.login');
     }
 
-    public function load_friends(){
+    public function load_friends()
+    {
         $friends = FriendShip::with(['getSender', 'getReceiver'])
             ->where(function ($q) {
                 $q->where('sender_id', Auth::user()->user_id)
-                ->orWhere('receiver_id', Auth::user()->user_id);
+                    ->orWhere('receiver_id', Auth::user()->user_id);
             })
             ->where('status', FRIEND_REQUEST_STATUS_ACCEPTED)
             ->get()
@@ -300,23 +301,53 @@ class UserController extends Controller
                 if ($row->sender_id == Auth::user()->user_id) {
                     return [
                         'user_id' => $row->getReceiver->user_id,
-                        'username' => $row->getReceiver->username
+                        'username' => $row->getReceiver->username,
                     ];
                 }
 
                 return [
                     'user_id' => $row->getSender->user_id,
-                    'username' => $row->getSender->username
+                    'username' => $row->getSender->username,
                 ];
             });
+
         return $friends;
     }
 
-    public function show_favorite_posts(){
+    public function show_favorite_posts()
+    {
         return view('users.mark_favorite_posts');
     }
 
-    public function show_friends_posts(){
+    public function show_friends_posts()
+    {
         return view('users.friends_posts');
+    }
+
+    public function email_setting(Request $request)
+    {
+        if ($request->isMethod(FORM_METHOD_POST)) {
+
+            $n = $request->notifications;
+
+            UserMeta::where('user_id', Auth::user()->user_id)->update([
+                'email_on_metion' => ($n['notification_activity_new_mention'] ?? 'no') == 'yes' ? 1 : 0,
+                'email_on_reply_or_comment' => ($n['notification_activity_new_reply'] ?? 'no') == 'yes' ? 1 : 0,
+                'email_on_sending_message' => ($n['notification_messages_new_message'] ?? 'no') == 'yes' ? 1 : 0,
+                'email_on_accept_membership_invitation' => ($n['notification_members_invitation_accepted'] ?? 'no') == 'yes' ? 1 : 0,
+                'email_on_friend_request_receive' => ($n['notification_friends_friendship_request'] ?? 'no') == 'yes' ? 1 : 0,
+                'email_on_friend_request_accept' => ($n['notification_friends_friendship_accepted'] ?? 'no') == 'yes' ? 1 : 0,
+                'email_on_receiving_membership_invitation' => ($n['notification_groups_invite'] ?? 'no') == 'yes' ? 1 : 0,
+                'email_on_changing_group_role' => ($n['notification_groups_admin_promotion'] ?? 'no') == 'yes' ? 1 : 0,
+                'email_on_receiving_request_for_private_group' => ($n['notification_groups_membership_request'] ?? 'no') == 'yes' ? 1 : 0,
+                'email_on_group_joining_accepted_or_rejected' => ($n['notification_membership_request_completed'] ?? 'no') == 'yes' ? 1 : 0,
+            ]);
+
+            return back()->with('success', 'Email Notification Settings Updated Successfully.');
+        }
+
+        return view('users.profile.groups.settings.email_setting', [
+            'meta' => UserMeta::where(['user_id' => Auth::user()->user_id])->first(),
+        ]);
     }
 }

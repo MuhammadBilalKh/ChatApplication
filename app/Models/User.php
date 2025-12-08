@@ -96,4 +96,12 @@ class User extends Authenticatable
     public function getOrders(){
         return $this->hasMany(Order::class, "vendor_id", "user_id");
     }
+
+    public function getCreatedGroups(){
+        return $this->hasMany(Group::class, "user_id", "created_by");
+    }
+
+    public function getInvitations(){
+        return $this->hasMany(GroupInvitation::class, 'invited_to', "user_id");
+    }
 }

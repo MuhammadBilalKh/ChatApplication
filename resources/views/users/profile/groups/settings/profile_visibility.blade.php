@@ -3,7 +3,7 @@
 @section('title', 'Profile Visibility Settings')
 
 @section('profile-content')
-    <nav class="bp-navs bp-subnavs no-ajax user-subnav mb-3" id="subnav" role="navigation" aria-label="Settings menu">
+     <nav class="bp-navs bp-subnavs no-ajax user-subnav mb-3" id="subnav" role="navigation" aria-label="Settings menu">
         <ul id="member-secondary-nav" class="subnav bp-priority-subnav-nav-items">
 
             <li id="general-personal-li" class="bp-personal-sub-tab" data-bp-user-scope="general">
@@ -13,7 +13,7 @@
             </li>
 
             <li id="notifications-personal-li" class="bp-personal-sub-tab" data-bp-user-scope="notifications">
-                <a href="https://mythemestore.com/beehive-preview/members/user/settings/notifications/" id="notifications">
+                <a href="{{ route('users.email_setting') }}" id="notifications">
                     Email
                 </a>
             </li>

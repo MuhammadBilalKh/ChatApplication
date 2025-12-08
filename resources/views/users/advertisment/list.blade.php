@@ -91,6 +91,9 @@
                               <p class="address mute"><i
                                       class="uil-location-point"></i>{{ $value->getAdvertisment->location }}
                               </p>
+                              <p class="address mute"><i
+                                      class="uil-user"></i>{{ $value->getAdvertisment->advertPostedBy->username }}
+                              </p>
                           </div>
                       </div>
 

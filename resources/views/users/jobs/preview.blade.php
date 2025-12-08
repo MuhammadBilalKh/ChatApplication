@@ -75,8 +75,8 @@
                         <div class="company job-single-header">
                             <div class="logo">
                                 <img decoding="async" class="company_logo"
-                                    src="https://www.clientbetalink.xyz/MIGVELv1/wp-content/uploads/job-manager-uploads/company_logo/2025/11/Social_Media_DB-150x150.png"
-                                    alt="test company">
+                                    src="{{ asset('/storage/'.$data->company_logo) }}"
+                                    alt="test company" />
                             </div>
                             <div class="info">
                                 <h1 class="job_title h2">{{ $data->title }}</h1> <span
