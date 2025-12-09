@@ -68,7 +68,7 @@
                             <ul id="menu-account-menu" class="member-account-menu">
                                 <li id="menu-item-485"
                                     class="bp-menu bp-activity-nav menu-item menu-item-type-custom menu-item-object-custom menu-item-485">
-                                    <a href="./activity/">Timeline</a>
+                                    <a href="{{ route('users.timeline_activity') }}">Timeline</a>
                                 </li>
                                 <li id="menu-item-486"
                                     class="bp-menu bp-profile-nav menu-item menu-item-type-custom menu-item-object-custom menu-item-486">

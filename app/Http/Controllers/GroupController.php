@@ -94,9 +94,11 @@ class GroupController extends Controller
 
     public function groups_invitation()
     {
-        $groupInvitations = GroupInvitation::with('getInvitedBy', 'getGroup')->where([
+        $groupInvitations = GroupInvitation::with('getInvitedBy', 'getGroup.getMeta', "getGroup.groupCreatedBy")->where([
             'invited_to' => Auth::user()->user_id,
-        ])->orderByDesc('invited_at')->paginate(10);
+        ])
+        ->where("status", "pending")
+        ->orderByDesc('invited_at')->paginate(10);
 
         return view('users.profile.groups.invitations', [
             'invitations' => $groupInvitations,
@@ -466,5 +468,25 @@ class GroupController extends Controller
         return view('users.profile.groups.invitations.all_members', [
             'membersToInvite' => $members,
         ]);
+    }
+
+    public function approve_reject_group_invitation(Request $request){
+        GroupInvitation::where([
+            'group_id' => $request->group_id,
+            'invited_to' => Auth::user()->user_id,
+        ])->update([
+            'status' => $request->approval_type == "approve" ? "accepted" : "rejected",
+        ]);
+
+        if($request->approval_type == "approve"){
+            GroupMember::create([
+                'group_id' => $request->group_id,
+                'user_id' => Auth::user()->user_id,
+                'joined_at' => now(),
+                'role' => "member",
+            ]);
+        }
+
+        return redirect()->back()->with("success", "Group Invitation Request Processed Successfully.");
     }
 }

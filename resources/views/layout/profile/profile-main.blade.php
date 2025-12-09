@@ -760,7 +760,7 @@
 
         $.ajax({
             url: '{{ route('chat.load-messages') }}',
-            method: 'GET',
+            method: '{{ FORM_METHOD_GET }}',
             data: {
                 user_id: userId,
                 offset: messageOffsets[userId],

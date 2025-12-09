@@ -28,65 +28,60 @@
 
     </nav>
 
+    @if(session()->has('success'))
+        <div class="alert alert-success">
+            <span>{{ session()->get('success') }}</span>
+        </div>
+    @endif
+
     <div class="groups mygroups" data-bp-list="groups">
-        @forelse ($invitations as $key => $value)
+        <div class="row mt-3">
 
-            <li class="item-entryanimate-itemslideInUp even public is-admin is-member group-has-avatar" data-bp-item-id="1"
-                data-bp-item-component="groups">
-                <div class="list-wrap">
-                    <div class="item-cover"
-                        style="background-image: url('{{ asset('/storage/' . $value->getgroup->cover_image) }}');">
-                    </div>
+            @forelse ($invitations as $key => $value)
+                <div class="col-sm-12">
 
-                    <div class="item-avatar">
-                        <a href="https://www.clientbetalink.xyz/MIGVELv1/groups/tech-group/"><img loading="lazy"
-                                src="{{ asset('/storage/' . $value->getgroup->profile_image) }}"
-                                class="avatar group-1-avatar avatar-200 photo" width="200" height="200"
-                                alt="Group logo of {{ $value->getgroup->group_name }}"></a>
-                    </div>
-
-                    <div class="item">
-
-                        <div class="item-block">
-
-                            <h5 class="list-title groups-title"><a
-                                    href="https://www.clientbetalink.xyz/MIGVELv1/groups/tech-group/"
-                                    class="bp-group-home-link tech-group-home-link">{{ $value->getgroup->group_name }}</a></h5>
-
-                            <ul class="inline-members">
-
-                                <li>
-                                    <a href="https://www.clientbetalink.xyz/MIGVELv1/members-2/wpdeveloper/"
-                                        title="wpdeveloper" target="_blank">
-                                        <img loading="lazy" src="{{ asset($value->getgroup->groupCreatedBy->profile_picture) }}"
-                                            class="avatar user-1-avatar avatar-35 photo" width="35" height="35"
-                                            alt="Profile picture of wpdeveloper"> </a>
-                                </li>
-                            </ul>
-
-
-                            <p class="item-meta group-details">Public Group / 1 member</p>
-
-                            <ul class=" groups-meta action">
-                                <li class="generic-button"><a
-                                        href="https://www.clientbetalink.xyz/MIGVELv1/groups/tech-group/admin/">Manage
-                                        Group</a></li>
-                            </ul>
+                    <div class="card border-0">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="item-avatr">
+                                        <img class="avatar group-1-avatar avatar-200 photo"
+                                            src="{{ asset('/storage/' . $value->getgroup->profile_image) }}" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-8">
+                                    <p style="font-weight: bold;"> {{ $value->getgroup->group_name }}
+                                        ({{ ucfirst($value->getgroup->getMeta->privacy_setting) }} Group)
+                                    </p>
+                                    <p style="font-weight: bold;">Created By: {{ $value->getgroup->groupCreatedBy->name }}
+                                        ({{ $value->getgroup->groupCreatedBy->username }})</p>
+                                </div>
+                            </div>
+                            <form method="{{ FORM_METHOD_POST }}" action="{{ route('groups.approve_reject_group_invitation', ['group' => $value->getgroup->group_id]) }}">
+                                @csrf
+                                <input type="hidden" name="group_id" value="{{ $value->getgroup->group_id }}" />
+                                <button type="submit" name="approval_type" value="approve" class="btn btn-success btn-sm float-right m-1">Approve</button>
+                                <button type="submit" name="approval_type" value="reject" class="btn btn-sm btn-danger float-right m-1">Reject</button>
+                            </form>
                         </div>
-
                     </div>
-
                 </div>
-            </li>
-        @empty
-            <aside class="bp-feedback bp-messages info">
-                <span class="bp-icon" aria-hidden="true"></span>
-                <p>You have no outstanding group invites.</p>
-
-            </aside>
-        @endforelse
-        </ul>
+            @empty
+                <aside class="bp-feedback bp-messages info">
+                    <span class="bp-icon" aria-hidden="true"></span>
+                    <p>You have no outstanding group invites.</p>
+                </aside>
+            @endforelse
+        </div>
     </div>
 
     {{ $invitations->links() }}
 @endsection
+
+@push('script')
+    <script>
+        jQuery(document).ready(function(){
+            jQuery(".alert").delay(2500).fadeOut();
+        });
+    </script>
+@endpush

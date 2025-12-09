@@ -350,4 +350,41 @@ class UserController extends Controller
             'meta' => UserMeta::where(['user_id' => Auth::user()->user_id])->first(),
         ]);
     }
+
+    public function timeline_activity(Request $request)
+    {
+        $limit = 10;
+        $page = $request->input('page', 1);
+
+        $query = Post::with([
+            'getLikedBy',
+            'postUploadedBy',
+            'getMarkedFavorite',
+            'postMedia',
+            'comments' => function ($query) {
+                $query->whereNull('parent_comment_id')
+                    ->with([
+                        'commentPostedBy',
+                        'replies' => function ($q) {
+                            $q->with('commentPostedBy')->whereNotNull('parent_comment_id');
+                        },
+                    ]);
+            },
+        ])
+            ->where('user_id', Auth::user()->user_id)
+            ->where('post_type', POSTING_TYPE_POST)
+            ->orderByDesc('created_at');
+
+        $posts = $query->paginate($limit, ['*'], 'page', $page);
+
+        if ($request->ajax()) {
+            $html = view('partials.timeline_posts', compact('posts'))->render();
+            return response()->json([
+                'html' => $html,
+                'hasMore' => $posts->hasMorePages(),
+            ]);
+        }
+
+        return view('users.timeline.home');
+    }
 }

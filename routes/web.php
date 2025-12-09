@@ -17,13 +17,13 @@ Route::middleware(['guest'])->group(function () {
 Route::middleware(['userauth'])->group(function () {
 
     Route::get('/dashboard', [UserController::class, 'show_dashboard'])->name('users.show_dashboard');
-    Route::get("/post/favorite", [UserController::class, 'show_favorite_posts'])->name('users.show_favorite_posts');
-    Route::get("/post/friends", [UserController::class, 'show_friends_posts'])->name("users.show_friends_posts");
+    Route::get('/post/favorite', [UserController::class, 'show_favorite_posts'])->name('users.show_favorite_posts');
+    Route::get('/post/friends', [UserController::class, 'show_friends_posts'])->name('users.show_friends_posts');
 
     Route::prefix('users')->group(function () {
         Route::get('/categories', [SiteController::class, 'manage_categories'])->name('users.manage_categories');
-        Route::get("/notifications/{type}", [SiteController::class, 'manage_notifications'])->name('users.notifications');
-        Route::get("/load-friends", [UserController::class, 'load_friends'])->name("users.load_friends");
+        Route::get('/notifications/{type}', [SiteController::class, 'manage_notifications'])->name('users.notifications');
+        Route::get('/load-friends', [UserController::class, 'load_friends'])->name('users.load_friends');
 
         Route::prefix('advertisments')->group(function () {
             Route::get('/', [SiteController::class, 'manage_advertisments'])->name('users.advertisments');
@@ -45,9 +45,12 @@ Route::middleware(['userauth'])->group(function () {
         Route::get('/', [UserController::class, 'show_profile'])->name('users.profile');
         Route::get('/settings/general', [UserController::class, 'general_settings'])->name('users.general_settings');
         Route::get('/setting/profile-visibility', [UserController::class, 'profile_visibility_settings'])->name('users.profile_visibility_settings');
-        Route::get("/settings/email", [UserController::class, 'email_setting'])->name("users.email_setting");
+        Route::get('/settings/email', [UserController::class, 'email_setting'])->name('users.email_setting');
 
-        Route::post("/settings/email/update", [UserController::class, 'email_setting'])->name("users.update_email_setting");
+        Route::prefix("timeline")->group(function(){
+            Route::get("/activity", [UserController::class, 'timeline_activity'])->name("users.timeline_activity");
+        });
+        Route::post('/settings/email/update', [UserController::class, 'email_setting'])->name('users.update_email_setting');
         Route::post('/setting/update-profile-visibility', [UserController::class, 'profile_visibility_settings'])->name('users.update_profile_visibility_settings');
         Route::post('/settings/general/update', [UserController::class, 'general_settings'])->name('users.update_general_settings');
     });
@@ -55,13 +58,13 @@ Route::middleware(['userauth'])->group(function () {
     Route::post('/load-images-media', [SiteController::class, 'load_profile_pictures'])->name('site.load_profile_pictures');
     Route::prefix('post')->group(function () {
         Route::get('/load', [PostController::class, 'load_posts'])->name('posts.load');
-        Route::get("/load/favorites", [PostController::class, 'load_favorite_posts'])->name("posts.load_favorite_posts");
-        Route::get("/load/friends", [PostController::class, 'load_friends_posts'])->name('posts.load_friends_posts');
+        Route::get('/load/favorites', [PostController::class, 'load_favorite_posts'])->name('posts.load_favorite_posts');
+        Route::get('/load/friends', [PostController::class, 'load_friends_posts'])->name('posts.load_friends_posts');
         Route::get('/photos', [PostController::class, 'show_photos'])->name('posts.show_photos');
         Route::get('/videos', [PostController::class, 'show_videos'])->name('posts.show_videos');
-        Route::get("/notification/{id}", [PostController::class, 'manage_notifications'])->name("notifications.manage_notifications");
+        Route::get('/notification/{id}', [PostController::class, 'manage_notifications'])->name('notifications.manage_notifications');
 
-        Route::post("/bulk-notifications", [PostController::class, 'manage_bulk_notification'])->name('notifications.bulk_action');
+        Route::post('/bulk-notifications', [PostController::class, 'manage_bulk_notification'])->name('notifications.bulk_action');
         Route::post('/load-post-comments', [PostController::class, 'load_post_comments'])->name('comments.fetch');
         Route::post('/load-post', [PostController::class, 'generate_post_content'])->name('posts.generate_post_content');
         Route::post('/manage-like-dislike', [PostController::class, 'toggleLike'])->name('posts.toggle_like');
@@ -82,14 +85,14 @@ Route::middleware(['userauth'])->group(function () {
         Route::get('/upload', [ShopController::class, 'create_products'])->name('shops.create');
         Route::get('/{id}/view', [ShopController::class, 'view_product'])->name('shops.show');
         Route::get('/manage_cart', [ShopController::class, 'manage_cart'])->name('shops.manage_cart');
-        Route::get("/delete-item/{id}", [ShopController::class, 'delete_item'])->name("shops.delete_item");
-        Route::get("/checkout", [ShopController::class, 'checkout'])->name("shops.checkout");
-        Route::get("/orders", [ShopController::class, 'placed_orders'])->name('shops.placed_orders');
-        Route::get("/sheduled/{id}", [ShopController::class, 'scheduled_cart_items'])->name("shops.scheduled_cart_items");
-        Route::get("/orders/manage", [ShopController::class, 'manage_orders'])->name("shops.manage_orders");
+        Route::get('/delete-item/{id}', [ShopController::class, 'delete_item'])->name('shops.delete_item');
+        Route::get('/checkout', [ShopController::class, 'checkout'])->name('shops.checkout');
+        Route::get('/orders', [ShopController::class, 'placed_orders'])->name('shops.placed_orders');
+        Route::get('/sheduled/{id}', [ShopController::class, 'scheduled_cart_items'])->name('shops.scheduled_cart_items');
+        Route::get('/orders/manage', [ShopController::class, 'manage_orders'])->name('shops.manage_orders');
 
-        Route::post("/place-order", [ShopController::class, 'checkout'])->name('shops.proceed_with_order');
-        Route::post("/update-cart", [ShopController::class, 'manage_cart'])->name('shops.update_cart');
+        Route::post('/place-order', [ShopController::class, 'checkout'])->name('shops.proceed_with_order');
+        Route::post('/update-cart', [ShopController::class, 'manage_cart'])->name('shops.update_cart');
         Route::post('/add-to-cart', [ShopController::class, 'add_to_cart'])->name('shops.add_to_cart');
         Route::post('/submit', [ShopController::class, 'create_products'])->name('shops.submit');
     });
@@ -99,19 +102,17 @@ Route::middleware(['userauth'])->group(function () {
         Route::get('/manage', [GroupController::class, 'manage_groups'])->name('groups.index');
         Route::get('/create', [GroupController::class, 'create_group'])->name('groups.create');
         Route::get('/invitations', [GroupController::class, 'groups_invitation'])->name('groups.invitation');
-        Route::get('/layout', function () {
-            return view('users.profile.groups.layout');
-        });
+        Route::post('/accept-reject-invitation', [GroupController::class, 'approve_reject_group_invitation'])->name('groups.approve_reject_group_invitation');
 
         Route::post('/store', [GroupController::class, 'create_group'])->name('groups.store');
 
         Route::prefix('{group}')->group(function () {
             Route::get('/dashboard', [GroupController::class, 'show_dashboard'])->name('groups.dashboard');
             Route::get('/load-posts', [GroupController::class, 'load_group_posts'])->name('group_posts.load');
-            Route::get("/manage_invite", [GroupController::class, 'manage_invite'])->name("groups.manage_invite");
-            Route::get("/all-members", [GroupController::class, 'all_members'])->name('groups.all_members');
+            Route::get('/manage_invite', [GroupController::class, 'manage_invite'])->name('groups.manage_invite');
+            Route::get('/all-members', [GroupController::class, 'all_members'])->name('groups.all_members');
 
-            Route::post("/send-invitation", [GroupController::class, 'send_remove_group_invitation'])->name("groups.send_remove_group_invitation");
+            Route::post('/send-invitation', [GroupController::class, 'send_remove_group_invitation'])->name('groups.send_remove_group_invitation');
             Route::post('/manage-like-dislike', [GroupController::class, 'toggleLike'])->name('group_posts.toggle_like');
             Route::post('/delete-post', [GroupController::class, 'delete_post'])->name('group_posts.delete');
             Route::post('/mark-favorite', [GroupController::class, 'toggleMarkFavorite'])->name('group_posts.toggle_mark_favorite');
@@ -139,7 +140,7 @@ Route::middleware(['userauth'])->group(function () {
     Route::prefix('peoples')->group(function () {
         Route::get('/list', [SiteController::class, 'list'])->name('peoples.list');
         Route::get('/games', [SiteController::class, 'games'])->name('peoples.games');
-        Route::get("/music", [SiteController::class, 'music'])->name("peoples.music");
+        Route::get('/music', [SiteController::class, 'music'])->name('peoples.music');
 
         Route::get('/load-friends', [SiteController::class, 'list_friends'])->name('peoples.list_friends');
         Route::get('/load-requests', [SiteController::class, 'list_requests'])->name('peoples.list_requests');
