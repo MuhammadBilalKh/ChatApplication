@@ -49,6 +49,8 @@ Route::middleware(['userauth'])->group(function () {
 
         Route::prefix("timeline")->group(function(){
             Route::get("/activity", [UserController::class, 'timeline_activity'])->name("users.timeline_activity");
+            Route::get("/activity/favorites", [UserController::class, 'timline_favorites_activity'])->name('users.timline_favorites_activity');
+            Route::get("/activity/friends", [UserController::class, 'timeline_friends_activity'])->name("users.timeline_friends_activity");
         });
         Route::post('/settings/email/update', [UserController::class, 'email_setting'])->name('users.update_email_setting');
         Route::post('/setting/update-profile-visibility', [UserController::class, 'profile_visibility_settings'])->name('users.update_profile_visibility_settings');

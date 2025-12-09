@@ -11,12 +11,14 @@
                 </a>
             </li>
             <li id="activity-favs-personal-li" class="bp-personal-sub-tab current selected" data-bp-user-scope="favorites">
-                <a href="{{ route('users.timline_favorites_activity') }}" id="activity-favs">
+                <a href="{{ route('users.timline_favorites_activity') }}"
+                    id="activity-favs">
                     Favorites
                 </a>
             </li>
             <li id="activity-friends-personal-li" class="bp-personal-sub-tab" data-bp-user-scope="friends">
-                <a href="{{ route('users.timeline_friends_activity') }}" id="activity-friends">
+                <a href="{{ route('users.timeline_friends_activity') }}"
+                    id="activity-friends">
                     Friends
                 </a>
             </li>
@@ -110,7 +112,7 @@
             showAlertLoading();
 
             $.ajax({
-                url: "{{ route('users.timline_favorites_activity') }}",
+                url: "{{ route('users.timline_friends_activity') }}",
                 type: "{{ FORM_METHOD_GET }}",
                 data: {
                     page: page,
@@ -134,8 +136,7 @@
                         morePages = false;
                         hideLoadMoreBtn();
                         if (page === 1) {
-                            listPosts.innerHTML =
-                                '<li class="text-center text-gray-600 py-6">No posts found.</li>';
+                            listPosts.innerHTML = '<li class="text-center text-gray-600 py-6">No posts found.</li>';
                         }
                     }
                     loading = false;

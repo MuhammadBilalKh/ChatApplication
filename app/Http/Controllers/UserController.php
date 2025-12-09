@@ -379,6 +379,7 @@ class UserController extends Controller
 
         if ($request->ajax()) {
             $html = view('partials.timeline_posts', compact('posts'))->render();
+
             return response()->json([
                 'html' => $html,
                 'hasMore' => $posts->hasMorePages(),
@@ -386,5 +387,99 @@ class UserController extends Controller
         }
 
         return view('users.timeline.home');
+    }
+
+    public function timline_favorites_activity(Request $request)
+    {
+        if ($request->ajax()) {
+            $limit = 10;
+            $page = $request->input('page', 1);
+            $authId = Auth::user()->user_id;
+
+            $friends = FriendShip::where(function ($q) use ($authId) {
+                $q->where('sender_id', $authId)
+                    ->orWhere('receiver_id', $authId);
+            })
+                ->where('status', FRIEND_REQUEST_STATUS_ACCEPTED)
+                ->get(['sender_id', 'receiver_id'])
+                ->map(function ($item) use ($authId) {
+                    return $item->sender_id == $authId ? $item->receiver_id : $item->sender_id;
+                })
+                ->unique()
+                ->values()
+                ->toArray();
+
+            $userIds = array_unique($friends);
+
+            $posts = Post::with([
+                'getLikedBy',
+                'postUploadedBy',
+                'getMarkedFavorite',
+                'postMedia',
+                'comments' => function ($query) {
+                    $query->whereNull('parent_comment_id')
+                        ->with([
+                            'commentPostedBy',
+                            'replies' => function ($q) {
+                                $q->whereNotNull('parent_comment_id')->with('commentPostedBy');
+                            }]);
+                },
+            ])
+                ->whereHas('getMarkedFavorite', function ($q) use ($authId) {
+                    $q->where('user_id', $authId);
+                })
+                ->where(function ($q) {
+                    $q->where('post_type', POSTING_TYPE_POST)
+                        ->orWhere('new_joining_post', NEW_JOINING_USER_POST);
+                })->orderByDesc('created_at')->paginate($limit);
+
+            $html = view('partials.timeline_posts', compact('posts'))->render();
+
+            return response()->json([
+                'html' => $html,
+                'hasMore' => $posts->hasMorePages(),
+            ]);
+        }
+
+        return view('users.timeline.favorites');
+    }
+
+    public function timeline_friends_activity(Request $request){
+        if ($request->ajax()) {
+            $authId = Auth::user()->user_id;
+            $limit = 10;
+            $page = $request->input('page', 1);
+
+            $posts = Post::with([
+                'getLikedBy',
+                'postUploadedBy',
+                'getMarkedFavorite',
+                'postMedia',
+                'comments' => function ($query) {
+                    $query->whereNull('parent_comment_id')
+                        ->with([
+                            'commentPostedBy',
+                            'replies' => function ($q) {
+                                $q->whereNotNull('parent_comment_id')->with('commentPostedBy');
+                            }]);
+                },
+            ])
+                ->whereHas('getMarkedFavorite', function ($q) use ($authId) {
+                    $q->where('user_id', $authId);
+                })
+                ->where(function ($q) {
+                    $q->where('post_type', POSTING_TYPE_POST)
+                        ->orWhere('new_joining_post', NEW_JOINING_USER_POST);
+                })->orderByDesc('created_at')->paginate($limit);
+
+            $html = view('partials.timeline_posts', compact('posts'))->render();
+
+            return response()->json([
+                'html' => $html,
+                'hasMore' => $posts->hasMorePages(),
+            ]);
+        }
+
+        return view('users.timeline.favorites');
     }
 }

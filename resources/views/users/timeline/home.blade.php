@@ -5,27 +5,19 @@
 @section('profile-content')
     <nav class="bp-navs bp-subnavs no-ajax user-subnav" id="subnav" role="navigation" aria-label="Activity menu">
         <ul class="subnav">
-            <li id="just-me-personal-li" class="bp-personal-sub-tab current selected" data-bp-user-scope="just-me">
+            <li id="just-me-personal-li" class="bp-personal-sub-tab" data-bp-user-scope="just-me">
                 <a href="{{ route('users.timeline_activity') }}" id="just-me">
                     Personal
                 </a>
             </li>
-            <li id="activity-favs-personal-li" class="bp-personal-sub-tab" data-bp-user-scope="favorites">
-                <a href="https://www.clientbetalink.xyz/MIGVELv1/members-2/wpdeveloper/activity/favorites/"
-                    id="activity-favs">
+            <li id="activity-favs-personal-li" class="bp-personal-sub-tab current selected" data-bp-user-scope="favorites">
+                <a href="{{ route('users.timline_favorites_activity') }}" id="activity-favs">
                     Favorites
                 </a>
             </li>
             <li id="activity-friends-personal-li" class="bp-personal-sub-tab" data-bp-user-scope="friends">
-                <a href="https://www.clientbetalink.xyz/MIGVELv1/members-2/wpdeveloper/activity/friends/"
-                    id="activity-friends">
+                <a href="{{ route('users.timeline_friends_activity') }}" id="activity-friends">
                     Friends
-                </a>
-            </li>
-            <li id="activity-groups-personal-li" class="bp-personal-sub-tab" data-bp-user-scope="groups">
-                <a href="https://www.clientbetalink.xyz/MIGVELv1/members-2/wpdeveloper/activity/groups/"
-                    id="activity-groups">
-                    Groups
                 </a>
             </li>
         </ul>
@@ -142,7 +134,8 @@
                         morePages = false;
                         hideLoadMoreBtn();
                         if (page === 1) {
-                            listPosts.innerHTML = '<li class="text-center text-gray-600 py-6">No posts found.</li>';
+                            listPosts.innerHTML =
+                                '<li class="text-center text-gray-600 py-6">No posts found.</li>';
                         }
                     }
                     loading = false;
